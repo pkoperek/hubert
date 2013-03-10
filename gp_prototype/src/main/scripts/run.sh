@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -cp
+java -jar lib/gp_prototype-1.0-SNAPSHOT.jar data/circle.csv
