@@ -2,8 +2,11 @@ package prototype.differentiation.strategies;
 
 import org.junit.Before;
 import org.junit.Test;
-import prototype.VariablesValues;
-import prototype.differentiation.*;
+import prototype.data.VariablesValues;
+import prototype.differentiation.Function;
+import prototype.differentiation.FunctionType;
+import prototype.differentiation.TreeNode;
+import prototype.differentiation.TreeNodeToFunctionTranslator;
 import prototype.differentiation.functions.Add;
 import prototype.differentiation.functions.Multiply;
 import prototype.differentiation.tree.ConstantTreeNode;
@@ -11,7 +14,6 @@ import prototype.differentiation.tree.SimpleTreeNode;
 import prototype.differentiation.tree.VariableTreeNode;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static prototype.differentiation.TestTools.aVariableTreeNode;
 
 /**
  * User: koperek

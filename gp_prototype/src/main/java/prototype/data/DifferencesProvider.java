@@ -1,6 +1,4 @@
-package prototype;
-
-import prototype.data.DataContainer;
+package prototype.data;
 
 /**
  * User: koperek

@@ -1,6 +1,6 @@
 package prototype.differentiation.functions;
 
-import prototype.VariablesValues;
+import prototype.data.VariablesValues;
 
 /**
  * User: koperek

@@ -1,6 +1,6 @@
 package prototype.differentiation.strategies;
 
-import prototype.VariablesValues;
+import prototype.data.VariablesValues;
 import prototype.differentiation.Function;
 import prototype.differentiation.TreeNode;
 import prototype.differentiation.functions.*;

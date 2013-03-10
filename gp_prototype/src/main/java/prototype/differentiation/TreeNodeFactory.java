@@ -5,8 +5,8 @@ import org.jgap.gp.MathCommand;
 import org.jgap.gp.impl.ProgramChromosome;
 import org.jgap.gp.terminal.Terminal;
 import org.jgap.gp.terminal.Variable;
-import prototype.VariablesValues;
 import prototype.data.Pair;
+import prototype.data.VariablesValues;
 import prototype.differentiation.tree.ConstantTreeNode;
 import prototype.differentiation.tree.JGAPTreeNode;
 import prototype.differentiation.tree.VariableTreeNode;
@@ -20,6 +20,11 @@ public class TreeNodeFactory {
 
     private final VariablesValues variablesValues;
     private final Pair<String> dependantVariables;
+    private static final Pair<String> DEFAULT_DEPENDANT_VARIABLES = new Pair<String>(VariableTreeNode.EMPTY_NAME, VariableTreeNode.EMPTY_NAME);
+
+    public TreeNodeFactory(VariablesValues variablesValues) {
+        this(variablesValues, DEFAULT_DEPENDANT_VARIABLES);
+    }
 
     public TreeNodeFactory(VariablesValues variablesValues, Pair<String> dependantVariables) {
         this.variablesValues = variablesValues;

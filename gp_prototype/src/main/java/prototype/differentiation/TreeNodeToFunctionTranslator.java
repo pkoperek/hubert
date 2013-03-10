@@ -1,6 +1,5 @@
 package prototype.differentiation;
 
-import prototype.VariablesValues;
 import prototype.differentiation.functions.*;
 import prototype.differentiation.tree.ConstantTreeNode;
 import prototype.differentiation.tree.VariableTreeNode;

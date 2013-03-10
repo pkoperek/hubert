@@ -1,18 +1,15 @@
-package prototype;
+package prototype.evolution.fitness;
 
 import org.apache.log4j.Logger;
 import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
-import org.jgap.gp.terminal.Variable;
-import prototype.data.DataContainer;
-import prototype.data.Pair;
-import prototype.data.PairGenerator;
+import prototype.data.*;
 import prototype.differentiation.Function;
 import prototype.differentiation.TreeNodeFactory;
 import prototype.differentiation.functions.PreviousValueVariable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,25 +22,15 @@ public class PrototypeFitnessFunction extends GPFitnessFunction {
     private static final Logger LOGGER = Logger.getLogger(PrototypeFitnessFunction.class);
 
     private List<Pair<String>> pairs;
-    private List<Variable> variables;
+    private List<String> variables;
     private final DataContainer dataContainer;
     private DifferencesProvider differencesProvider;
 
-    public PrototypeFitnessFunction(List<Variable> variables, DataContainer dataContainer) {
-        this.variables = variables;
+    public PrototypeFitnessFunction(DataContainer dataContainer) {
+        this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
-        this.pairs = new PairGenerator<String>().generatePairs(toVariableNames(variables));
+        this.pairs = new PairGenerator<String>().generatePairs(variables);
         this.differencesProvider = new DifferencesProvider(dataContainer);
-    }
-
-    private List<String> toVariableNames(List<Variable> variables) {
-        List<String> variableNames = new ArrayList<>();
-
-        for (Variable variable : variables) {
-            variableNames.add(variable.getName());
-        }
-
-        return variableNames;
     }
 
     @Override
@@ -126,10 +113,9 @@ public class PrototypeFitnessFunction extends GPFitnessFunction {
     }
 
     private void populateVariableValues(int dataRow, VariablesValues variablesValues) {
-        for (Variable variable : variables) {
-            String variableName = variable.getName();
+        for (String variableName : variables) {
             variablesValues.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow));
-            String previousValueVariableName = variable.getName() + PreviousValueVariable.PREVIOUS_VALUE_VARIABLE_SUFFIX;
+            String previousValueVariableName = variableName + PreviousValueVariable.PREVIOUS_VALUE_VARIABLE_SUFFIX;
             variablesValues.setVariableValue(previousValueVariableName, dataContainer.getValue(variableName, dataRow - 1));
         }
     }

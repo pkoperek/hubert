@@ -1,4 +1,4 @@
-package prototype;
+package prototype.evolution;
 
 import org.apache.log4j.Logger;
 import org.jgap.gp.impl.GPGenotype;

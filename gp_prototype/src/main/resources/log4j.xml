@@ -15,7 +15,7 @@
     <!--<level value="debug"/>-->
     <!--</logger>-->
 
-    <logger name="prototype.PrototypeFitnessFunction">
+    <logger name="prototype.evolution.fitness.PrototypeFitnessFunction">
         <level value="info"/>
     </logger>
 

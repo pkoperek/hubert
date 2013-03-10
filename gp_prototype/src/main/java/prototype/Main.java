@@ -5,6 +5,8 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
+import prototype.evolution.GenotypeBuilder;
+import prototype.evolution.GenotypeEvolutionEngine;
 
 import java.io.IOException;
 
@@ -22,7 +24,7 @@ public class Main {
         DOMConfigurator.configure("log4j.xml");
 
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
-        GPGenotype genotype = new GenotypeBuilder().buildGenotype(dataContainer);
+        GPGenotype genotype = GenotypeBuilder.builder(dataContainer).build();
         new GenotypeEvolutionEngine(ITERATIONS, GENERATIONS_PER_ITERATION).genotypeEvolve(genotype);
     }
 
