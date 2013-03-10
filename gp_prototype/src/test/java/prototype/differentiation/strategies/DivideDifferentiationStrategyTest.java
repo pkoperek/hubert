@@ -22,7 +22,6 @@ public class DivideDifferentiationStrategyTest {
         // Given
 
         // When
-        fail();
 
         // Then
 

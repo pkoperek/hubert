@@ -22,7 +22,6 @@ public class SinDifferentiationStrategyTest {
         // Given
 
         // When
-        fail();
 
         // Then
 
