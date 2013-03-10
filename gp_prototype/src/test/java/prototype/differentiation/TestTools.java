@@ -44,6 +44,6 @@ public class TestTools {
     }
 
     public static VariableTreeNode aVariableTreeNode(String variableName) {
-        return new VariableTreeNode(null, null, variableName);
+        return new VariableTreeNode(null, variableName);
     }
 }
