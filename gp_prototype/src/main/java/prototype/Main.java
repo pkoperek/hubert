@@ -29,7 +29,7 @@ public class Main {
 
     public static void main(String[] args) throws InvalidConfigurationException, IOException {
         DOMConfigurator.configure("log4j.xml");
-        DataContainer dataContainer = getDataContainer("circle.csv");
+        DataContainer dataContainer = getDataContainer(args[0]);
 
         GPConfiguration config = new GPConfiguration();
         Variable[] variables = createVariables(dataContainer, config);
