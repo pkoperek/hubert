@@ -2,6 +2,8 @@ package prototype;
 
 import org.junit.Before;
 import org.junit.Test;
+import prototype.data.Pair;
+import prototype.data.PairGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class PairGeneratorTest {
         List<Pair<String>> pairs = generator.generatePairs(elements);
 
         // Then
-        assertThat(pairs.size()).isEqualTo( 8*7/2 ); // k(k-1) / 2
+        assertThat(pairs.size()).isEqualTo(8 * 7 / 2); // k(k-1) / 2
     }
 
     @Test
@@ -57,9 +59,9 @@ public class PairGeneratorTest {
 
         // Then
         assertThat(pairs).containsExactly(
-                new Pair("1","2"),
-                new Pair("1","3"),
-                new Pair("2","3")
+                new Pair("1", "2"),
+                new Pair("1", "3"),
+                new Pair("2", "3")
         );
     }
 

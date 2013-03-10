@@ -5,6 +5,9 @@ import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
 import org.jgap.gp.terminal.Variable;
+import prototype.data.DataContainer;
+import prototype.data.Pair;
+import prototype.data.PairGenerator;
 import prototype.differentiation.Function;
 import prototype.differentiation.TreeNodeFactory;
 import prototype.differentiation.functions.PreviousValueVariable;
@@ -22,18 +25,18 @@ public class PrototypeFitnessFunction extends GPFitnessFunction {
     private static final Logger LOGGER = Logger.getLogger(PrototypeFitnessFunction.class);
 
     private List<Pair<String>> pairs;
-    private Variable[] variables;
+    private List<Variable> variables;
     private final DataContainer dataContainer;
     private DifferencesProvider differencesProvider;
 
-    public PrototypeFitnessFunction(Variable[] variables, DataContainer dataContainer) {
+    public PrototypeFitnessFunction(List<Variable> variables, DataContainer dataContainer) {
         this.variables = variables;
         this.dataContainer = dataContainer;
         this.pairs = new PairGenerator<String>().generatePairs(toVariableNames(variables));
         this.differencesProvider = new DifferencesProvider(dataContainer);
     }
 
-    private List<String> toVariableNames(Variable[] variables) {
+    private List<String> toVariableNames(List<Variable> variables) {
         List<String> variableNames = new ArrayList<>();
 
         for (Variable variable : variables) {
@@ -112,11 +115,6 @@ public class PrototypeFitnessFunction extends GPFitnessFunction {
         // mean log error - but not negative; the DeltaGPFitnessEvaluator
         // treats smaller values as better
         error /= dataContainer.rowsCount();
-
-//        // if this individual discarded all rows for all pairings - throw it out...
-//        if (processedDataRows == 0) {
-//            error = Double.MAX_VALUE;
-//        }
 
         long stop = System.nanoTime();
         LOGGER.debug("Fitness Function Time: " + (stop - start) + " ns Error: " + error);

@@ -1,5 +1,7 @@
 package prototype;
 
+import prototype.data.DataContainer;
+
 /**
  * User: koperek
  * Date: 16.02.13

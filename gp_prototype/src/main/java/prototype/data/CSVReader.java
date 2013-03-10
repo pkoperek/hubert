@@ -1,4 +1,4 @@
-package prototype;
+package prototype.data;
 
 import java.io.BufferedReader;
 import java.io.IOException;

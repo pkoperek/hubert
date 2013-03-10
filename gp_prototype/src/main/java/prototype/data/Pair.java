@@ -1,4 +1,4 @@
-package prototype;
+package prototype.data;
 
 /**
  * User: koperek
