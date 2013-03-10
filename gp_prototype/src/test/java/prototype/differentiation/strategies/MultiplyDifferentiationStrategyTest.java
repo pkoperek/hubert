@@ -2,6 +2,7 @@ package prototype.differentiation.strategies;
 
 import org.junit.Before;
 import org.junit.Test;
+import prototype.VariablesValues;
 import prototype.differentiation.*;
 import prototype.differentiation.functions.Add;
 import prototype.differentiation.functions.Multiply;
@@ -31,10 +32,12 @@ public class MultiplyDifferentiationStrategyTest {
     public void shouldDifferentiateVariableConstantMultiplication() throws Exception {
 
         // Given
+        VariablesValues values = new VariablesValues();
+        values.setVariableValue("x", 4);
         TreeNode treeNode = new SimpleTreeNode(
                 FunctionType.MULTIPLY,
                 new TreeNode[]{
-                        aVariableTreeNode("x"),
+                        new VariableTreeNode(values, "x"),
                         new ConstantTreeNode(20.0),
                 });
 
