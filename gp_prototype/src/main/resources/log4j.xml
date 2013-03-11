@@ -15,7 +15,7 @@
     <!--<level value="debug"/>-->
     <!--</logger>-->
 
-    <logger name="prototype.evolution.fitness.PrototypeFitnessFunction">
+    <logger name="prototype.evolution.fitness.EureqaFitnessFunction">
         <level value="info"/>
     </logger>
 

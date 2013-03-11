@@ -19,12 +19,12 @@ import java.util.List;
  * Date: 10.03.13
  * Time: 23:32
  */
-public class AbsoluteErrorFitnessFunction extends GPFitnessFunction {
+public class AbsoluteSquareErrorFitnessFunction extends GPFitnessFunction {
 
     private List<String> variablesNames;
     private final DataContainer dataContainer;
 
-    public AbsoluteErrorFitnessFunction(DataContainer dataContainer) {
+    public AbsoluteSquareErrorFitnessFunction(DataContainer dataContainer) {
         this.variablesNames = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
     }
@@ -53,7 +53,8 @@ public class AbsoluteErrorFitnessFunction extends GPFitnessFunction {
             double chromosomeValueAtPointI = chromosomeAsFunction.evaluate();
             double dataPoint = dataContainer.getValue(chromosomeVariableName, i).doubleValue();
 
-            chromosomeError += Math.abs(dataPoint - chromosomeValueAtPointI);
+            double err = dataPoint - chromosomeValueAtPointI;
+            chromosomeError += err * err;
         }
         return chromosomeError;
     }
