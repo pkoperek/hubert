@@ -5,10 +5,13 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
-import prototype.evolution.GenotypeBuilder;
 import prototype.evolution.GenotypeEvolutionEngine;
+import prototype.evolution.fitness.EureqaFitnessFunction;
+import prototype.evolution.genotype.GenotypeBuilder;
+import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * User: koperek
@@ -24,7 +27,9 @@ public class Main {
         DOMConfigurator.configure("log4j.xml");
 
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
-        GPGenotype genotype = GenotypeBuilder.builder(dataContainer).build();
+        EureqaFitnessFunction eureqaFitnessFunction = new EureqaFitnessFunction(dataContainer);
+        SingleChromosomeBuildingStrategy buildingStrategy = new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
+        GPGenotype genotype = GenotypeBuilder.builder(eureqaFitnessFunction, buildingStrategy).build();
         new GenotypeEvolutionEngine(ITERATIONS, GENERATIONS_PER_ITERATION).genotypeEvolve(genotype);
     }
 

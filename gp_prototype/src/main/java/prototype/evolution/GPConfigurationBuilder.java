@@ -1,15 +1,14 @@
 package prototype.evolution;
 
 import org.jgap.InvalidConfigurationException;
+import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.DeltaGPFitnessEvaluator;
 import org.jgap.gp.impl.GPConfiguration;
-import prototype.data.DataContainer;
-import prototype.evolution.fitness.AbsoluteErrorFitnessFunction;
 
 public class GPConfigurationBuilder {
 
     public static final int DEFAULT_MAX_INIT_DEPTH = 8; // 8 levels should be enough to contain 128 elements
-    public static final int DEFAULT_POPULATION_SIZE = 2048; // 2048 according to article
+    public static final int DEFAULT_POPULATION_SIZE = 128; // 2048 according to article
     public static final float DEFAULT_CROSSOVER_PROBABILITY = 0.75f; // setting according to article
     public static final int DEFAULT_MAX_NODES = 128;        // 128 - maximum number of nodes in equation tree - set according to article
     public static final float DEFAULT_MUTATION_PROBABILITY = 0.01f; // setting according to article
@@ -18,14 +17,14 @@ public class GPConfigurationBuilder {
     private int populationSize = DEFAULT_POPULATION_SIZE;
     private float crossoverProbability = DEFAULT_CROSSOVER_PROBABILITY;
     private float mutationProbability = DEFAULT_MUTATION_PROBABILITY;
-    private final DataContainer dataContainer;
+    private GPFitnessFunction fitnessFunction;
 
-    private GPConfigurationBuilder(DataContainer dataContainer) {
-        this.dataContainer = dataContainer;
+    private GPConfigurationBuilder(GPFitnessFunction fitnessFunction) {
+        this.fitnessFunction = fitnessFunction;
     }
 
-    public static GPConfigurationBuilder builder(DataContainer dataContainer) {
-        return new GPConfigurationBuilder(dataContainer);
+    public static GPConfigurationBuilder builder(GPFitnessFunction fitnessFunction) {
+        return new GPConfigurationBuilder(fitnessFunction);
     }
 
     public GPConfigurationBuilder setMaxInitDepth(int maxInitDepth) {
@@ -55,8 +54,7 @@ public class GPConfigurationBuilder {
         config.setCrossoverProb(crossoverProbability);
         config.setMutationProb(mutationProbability);
         config.setGPFitnessEvaluator(new DeltaGPFitnessEvaluator());
-//        config.setFitnessFunction(new PrototypeFitnessFunction(dataContainer));
-        config.setFitnessFunction(new AbsoluteErrorFitnessFunction(dataContainer));
+        config.setFitnessFunction(fitnessFunction);
         return config;
     }
 }
