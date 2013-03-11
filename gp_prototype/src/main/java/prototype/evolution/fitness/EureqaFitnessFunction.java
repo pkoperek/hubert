@@ -79,12 +79,11 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         String firstVariableName = pairing.getOne();
         String secondVariableName = pairing.getTwo();
 
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues, pairing);
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues);
         TreeNode chromosomeAsTree = treeNodeFactory.createTreeNode(chromosome);
-        TreeNode equationReversed = reverseEquation(chromosomeAsTree, firstVariableName, secondVariableName, variablesValues);
 
-        Function firstDifferentiated = equationReversed.differentiate(firstVariableName);
-        Function secondDifferentiated = equationReversed.differentiate(secondVariableName);
+        Function firstDifferentiated = chromosomeAsTree.differentiate(firstVariableName);
+        Function secondDifferentiated = chromosomeAsTree.differentiate(secondVariableName);
 
         double pairingError = 0.0f;
         for (int dataRow = 1; dataRow < dataContainer.rowsCount(); dataRow++) {

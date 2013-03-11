@@ -1,6 +1,7 @@
 package prototype.evolution;
 
 import org.apache.log4j.Logger;
+import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPGenotype;
 
 public class GenotypeEvolutionEngine {
@@ -38,12 +39,16 @@ public class GenotypeEvolutionEngine {
             logger.info("Iteration: " + i + " - evolving...");
             genotype.evolve(generationsPerIteration);
 
-            double bestFitnessValue = genotype.getFittestProgram().getFitnessValue();
+            IGPProgram fittestProgram = genotype.getFittestProgram();
 
-            logger.info("Best fitness: " + bestFitnessValue);
-            logger.info("Fittest: " + genotype.getFittestProgram().toStringNorm(0));
+            logger.info(
+                    "Best fitness: " + fittestProgram.getFitnessValue() +
+                            " Depth: " + fittestProgram.getChromosome(0).getDepth(0) +
+                            " Complexity: " + fittestProgram.getChromosome(0).size()
+            );
+            logger.info("Fittest: " + fittestProgram.toStringNorm(0));
 
-            if (bestFitnessValue < targetError) {
+            if (fittestProgram.getFitnessValue() < targetError) {
                 logger.info("Found a good solution!");
                 break;
             }
