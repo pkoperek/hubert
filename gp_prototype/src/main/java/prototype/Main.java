@@ -2,10 +2,12 @@ package prototype;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.jgap.InvalidConfigurationException;
+import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
-import prototype.evolution.GenotypeEvolutionEngine;
+import prototype.evolution.GPConfigurationBuilder;
+import prototype.evolution.engine.GenotypeEvolutionEngineBuilder;
 import prototype.evolution.fitness.EureqaFitnessFunction;
 import prototype.evolution.genotype.GenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
@@ -34,10 +36,19 @@ public class Main {
         }
 
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
-        EureqaFitnessFunction eureqaFitnessFunction = new EureqaFitnessFunction(dataContainer);
-        SingleChromosomeBuildingStrategy buildingStrategy = new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
-        GPGenotype genotype = GenotypeBuilder.builder(eureqaFitnessFunction, buildingStrategy).build();
-        new GenotypeEvolutionEngine(iterations, GENERATIONS_PER_ITERATION).genotypeEvolve(genotype);
+
+        EureqaFitnessFunction eureqaFitnessFunction =
+                new EureqaFitnessFunction(dataContainer);
+
+        SingleChromosomeBuildingStrategy buildingStrategy =
+                new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
+
+        GPConfiguration configuration = GPConfigurationBuilder
+                .builder(eureqaFitnessFunction)
+                .buildConfiguration();
+
+        GPGenotype genotype = GenotypeBuilder.builder(buildingStrategy, configuration).build();
+        GenotypeEvolutionEngineBuilder.builder().setMaxIterations(iterations).build().genotypeEvolve(genotype);
     }
 
 }

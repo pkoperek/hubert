@@ -18,6 +18,7 @@ public class GPConfigurationBuilder {
     private float crossoverProbability = DEFAULT_CROSSOVER_PROBABILITY;
     private float mutationProbability = DEFAULT_MUTATION_PROBABILITY;
     private GPFitnessFunction fitnessFunction;
+    private DeltaGPFitnessEvaluator fitnessEvaluator = new DeltaGPFitnessEvaluator();
 
     private GPConfigurationBuilder(GPFitnessFunction fitnessFunction) {
         this.fitnessFunction = fitnessFunction;
@@ -25,6 +26,11 @@ public class GPConfigurationBuilder {
 
     public static GPConfigurationBuilder builder(GPFitnessFunction fitnessFunction) {
         return new GPConfigurationBuilder(fitnessFunction);
+    }
+
+    public GPConfigurationBuilder setFitnessEvaluator(DeltaGPFitnessEvaluator fitnessEvaluator) {
+        this.fitnessEvaluator = fitnessEvaluator;
+        return this;
     }
 
     public GPConfigurationBuilder setMaxInitDepth(int maxInitDepth) {
@@ -53,7 +59,7 @@ public class GPConfigurationBuilder {
         config.setPopulationSize(populationSize);
         config.setCrossoverProb(crossoverProbability);
         config.setMutationProb(mutationProbability);
-        config.setGPFitnessEvaluator(new DeltaGPFitnessEvaluator());
+        config.setGPFitnessEvaluator(fitnessEvaluator);
         config.setFitnessFunction(fitnessFunction);
         return config;
     }
