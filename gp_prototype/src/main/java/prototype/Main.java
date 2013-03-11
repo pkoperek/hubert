@@ -26,6 +26,13 @@ public class Main {
     public static void main(String[] args) throws InvalidConfigurationException, IOException {
         DOMConfigurator.configure("log4j.xml");
 
+        int iterations;
+        try {
+            iterations = Integer.parseInt(args[1]);
+        } catch (Exception e) {
+            iterations = ITERATIONS;
+        }
+
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
         EureqaFitnessFunction eureqaFitnessFunction = new EureqaFitnessFunction(dataContainer);
         SingleChromosomeBuildingStrategy buildingStrategy = new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
