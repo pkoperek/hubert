@@ -37,7 +37,7 @@ public class Main {
         EureqaFitnessFunction eureqaFitnessFunction = new EureqaFitnessFunction(dataContainer);
         SingleChromosomeBuildingStrategy buildingStrategy = new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
         GPGenotype genotype = GenotypeBuilder.builder(eureqaFitnessFunction, buildingStrategy).build();
-        new GenotypeEvolutionEngine(ITERATIONS, GENERATIONS_PER_ITERATION).genotypeEvolve(genotype);
+        new GenotypeEvolutionEngine(iterations, GENERATIONS_PER_ITERATION).genotypeEvolve(genotype);
     }
 
 }
