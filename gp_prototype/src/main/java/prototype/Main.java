@@ -2,6 +2,7 @@ package prototype;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.jgap.InvalidConfigurationException;
+import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.DataContainer;
@@ -9,6 +10,7 @@ import prototype.data.DataContainerFactory;
 import prototype.evolution.GPConfigurationBuilder;
 import prototype.evolution.engine.GenotypeEvolutionEngineBuilder;
 import prototype.evolution.fitness.EureqaFitnessFunction;
+import prototype.evolution.fitness.parsimony.EuclidParsimonyPressure;
 import prototype.evolution.genotype.GenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
 
@@ -37,14 +39,15 @@ public class Main {
 
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
 
-        EureqaFitnessFunction eureqaFitnessFunction =
-                new EureqaFitnessFunction(dataContainer);
+        GPFitnessFunction fitnessFunction =
+                new EuclidParsimonyPressure(
+                        new EureqaFitnessFunction(dataContainer));
 
         SingleChromosomeBuildingStrategy buildingStrategy =
                 new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
 
         GPConfiguration configuration = GPConfigurationBuilder
-                .builder(eureqaFitnessFunction)
+                .builder(fitnessFunction)
                 .buildConfiguration();
 
         GPGenotype genotype = GenotypeBuilder.builder(buildingStrategy, configuration).build();
