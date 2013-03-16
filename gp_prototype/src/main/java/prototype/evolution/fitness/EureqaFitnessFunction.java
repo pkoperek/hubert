@@ -48,10 +48,8 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         long start = System.nanoTime();
 
         for (int chromosomeIdx = 0; chromosomeIdx < ind.size(); chromosomeIdx++) {
-            String chromosomeVariableName = dataContainer.getVariableName(chromosomeIdx);
             ProgramChromosome chromosome = ind.getChromosome(chromosomeIdx);
-
-            error += evaluatePairings(chromosomeVariableName, chromosome);
+            error += evaluatePairings(chromosome);
         }
 
         // mean log error - but not negative; the DeltaGPFitnessEvaluator
@@ -67,11 +65,11 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         return error;
     }
 
-    private double evaluatePairings(String chromosomeVariableName, ProgramChromosome chromosome) {
+    private double evaluatePairings(ProgramChromosome chromosome) {
         double chromosomeError = 0.0f;
 
         for (Pair<String> pairing : pairs) {
-            double pairingError = evaluateWithAndWithoutDependencies(chromosome, pairing);
+            double pairingError = evaluatePairing(chromosome, pairing);
 
             if (pairingError > chromosomeError) {
                 chromosomeError = pairingError;
@@ -81,26 +79,25 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         return chromosomeError;
     }
 
-    private double evaluateWithAndWithoutDependencies(ProgramChromosome chromosome, Pair<String> pairing) {
-        TreeNodeFactory withDependencies = new TreeNodeFactory(variablesValues, pairing);
-        TreeNodeFactory withoutDependencies = new TreeNodeFactory(variablesValues);
-
-        double pairingErrorWithDeps = evaluatePairing(withDependencies.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
-        double pairingErrorWithoutDeps = evaluatePairing(withoutDependencies.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
-
-        return pairingErrorWithDeps > pairingErrorWithoutDeps ? pairingErrorWithDeps : pairingErrorWithoutDeps;
+    private double evaluatePairing(ProgramChromosome chromosome, Pair<String> pairing) {
+        // we need to assume variables are dependent - if all are independent there are no relations in data!
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues, pairing);
+        return computeErrorForVariables(treeNodeFactory.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
     }
 
-    private double evaluatePairing(TreeNode f, String x, String y) {
+    private double computeErrorForVariables(TreeNode f, String x, String y) {
         Function dfdx = f.differentiate(x);
         Function dfdy = f.differentiate(y);
 
         double pairingError = 0.0f;
 
         variablesValues.clear();
+
+        int validDataRows = 0;
         for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)
                     && numericalDifferentiationCalculator.hasDifferential(y, dataRow)) {
+
                 populateVariableValues(dataRow, variablesValues);
 
                 double dfdx_val = dfdx.evaluate();
@@ -113,17 +110,21 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
                     // if any of denominators is 0 - discard data sample
                     if (isNotValidDataSample(dfdx_val, dfdy_val, deltaY)) {
                         logInvalidDataSample(x, y, dataRow, dfdx_val, deltaY);
-                        pairingError += 2.0f;
-                        continue;
+                    } else {
+                        double result = (deltaX / deltaY) - (dfdy_val / dfdx_val);
+                        pairingError += Math.log(1 + Math.abs(result));
+                        validDataRows++;
                     }
-
-                    double result = (deltaX / deltaY) - (dfdy_val / dfdx_val);
-                    pairingError += Math.log(1 + Math.abs(result));
                 } catch (ArithmeticException ex) {
                     LOGGER.error("Problems with computing result from: " + dfdx + " | " + dfdy, ex);
                 }
             }
         }
+
+        if (validDataRows == 0) {
+            pairingError = Double.MAX_VALUE;
+        }
+
         return pairingError;
     }
 
