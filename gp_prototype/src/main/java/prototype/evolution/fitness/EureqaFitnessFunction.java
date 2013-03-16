@@ -8,7 +8,6 @@ import prototype.data.DataContainer;
 import prototype.data.Pair;
 import prototype.data.PairGenerator;
 import prototype.data.VariablesValues;
-import prototype.differentiation.numeric.BackwardNumericalDifferentiationCalculator;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.differentiation.symbolic.*;
 import prototype.differentiation.symbolic.functions.PreviousValueVariable;
@@ -27,17 +26,17 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
 
     private static final Logger LOGGER = Logger.getLogger(EureqaFitnessFunction.class);
 
-    private TreeNodeToFunctionTranslator treeNodeToFunctionTranslator = new TreeNodeToFunctionTranslator();
-    private List<Pair<String>> pairs;
-    private List<String> variables;
+    private static final TreeNodeToFunctionTranslator treeNodeToFunctionTranslator = new TreeNodeToFunctionTranslator();
+    private final List<Pair<String>> pairs;
+    private final List<String> variables;
     private final DataContainer dataContainer;
-    private NumericalDifferentiationCalculator numericalDifferentiationCalculator;
+    private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
 
-    public EureqaFitnessFunction(DataContainer dataContainer) {
+    public EureqaFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
+        this.pairs = new PairGenerator<String>().generatePairs(Arrays.asList(dataContainer.getVariableNames()));
+        this.numericalDifferentiationCalculator = numericalDifferentiationCalculator;
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
-        this.pairs = new PairGenerator<String>().generatePairs(variables);
-        this.numericalDifferentiationCalculator = new BackwardNumericalDifferentiationCalculator(dataContainer);
     }
 
     @Override
@@ -84,6 +83,7 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         String x = pairing.getOne();
         String y = pairing.getTwo();
 
+        // TODO: tutaj trzeba policzyć oba przypadki: czy są zależne czy niezależne
         TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues, pairing);
         TreeNode f = treeNodeFactory.createTreeNode(chromosome);
 

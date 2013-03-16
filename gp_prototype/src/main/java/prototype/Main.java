@@ -2,15 +2,15 @@ package prototype;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.jgap.InvalidConfigurationException;
-import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
+import prototype.differentiation.numeric.CentralNumericalDifferentiationCalculator;
+import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.evolution.GPConfigurationBuilder;
-import prototype.evolution.engine.GenotypeEvolutionEngineBuilder;
+import prototype.evolution.engine.EvolutionEngineBuilder;
 import prototype.evolution.fitness.EureqaFitnessFunction;
-import prototype.evolution.fitness.parsimony.EuclidParsimonyPressure;
 import prototype.evolution.genotype.GenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
 
@@ -25,7 +25,6 @@ import java.util.Arrays;
 public class Main {
 
     private static final int ITERATIONS = 500;
-    private static final int GENERATIONS_PER_ITERATION = 1;
 
     public static void main(String[] args) throws InvalidConfigurationException, IOException {
         DOMConfigurator.configure("log4j.xml");
@@ -37,21 +36,31 @@ public class Main {
             iterations = ITERATIONS;
         }
 
+        // data
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
 
-        GPFitnessFunction fitnessFunction =
-                new EuclidParsimonyPressure(
-                        new EureqaFitnessFunction(dataContainer));
+        // fitness function
+        NumericalDifferentiationCalculator numericalDifferentiationCalculator = new CentralNumericalDifferentiationCalculator(dataContainer);
+        EureqaFitnessFunction fitnessFunction = new EureqaFitnessFunction(dataContainer, numericalDifferentiationCalculator);
+        //NormalizedEuclidParsimonyPressure parsimonyPressure = new NormalizedEuclidParsimonyPressure(fitnessFunction);
 
-        SingleChromosomeBuildingStrategy buildingStrategy =
-                new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
-
+        // configuration
         GPConfiguration configuration = GPConfigurationBuilder
                 .builder(fitnessFunction)
                 .buildConfiguration();
 
+        // genotype
+        SingleChromosomeBuildingStrategy buildingStrategy =
+                new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
+
         GPGenotype genotype = GenotypeBuilder.builder(buildingStrategy, configuration).build();
-        GenotypeEvolutionEngineBuilder.builder().setMaxIterations(iterations).build().genotypeEvolve(genotype);
+
+        // evolution
+        EvolutionEngineBuilder.builder()
+                //.setEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
+                .withMaxIterations(iterations)
+                .build()
+                .genotypeEvolve(genotype);
     }
 
 }
