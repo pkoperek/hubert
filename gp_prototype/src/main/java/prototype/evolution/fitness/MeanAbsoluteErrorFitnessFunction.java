@@ -16,6 +16,6 @@ public class MeanAbsoluteErrorFitnessFunction extends AbsoluteErrorFitnessFuncti
     @Override
     protected double evaluate(IGPProgram a_subject) {
         double error = super.evaluate(a_subject);
-        return error / getDataContainer().rowsCount();
+        return error / getDataContainer().getRowsCount();
     }
 }

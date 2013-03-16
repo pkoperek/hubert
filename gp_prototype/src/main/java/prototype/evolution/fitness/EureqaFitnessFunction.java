@@ -26,13 +26,13 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
     private List<Pair<String>> pairs;
     private List<String> variables;
     private final DataContainer dataContainer;
-    private DifferencesProvider differencesProvider;
+    private NumericalDifferentiationCalculator numericalDifferentiationCalculator;
 
     public EureqaFitnessFunction(DataContainer dataContainer) {
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
         this.pairs = new PairGenerator<String>().generatePairs(variables);
-        this.differencesProvider = new DifferencesProvider(dataContainer);
+        this.numericalDifferentiationCalculator = new NumericalDifferentiationCalculator(dataContainer);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
 
         // mean log error - but not negative; the DeltaGPFitnessEvaluator
         // treats smaller values as better
-        error /= dataContainer.rowsCount();
+        error /= dataContainer.getRowsCount();
 
         long stop = System.nanoTime();
         LOGGER.debug("Fitness Function Time: " + (stop - start) + " ns Error: " + error);
@@ -76,56 +76,59 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
 
     private double evaluatePairing(ProgramChromosome chromosome, Pair<String> pairing) {
         VariablesValues variablesValues = new VariablesValues();
-        String firstVariableName = pairing.getOne();
-        String secondVariableName = pairing.getTwo();
+        String x = pairing.getOne();
+        String y = pairing.getTwo();
 
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues);
-        TreeNode chromosomeAsTree = treeNodeFactory.createTreeNode(chromosome);
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues, pairing);
+        TreeNode f = treeNodeFactory.createTreeNode(chromosome);
 
-        Function firstDifferentiated = chromosomeAsTree.differentiate(firstVariableName);
-        Function secondDifferentiated = chromosomeAsTree.differentiate(secondVariableName);
+        Function dfdx = f.differentiate(x);
+        Function dfdy = f.differentiate(y);
 
         double pairingError = 0.0f;
-        for (int dataRow = 1; dataRow < dataContainer.rowsCount(); dataRow++) {
-            populateVariableValues(dataRow, variablesValues);
+        for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
+            if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)
+                    && numericalDifferentiationCalculator.hasDifferential(y, dataRow)) {
+                populateVariableValues(dataRow, variablesValues);
 
-            double firstDifferentiatedValue = firstDifferentiated.evaluate();
-            double secondDifferentiatedValue = secondDifferentiated.evaluate();
+                double dfdx_val = dfdx.evaluate();
+                double dfdy_val = dfdy.evaluate();
 
-            double firstDifference = differencesProvider.getDifference(firstVariableName, dataRow).doubleValue();
-            double secondDifference = differencesProvider.getDifference(secondVariableName, dataRow).doubleValue();
+                double deltaX = numericalDifferentiationCalculator.getDifferential(x, dataRow).doubleValue();
+                double deltaY = numericalDifferentiationCalculator.getDifferential(y, dataRow).doubleValue();
 
-            try {
-                // if any of denominators is 0 - discard data sample
-                if (secondDifference == 0.0 || firstDifferentiatedValue == 0.0) {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Discarding data sample: " +
-                                secondVariableName + " " +
-                                dataRow + " " +
-                                firstDifferentiated + " " +
-                                secondDifference + " " +
-                                firstDifferentiatedValue);
+                try {
+                    // if any of denominators is 0 - discard data sample
+                    if (deltaY == 0.0 || dfdx_val == 0.0) {
+                        if (LOGGER.isDebugEnabled()) {
+                            LOGGER.debug("Discarding data sample: " +
+                                    y + " " +
+                                    dataRow + " " +
+                                    dfdx + " " +
+                                    deltaY + " " +
+                                    dfdx_val);
+                        }
+                        pairingError += 2.0f;
+                        continue;
                     }
-                    pairingError += 1.0f;
-                    continue;
-                }
 
-                if (Double.isNaN(firstDifferentiatedValue) || Double.isInfinite(firstDifferentiatedValue) ||
-                        Double.isNaN(secondDifferentiatedValue) || Double.isInfinite(secondDifferentiatedValue)) {
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Discarding data sample: " +
-                                dataRow + " " +
-                                firstDifferentiatedValue + " " +
-                                secondDifferentiatedValue);
+                    if (Double.isNaN(dfdx_val) || Double.isInfinite(dfdx_val) ||
+                            Double.isNaN(dfdy_val) || Double.isInfinite(dfdy_val)) {
+                        if (LOGGER.isDebugEnabled()) {
+                            LOGGER.debug("Discarding data sample: " +
+                                    dataRow + " " +
+                                    dfdx_val + " " +
+                                    dfdy_val);
+                        }
+                        pairingError += 2.0f;
+                        continue;
                     }
-                    pairingError += 1.0f;
-                    continue;
-                }
 
-                double result = (firstDifference / secondDifference) - (secondDifferentiatedValue / firstDifferentiatedValue);
-                pairingError += Math.log(1 + Math.abs(result));
-            } catch (ArithmeticException ex) {
-                LOGGER.error("Problems with computing result from: " + firstDifferentiated + " | " + secondDifferentiated, ex);
+                    double result = (deltaX / deltaY) - (dfdy_val / dfdx_val);
+                    pairingError += Math.log(1 + Math.abs(result));
+                } catch (ArithmeticException ex) {
+                    LOGGER.error("Problems with computing result from: " + dfdx + " | " + dfdy, ex);
+                }
             }
         }
         return pairingError;
