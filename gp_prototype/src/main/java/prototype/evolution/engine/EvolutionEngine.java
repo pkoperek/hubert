@@ -8,52 +8,69 @@ import org.jgap.gp.impl.GPPopulation;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
-public class GenotypeEvolutionEngine {
+public class EvolutionEngine {
 
     public static final int DEFAULT_GENERATIONS_PER_ITERATION = 1;
     public static final double DEFAULT_TARGET_ERROR = 0.0000001f;
     public static final int DEFAULT_MAX_ITERATIONS = 10000;
 
-    private static Logger logger = Logger.getLogger(GenotypeEvolutionEngine.class);
+    private static Logger logger = Logger.getLogger(EvolutionEngine.class);
 
-    private int iterations;
-    private int generationsPerIteration;
-    private double targetError;
-    private IterationBeginHandler iterationBeginHandler;
+    private final int iterations;
+    private final int generationsPerIteration;
+    private final double targetError;
+    private final List<EvolutionEngineEventHandler> eventHandlers;
 
-    GenotypeEvolutionEngine(int iterations, int generationsPerIteration, double targetError) {
+    EvolutionEngine(int iterations, int generationsPerIteration, double targetError, List<EvolutionEngineEventHandler> eventHandlers) {
         this.iterations = iterations;
         this.generationsPerIteration = generationsPerIteration;
         this.targetError = targetError;
-    }
-
-    void setIterationBeginHandler(IterationBeginHandler iterationBeginHandler) {
-        this.iterationBeginHandler = iterationBeginHandler;
+        this.eventHandlers = eventHandlers;
     }
 
     public void genotypeEvolve(GPGenotype genotype) {
         logger.info("Starting computations");
         for (int i = 0; i < iterations; i++) {
-            if (iterationBeginHandler != null) {
-                iterationBeginHandler.notifyIterationBegin(i, genotype);
-            }
+            notifyBeforeEvolution(genotype);
 
             logger.info("Iteration: " + i + " - evolving...");
             genotype.evolve(generationsPerIteration);
 
             IGPProgram fittestProgram = genotype.getFittestProgram();
 
+            notifyAfterEvolution(genotype);
+
             reportPopulation(genotype.getGPPopulation(), i);
             reportFittestProgram(fittestProgram);
 
             if (fittestProgram.getFitnessValue() < targetError) {
                 logger.info("Found a good solution!");
+                notifyFinishedEvolution(genotype);
                 break;
             }
         }
 
         genotype.outputSolution(genotype.getAllTimeBest());
+    }
+
+    private void notifyFinishedEvolution(GPGenotype genotype) {
+        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.FINISHED_EVOLUTION, genotype));
+    }
+
+    private void notifyAfterEvolution(GPGenotype genotype) {
+        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.AFTER_EVOLUTION, genotype));
+    }
+
+    private void notifyBeforeEvolution(GPGenotype genotype) {
+        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.BEFORE_EVOLUTION, genotype));
+    }
+
+    private void notifyEvolutionEngineEventHandlers(EvolutionEngineEvent event) {
+        for (EvolutionEngineEventHandler handler : eventHandlers) {
+            handler.handleEvolutionEngineEvent(event);
+        }
     }
 
     private void reportPopulation(GPPopulation gpPopulation, int i) {
@@ -78,7 +95,6 @@ public class GenotypeEvolutionEngine {
                     }
                 }
             }
-
         }
     }
 
