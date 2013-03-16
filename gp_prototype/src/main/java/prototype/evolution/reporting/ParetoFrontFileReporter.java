@@ -16,7 +16,11 @@ public class ParetoFrontFileReporter extends FilePopulationReporter {
     private double[] fitnesses = new double[128]; // 128 - max size of single solution
 
     public ParetoFrontFileReporter() {
-        super("pareto");
+        this(1);
+    }
+
+    public ParetoFrontFileReporter(final int modulo) {
+        super("pareto", modulo);
     }
 
     protected void writePopulationData(GPPopulation gpPopulation, BufferedWriter writer) throws IOException {
@@ -36,7 +40,7 @@ public class ParetoFrontFileReporter extends FilePopulationReporter {
     private void generateParetoFront(GPPopulation gpPopulation) {
         for (IGPProgram program : gpPopulation.getGPPrograms()) {
             double fitness = program.getFitnessValue();
-            int size = program.size();
+            int size = program.getChromosome(0).size();
 
             if (fitnesses[size] > fitness) {
                 fitnesses[size] = fitness;

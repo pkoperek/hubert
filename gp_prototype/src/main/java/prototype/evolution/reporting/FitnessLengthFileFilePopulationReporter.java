@@ -9,7 +9,7 @@ import java.io.IOException;
 public class FitnessLengthFileFilePopulationReporter extends FilePopulationReporter {
 
     public FitnessLengthFileFilePopulationReporter() {
-        super("fl");
+        super("fl", 1);
     }
 
     protected void writePopulationData(GPPopulation gpPopulation, BufferedWriter writer) throws IOException {

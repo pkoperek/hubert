@@ -20,8 +20,10 @@ public abstract class FilePopulationReporter implements EvolutionEngineEventHand
     private static Logger logger = Logger.getLogger(FilePopulationReporter.class);
     private int iteration = 0;
     private final String filenameFormat;
+    private final int modulo;
 
-    protected FilePopulationReporter(String filenameFormatPrefix) {
+    protected FilePopulationReporter(String filenameFormatPrefix, int modulo) {
+        this.modulo = modulo;
         this.filenameFormat = filenameFormatPrefix + "_%05d.csv";
     }
 
@@ -49,8 +51,10 @@ public abstract class FilePopulationReporter implements EvolutionEngineEventHand
 
     @Override
     public void handleEvolutionEngineEvent(EvolutionEngineEvent event) {
-        if (logger.isTraceEnabled() && EvolutionEngineEventType.AFTER_EVOLUTION.equals(event.getType())) {
-            reportPopulation(event.getGenotype());
+        if (EvolutionEngineEventType.AFTER_EVOLUTION.equals(event.getType())) {
+            if (iteration % modulo == 0) {
+                reportPopulation(event.getGenotype());
+            }
             iteration++;
         }
     }

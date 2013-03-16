@@ -59,7 +59,7 @@ public class Main {
         // evolution
         EvolutionEngineBuilder.builder()
                 //.setEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
-                .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter())
+                .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(10))
                 .withMaxIterations(iterations)
                 .build()
                 .genotypeEvolve(genotype);
