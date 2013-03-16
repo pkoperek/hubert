@@ -28,11 +28,11 @@ public class DataContainer {
         return numbers.get(row);
     }
 
-    public int rowsCount() {
+    public int getRowsCount() {
         return rowsCount;
     }
 
-    public int variablesCount() {
+    public int getVariablesCount() {
         return variableNames.length;
     }
 

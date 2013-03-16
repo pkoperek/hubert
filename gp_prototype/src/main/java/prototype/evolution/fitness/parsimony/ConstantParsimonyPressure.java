@@ -19,6 +19,7 @@ public class ConstantParsimonyPressure extends ParsimonyPressureFitnessFunction 
 
     @Override
     protected double evaluate(IGPProgram a_subject) {
-        return getDelegateFitnessFunction().getFitnessValue(a_subject) - a_subject.getChromosome(0).size() * constantParsimonyPressure;
+        // + - because we minimize this function :)
+        return getDelegateFitnessFunction().getFitnessValue(a_subject) + a_subject.getChromosome(0).size() * constantParsimonyPressure;
     }
 }
