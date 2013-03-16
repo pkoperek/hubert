@@ -46,6 +46,7 @@ public class FilePopulationReporter implements EvolutionEngineEventHandler {
     public void handleEvolutionEngineEvent(EvolutionEngineEvent event) {
         if (logger.isTraceEnabled() && EvolutionEngineEventType.AFTER_EVOLUTION.equals(event.getType())) {
             reportPopulation(event.getGenotype());
+            iteration++;
         }
     }
 

@@ -9,7 +9,7 @@ import org.jgap.gp.GPFitnessFunction;
  */
 public abstract class ParsimonyPressureFitnessFunction extends GPFitnessFunction {
 
-    private GPFitnessFunction delegateFitnessFunction;
+    private final GPFitnessFunction delegateFitnessFunction;
 
     public ParsimonyPressureFitnessFunction(GPFitnessFunction delegateFitnessFunction) {
         this.delegateFitnessFunction = delegateFitnessFunction;
