@@ -30,7 +30,7 @@ public class ParetoFrontFileReporter extends FilePopulationReporter {
 
         for (int i = 0; i < fitnesses.length; i++) {
             if (fitnesses[i] != Double.MAX_VALUE) {
-                writer.append(i + "," + fitnesses[i]);
+                writer.append(fitnesses[i] + "," + i);
                 writer.newLine();
             }
         }
@@ -44,6 +44,16 @@ public class ParetoFrontFileReporter extends FilePopulationReporter {
 
             if (fitnesses[size] > fitness) {
                 fitnesses[size] = fitness;
+            }
+        }
+
+        for (int i = 0; i < fitnesses.length; i++) {
+            if (fitnesses[i] != Double.MAX_VALUE) {
+                for (int j = i + 1; j < fitnesses.length; j++) {
+                    if (fitnesses[j] != Double.MAX_VALUE && fitnesses[j] > fitnesses[i]) {
+                        fitnesses[j] = Double.MAX_VALUE;
+                    }
+                }
             }
         }
     }
