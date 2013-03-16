@@ -9,7 +9,10 @@ import prototype.data.Pair;
 import prototype.data.PairGenerator;
 import prototype.data.VariablesValues;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
-import prototype.differentiation.symbolic.*;
+import prototype.differentiation.symbolic.Function;
+import prototype.differentiation.symbolic.FunctionType;
+import prototype.differentiation.symbolic.TreeNode;
+import prototype.differentiation.symbolic.TreeNodeFactory;
 import prototype.differentiation.symbolic.functions.PreviousValueVariable;
 import prototype.differentiation.symbolic.tree.SimpleTreeNode;
 import prototype.differentiation.symbolic.tree.VariableTreeNode;
@@ -26,11 +29,11 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
 
     private static final Logger LOGGER = Logger.getLogger(EureqaFitnessFunction.class);
 
-    private static final TreeNodeToFunctionTranslator treeNodeToFunctionTranslator = new TreeNodeToFunctionTranslator();
     private final List<Pair<String>> pairs;
     private final List<String> variables;
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
+    private VariablesValues variablesValues = new VariablesValues();
 
     public EureqaFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.pairs = new PairGenerator<String>().generatePairs(Arrays.asList(dataContainer.getVariableNames()));
@@ -68,7 +71,7 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         double chromosomeError = 0.0f;
 
         for (Pair<String> pairing : pairs) {
-            double pairingError = evaluatePairing(chromosome, pairing);
+            double pairingError = evaluateWithAndWithoutDependencies(chromosome, pairing);
 
             if (pairingError > chromosomeError) {
                 chromosomeError = pairingError;
@@ -78,19 +81,23 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         return chromosomeError;
     }
 
-    private double evaluatePairing(ProgramChromosome chromosome, Pair<String> pairing) {
-        VariablesValues variablesValues = new VariablesValues();
-        String x = pairing.getOne();
-        String y = pairing.getTwo();
+    private double evaluateWithAndWithoutDependencies(ProgramChromosome chromosome, Pair<String> pairing) {
+        TreeNodeFactory withDependencies = new TreeNodeFactory(variablesValues, pairing);
+        TreeNodeFactory withoutDependencies = new TreeNodeFactory(variablesValues);
 
-        // TODO: tutaj trzeba policzyć oba przypadki: czy są zależne czy niezależne
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues, pairing);
-        TreeNode f = treeNodeFactory.createTreeNode(chromosome);
+        double pairingErrorWithDeps = evaluatePairing(withDependencies.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
+        double pairingErrorWithoutDeps = evaluatePairing(withoutDependencies.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
 
+        return pairingErrorWithDeps > pairingErrorWithoutDeps ? pairingErrorWithDeps : pairingErrorWithoutDeps;
+    }
+
+    private double evaluatePairing(TreeNode f, String x, String y) {
         Function dfdx = f.differentiate(x);
         Function dfdy = f.differentiate(y);
 
         double pairingError = 0.0f;
+
+        variablesValues.clear();
         for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)
                     && numericalDifferentiationCalculator.hasDifferential(y, dataRow)) {
@@ -104,27 +111,8 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
 
                 try {
                     // if any of denominators is 0 - discard data sample
-                    if (deltaY == 0.0 || dfdx_val == 0.0) {
-                        if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Discarding data sample: " +
-                                    y + " " +
-                                    dataRow + " " +
-                                    dfdx + " " +
-                                    deltaY + " " +
-                                    dfdx_val);
-                        }
-                        pairingError += 2.0f;
-                        continue;
-                    }
-
-                    if (Double.isNaN(dfdx_val) || Double.isInfinite(dfdx_val) ||
-                            Double.isNaN(dfdy_val) || Double.isInfinite(dfdy_val)) {
-                        if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Discarding data sample: " +
-                                    dataRow + " " +
-                                    dfdx_val + " " +
-                                    dfdy_val);
-                        }
+                    if (isNotValidDataSample(dfdx_val, dfdy_val, deltaY)) {
+                        logInvalidDataSample(x, y, dataRow, dfdx_val, deltaY);
                         pairingError += 2.0f;
                         continue;
                     }
@@ -137,6 +125,26 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
             }
         }
         return pairingError;
+    }
+
+    private void logInvalidDataSample(String x, String y, int dataRow, double dfdx_val, double deltaY) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Discarding data sample: " +
+                    " x:" + x +
+                    " y: " + y +
+                    " data row: " + dataRow +
+                    " deltaY: " + deltaY +
+                    " dfdx: " + dfdx_val +
+                    " dfdy: " + dfdx_val);
+        }
+    }
+
+    private boolean isNotValidDataSample(double dfdx_val, double dfdy_val, double deltaY) {
+        return deltaY == 0.0 || dfdx_val == 0.0 || isNotValidNumber(dfdx_val) || isNotValidNumber(dfdy_val);
+    }
+
+    private boolean isNotValidNumber(double dfdx_val) {
+        return Double.isNaN(dfdx_val) || Double.isInfinite(dfdx_val);
     }
 
     private TreeNode reverseEquation(TreeNode chromosomeAsTree, String firstVariableName, String interdependentVariableName, VariablesValues variablesValues) {
