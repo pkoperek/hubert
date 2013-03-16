@@ -25,7 +25,7 @@ public class EvolutionEngineBuilder {
         return new EvolutionEngineBuilder();
     }
 
-    public EvolutionEngineBuilder setEvolutionEngineEventHandlers(EvolutionEngineEventHandler evolutionEngineEventHandler) {
+    public EvolutionEngineBuilder addEvolutionEngineEventHandlers(EvolutionEngineEventHandler evolutionEngineEventHandler) {
         this.evolutionEngineEventHandlers.add(evolutionEngineEventHandler);
         return this;
     }

@@ -13,6 +13,7 @@ import prototype.evolution.engine.EvolutionEngineBuilder;
 import prototype.evolution.fitness.EureqaFitnessFunction;
 import prototype.evolution.genotype.GenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
+import prototype.evolution.reporting.ParetoFrontFileReporter;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -58,6 +59,7 @@ public class Main {
         // evolution
         EvolutionEngineBuilder.builder()
                 //.setEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
+                .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter())
                 .withMaxIterations(iterations)
                 .build()
                 .genotypeEvolve(genotype);
