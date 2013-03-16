@@ -47,7 +47,7 @@ public class AbsoluteErrorFitnessFunction extends GPFitnessFunction {
         TreeNode chromosomeAsTree = new TreeNodeFactory(variablesValues).createTreeNode(chromosome);
         Function chromosomeAsFunction = new TreeNodeToFunctionTranslator().translate(chromosomeAsTree);
 
-        for (int i = 1; i < dataContainer.rowsCount(); i++) {
+        for (int i = 0; i < dataContainer.getRowsCount(); i++) {
             populateVariableValues(i, variablesValues);
 
             double chromosomeValueAtPointI = chromosomeAsFunction.evaluate();
