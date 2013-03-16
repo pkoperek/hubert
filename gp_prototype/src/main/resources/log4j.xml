@@ -7,7 +7,7 @@
         </layout>
     </appender>
 
-    <!--<logger name="prototype.differentiation.strategies.elementary.LnDifferentiationStrategy">-->
+    <!--<logger name="prototype.symdifferentiationion.strategies.elementary.LnDifferentiationStrategy">-->
     <!--<level value="info"/>-->
     <!--</logger>-->
 

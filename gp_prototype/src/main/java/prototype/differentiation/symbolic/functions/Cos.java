@@ -1,0 +1,30 @@
+package prototype.differentiation.symbolic.functions;
+
+import prototype.differentiation.symbolic.Function;
+
+/**
+ * User: koperek
+ * Date: 23.02.13
+ * Time: 23:11
+ */
+public class Cos extends SingleOperandFunction {
+
+    public Cos(Function operand) {
+        super(operand);
+    }
+
+    @Override
+    public double evaluate() {
+        return Math.cos(getOperand().evaluate());
+    }
+
+    @Override
+    public Function clone() {
+        return new Cos(getOperand().clone());
+    }
+
+    @Override
+    public String toString() {
+        return "Cos( " + getOperand() + " )";
+    }
+}

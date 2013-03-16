@@ -4,11 +4,16 @@ import org.apache.log4j.Logger;
 import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
-import prototype.data.*;
-import prototype.differentiation.*;
-import prototype.differentiation.functions.PreviousValueVariable;
-import prototype.differentiation.tree.SimpleTreeNode;
-import prototype.differentiation.tree.VariableTreeNode;
+import prototype.data.DataContainer;
+import prototype.data.Pair;
+import prototype.data.PairGenerator;
+import prototype.data.VariablesValues;
+import prototype.differentiation.numeric.BackwardNumericalDifferentiationCalculator;
+import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
+import prototype.differentiation.symbolic.*;
+import prototype.differentiation.symbolic.functions.PreviousValueVariable;
+import prototype.differentiation.symbolic.tree.SimpleTreeNode;
+import prototype.differentiation.symbolic.tree.VariableTreeNode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +37,7 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
         this.pairs = new PairGenerator<String>().generatePairs(variables);
-        this.numericalDifferentiationCalculator = new NumericalDifferentiationCalculator(dataContainer);
+        this.numericalDifferentiationCalculator = new BackwardNumericalDifferentiationCalculator(dataContainer);
     }
 
     @Override

@@ -5,11 +5,11 @@ import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
 import prototype.data.DataContainer;
 import prototype.data.VariablesValues;
-import prototype.differentiation.Function;
-import prototype.differentiation.TreeNode;
-import prototype.differentiation.TreeNodeFactory;
-import prototype.differentiation.TreeNodeToFunctionTranslator;
-import prototype.differentiation.functions.PreviousValueVariable;
+import prototype.differentiation.symbolic.Function;
+import prototype.differentiation.symbolic.TreeNode;
+import prototype.differentiation.symbolic.TreeNodeFactory;
+import prototype.differentiation.symbolic.TreeNodeToFunctionTranslator;
+import prototype.differentiation.symbolic.functions.PreviousValueVariable;
 
 import java.util.Arrays;
 import java.util.List;

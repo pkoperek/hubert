@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class DataContainer {
 
-    private Map<String, VariablesSeries> data = new HashMap<String, VariablesSeries>();
+    private Map<String, VariableSeries> data = new HashMap<String, VariableSeries>();
     private int rowsCount = 0;
     private String[] variableNames;
 
@@ -19,12 +19,12 @@ public class DataContainer {
         this.variableNames = variableNames;
 
         for (String variableName : variableNames) {
-            data.put(variableName, new VariablesSeries(variableName));
+            data.put(variableName, new VariableSeries(variableName));
         }
     }
 
     public Number getValue(String variable, int row) {
-        VariablesSeries numbers = data.get(variable);
+        VariableSeries numbers = data.get(variable);
         return numbers.get(row);
     }
 
@@ -41,7 +41,7 @@ public class DataContainer {
             throw new IllegalArgumentException("Variable: " + variable + " not supported!");
         }
 
-        VariablesSeries values = data.get(variable);
+        VariableSeries values = data.get(variable);
         values.add(value);
 
         if (values.getDataRowsCount() > rowsCount) {
