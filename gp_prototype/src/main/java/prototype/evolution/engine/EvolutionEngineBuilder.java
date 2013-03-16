@@ -1,5 +1,9 @@
 package prototype.evolution.engine;
 
+import prototype.evolution.reporting.AllTimeBestIndividualReporter;
+import prototype.evolution.reporting.FilePopulationReporter;
+import prototype.evolution.reporting.FittestIndividualReporter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +47,17 @@ public class EvolutionEngineBuilder {
     }
 
     public EvolutionEngine build() {
+        fillDefaultReporters();
+
         EvolutionEngine evolutionEngine = new EvolutionEngine(
                 maxIterations, generationsPerIteration, targetError, evolutionEngineEventHandlers);
         return evolutionEngine;
+    }
+
+    private void fillDefaultReporters() {
+        evolutionEngineEventHandlers.add(new AllTimeBestIndividualReporter());
+        evolutionEngineEventHandlers.add(new FittestIndividualReporter());
+        evolutionEngineEventHandlers.add(new FilePopulationReporter());
     }
 
 }
