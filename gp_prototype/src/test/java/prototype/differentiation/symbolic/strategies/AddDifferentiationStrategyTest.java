@@ -10,6 +10,7 @@ import prototype.differentiation.symbolic.functions.Constant;
 import prototype.differentiation.symbolic.tree.ConstantTreeNode;
 import prototype.differentiation.symbolic.tree.SimpleTreeNode;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static prototype.differentiation.symbolic.TestTools.aVariableTreeNode;
 
 /**

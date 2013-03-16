@@ -2,6 +2,10 @@ package prototype.differentiation.symbolic.strategies.elementary;
 
 import org.junit.Before;
 import org.junit.Test;
+import prototype.differentiation.symbolic.AbstractDifferentiationStrategyTest;
+import prototype.differentiation.symbolic.Function;
+import prototype.differentiation.symbolic.FunctionType;
+import prototype.differentiation.symbolic.TreeNode;
 import prototype.differentiation.symbolic.functions.*;
 import prototype.differentiation.symbolic.tree.SimpleTreeNode;
 
