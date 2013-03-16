@@ -15,6 +15,10 @@ import java.util.Arrays;
 public class ParetoFrontFileReporter extends FilePopulationReporter {
     private double[] fitnesses = new double[128]; // 128 - max size of single solution
 
+    public ParetoFrontFileReporter() {
+        super("pareto");
+    }
+
     protected void writePopulationData(GPPopulation gpPopulation, BufferedWriter writer) throws IOException {
         Arrays.fill(fitnesses, Double.MAX_VALUE);
 

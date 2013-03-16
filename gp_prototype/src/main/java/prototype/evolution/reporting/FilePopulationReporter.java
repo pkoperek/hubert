@@ -19,12 +19,17 @@ import java.io.IOException;
 public abstract class FilePopulationReporter implements EvolutionEngineEventHandler {
     private static Logger logger = Logger.getLogger(FilePopulationReporter.class);
     private int iteration = 0;
+    private final String filenameFormat;
+
+    protected FilePopulationReporter(String filenameFormatPrefix) {
+        this.filenameFormat = filenameFormatPrefix + "_%05d.csv";
+    }
 
     private void reportPopulation(GPPopulation gpPopulation) {
 
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(String.format("population%05d.csv", iteration)));
+            writer = new BufferedWriter(new FileWriter(String.format(filenameFormat, iteration)));
             writePopulationData(gpPopulation, writer);
         } catch (IOException e) {
             logger.error("IO error writing population data", e);
