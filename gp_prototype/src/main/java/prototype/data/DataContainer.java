@@ -23,7 +23,7 @@ public class DataContainer {
         }
     }
 
-    public Number getValue(String variable, int row) {
+    public double getValue(String variable, int row) {
         VariableSeries numbers = data.get(variable);
         return numbers.get(row);
     }
@@ -36,7 +36,7 @@ public class DataContainer {
         return variableNames.length;
     }
 
-    public void addValue(String variable, Number value) {
+    public void addValue(String variable, double value) {
         if (!data.containsKey(variable)) {
             throw new IllegalArgumentException("Variable: " + variable + " not supported!");
         }

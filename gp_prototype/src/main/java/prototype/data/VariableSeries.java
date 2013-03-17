@@ -11,13 +11,13 @@ import java.util.List;
 public class VariableSeries {
     private String name;
 
-    private List<Number> values = new ArrayList<Number>();
+    private List<Double> values = new ArrayList<Double>();
 
     public VariableSeries(String name) {
         this.name = name;
     }
 
-    public void add(Number value) {
+    public void add(double value) {
         values.add(value);
     }
 
@@ -25,7 +25,11 @@ public class VariableSeries {
         return values.size();
     }
 
-    public Number get(int row) {
+    public double get(int row) {
         return values.get(row);
+    }
+
+    public String getName() {
+        return name;
     }
 }
