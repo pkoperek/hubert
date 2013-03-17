@@ -23,11 +23,11 @@ public class CentralNumericalDifferentiationCalculator extends NumericalDifferen
     }
 
     @Override
-    public Number getDifferential(String variable, int secondRow) {
+    public double getDifferential(String variable, int secondRow) {
         if (secondRow == 0) {
             throw new IllegalArgumentException("Can't compute difference of " + secondRow + " and " + (secondRow - 1));
         }
 
-        return getDifference(variable, secondRow - 1, secondRow).doubleValue() / 2.0;
+        return getDifference(variable, secondRow - 1, secondRow) / 2.0;
     }
 }

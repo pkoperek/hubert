@@ -17,16 +17,20 @@ public abstract class NumericalDifferentiationCalculator {
 
     public abstract boolean hasDifferential(String variable, int row);
 
-    public abstract Number getDifferential(String variable, int secondRow);
+    public abstract double getDifferential(String variable, int secondRow);
 
     protected DataContainer getDataContainer() {
         return dataContainer;
     }
 
-    protected Number getDifference(String variable, int firstRow, int secondRow) {
-        Number first = dataContainer.getValue(variable, firstRow);
-        Number second = dataContainer.getValue(variable, secondRow);
+    protected double getDifference(String variable, int firstRow, int secondRow) {
+        double first = dataContainer.getValue(variable, firstRow);
+        double second = dataContainer.getValue(variable, secondRow);
 
-        return first.doubleValue() - second.doubleValue();
+        return first - second;
+    }
+
+    public double getDifferentialQuotient(String x, String y, int dataRow) {
+        return getDifferential(x, dataRow) / getDifferential(y, dataRow);
     }
 }

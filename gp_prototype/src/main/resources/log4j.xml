@@ -15,7 +15,7 @@
     <!--<level value="debug"/>-->
     <!--</logger>-->
 
-    <logger name="prototype.evolution.fitness.EureqaFitnessFunction">
+    <logger name="prototype.evolution.fitness.DifferentialQuotientFitnessFunction">
         <level value="info"/>
     </logger>
 

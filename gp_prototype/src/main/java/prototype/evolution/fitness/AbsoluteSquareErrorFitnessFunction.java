@@ -51,7 +51,7 @@ public class AbsoluteSquareErrorFitnessFunction extends GPFitnessFunction {
             populateVariableValues(i, variablesValues);
 
             double chromosomeValueAtPointI = chromosomeAsFunction.evaluate();
-            double dataPoint = dataContainer.getValue(chromosomeVariableName, i).doubleValue();
+            double dataPoint = dataContainer.getValue(chromosomeVariableName, i);
 
             double err = dataPoint - chromosomeValueAtPointI;
             chromosomeError += err * err;

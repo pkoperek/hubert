@@ -56,4 +56,8 @@ public class DataContainer {
     public String getVariableName(int i) {
         return variableNames[i];
     }
+
+    public VariableSeries getVariableSeries(String variableName) {
+        return data.get(variableName);
+    }
 }

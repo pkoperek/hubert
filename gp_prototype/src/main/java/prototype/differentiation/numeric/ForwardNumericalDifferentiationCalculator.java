@@ -23,7 +23,7 @@ public class ForwardNumericalDifferentiationCalculator extends NumericalDifferen
     }
 
     @Override
-    public Number getDifferential(String variable, int secondRow) {
+    public double getDifferential(String variable, int secondRow) {
         if (secondRow == 0) {
             throw new IllegalArgumentException("Can't compute difference of " + secondRow + " and " + (secondRow - 1));
         }

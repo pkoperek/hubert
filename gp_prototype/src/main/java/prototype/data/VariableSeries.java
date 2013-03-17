@@ -32,4 +32,14 @@ public class VariableSeries {
     public String getName() {
         return name;
     }
+
+    public double[] getSeriesArray() {
+        double[] serie = new double[values.size()];
+
+        for (int i = 0; i < values.size(); i++) {
+            serie[i] = values.get(i);
+        }
+
+        return serie;
+    }
 }

@@ -6,11 +6,13 @@ import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
-import prototype.differentiation.numeric.CentralNumericalDifferentiationCalculator;
+import prototype.differentiation.numeric.LoessNumericalDifferentiationCalculator;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.evolution.GPConfigurationBuilder;
 import prototype.evolution.engine.EvolutionEngineBuilder;
-import prototype.evolution.fitness.EureqaFitnessFunction;
+import prototype.evolution.fitness.DifferentialFitnessFunction;
+import prototype.evolution.fitness.parsimony.NormalizedEuclidParsimonyPressure;
+import prototype.evolution.fitness.parsimony.NotifyingEvolutionHandler;
 import prototype.evolution.genotype.GenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
 import prototype.evolution.reporting.ParetoFrontFileReporter;
@@ -41,9 +43,9 @@ public class Main {
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
 
         // fitness function
-        NumericalDifferentiationCalculator numericalDifferentiationCalculator = new CentralNumericalDifferentiationCalculator(dataContainer);
-        EureqaFitnessFunction fitnessFunction = new EureqaFitnessFunction(dataContainer, numericalDifferentiationCalculator);
-        //NormalizedEuclidParsimonyPressure parsimonyPressure = new NormalizedEuclidParsimonyPressure(fitnessFunction);
+        NumericalDifferentiationCalculator numericalDifferentiationCalculator = new LoessNumericalDifferentiationCalculator(dataContainer);
+        DifferentialFitnessFunction fitnessFunction = new DifferentialFitnessFunction(dataContainer, numericalDifferentiationCalculator);
+        NormalizedEuclidParsimonyPressure parsimonyPressure = new NormalizedEuclidParsimonyPressure(fitnessFunction);
 
         // configuration
         GPConfiguration configuration = GPConfigurationBuilder
@@ -58,8 +60,8 @@ public class Main {
 
         // evolution
         EvolutionEngineBuilder.builder()
-                //.setEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
-                .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(10))
+                .addEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
+                .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(50))
                 .withMaxIterations(iterations)
                 .build()
                 .genotypeEvolve(genotype);

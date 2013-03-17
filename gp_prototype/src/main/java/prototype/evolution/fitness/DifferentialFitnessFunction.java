@@ -5,8 +5,6 @@ import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
 import prototype.data.DataContainer;
-import prototype.data.Pair;
-import prototype.data.PairGenerator;
 import prototype.data.VariablesValues;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.differentiation.symbolic.Function;
@@ -22,21 +20,18 @@ import java.util.List;
 
 /**
  * User: koperek
- * Date: 11.02.13
- * Time: 19:22
+ * Date: 17.03.13
+ * Time: 22:48
  */
-public class EureqaFitnessFunction extends GPFitnessFunction {
+public class DifferentialFitnessFunction extends GPFitnessFunction {
+    private static final Logger LOGGER = Logger.getLogger(DifferentialQuotientFitnessFunction.class);
 
-    private static final Logger LOGGER = Logger.getLogger(EureqaFitnessFunction.class);
-
-    private final List<Pair<String>> pairs;
     private final List<String> variables;
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
     private VariablesValues variablesValues = new VariablesValues();
 
-    public EureqaFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
-        this.pairs = new PairGenerator<String>().generatePairs(Arrays.asList(dataContainer.getVariableNames()));
+    public DifferentialFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.numericalDifferentiationCalculator = numericalDifferentiationCalculator;
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
@@ -49,12 +44,14 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
 
         for (int chromosomeIdx = 0; chromosomeIdx < ind.size(); chromosomeIdx++) {
             ProgramChromosome chromosome = ind.getChromosome(chromosomeIdx);
-            error += evaluatePairings(chromosome);
+            error += evaluateChromosome(chromosome);
         }
 
         // mean log error - but not negative; the DeltaGPFitnessEvaluator
         // treats smaller values as better
-        error /= dataContainer.getRowsCount();
+        if (error != Double.MAX_VALUE) {
+            error /= dataContainer.getRowsCount();
+        }
 
         long stop = System.nanoTime();
         LOGGER.debug("Fitness Function Time: " + (stop - start) + " ns Error: " + error);
@@ -65,83 +62,69 @@ public class EureqaFitnessFunction extends GPFitnessFunction {
         return error;
     }
 
-    private double evaluatePairings(ProgramChromosome chromosome) {
+    private double evaluateChromosome(ProgramChromosome chromosome) {
         double chromosomeError = 0.0f;
 
-        for (Pair<String> pairing : pairs) {
-            double pairingError = evaluatePairing(chromosome, pairing);
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues);
+        for (String variable : dataContainer.getVariableNames()) {
+            double variableError = computeErrorForVariable(treeNodeFactory.createTreeNode(chromosome), variable);
 
-            if (pairingError > chromosomeError) {
-                chromosomeError = pairingError;
+            if (variableError > chromosomeError) {
+                chromosomeError = variableError;
             }
         }
 
         return chromosomeError;
     }
 
-    private double evaluatePairing(ProgramChromosome chromosome, Pair<String> pairing) {
-        // we need to assume variables are dependent - if all are independent there are no relations in data!
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues, pairing);
-        return computeErrorForVariables(treeNodeFactory.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
-    }
-
-    private double computeErrorForVariables(TreeNode f, String x, String y) {
+    private double computeErrorForVariable(TreeNode f, String x) {
         Function dfdx = f.differentiate(x);
-        Function dfdy = f.differentiate(y);
-
-        double pairingError = 0.0f;
-
         variablesValues.clear();
+        double errorForVariable = 0.0f;
 
         int validDataRows = 0;
         for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
-            if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)
-                    && numericalDifferentiationCalculator.hasDifferential(y, dataRow)) {
-
+            if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)) {
                 populateVariableValues(dataRow, variablesValues);
 
                 double dfdx_val = dfdx.evaluate();
-                double dfdy_val = dfdy.evaluate();
 
-                double deltaX = numericalDifferentiationCalculator.getDifferential(x, dataRow).doubleValue();
-                double deltaY = numericalDifferentiationCalculator.getDifferential(y, dataRow).doubleValue();
+                double deltaX = numericalDifferentiationCalculator.getDifferential(x, dataRow);
 
                 try {
                     // if any of denominators is 0 - discard data sample
-                    if (isNotValidDataSample(dfdx_val, dfdy_val, deltaY)) {
-                        logInvalidDataSample(x, y, dataRow, dfdx_val, deltaY);
+                    if (isNotValidDataSample(dfdx_val, deltaX)) {
+                        logInvalidDataSample(x, dataRow, dfdx_val, deltaX);
                     } else {
-                        double result = (deltaX / deltaY) - (dfdy_val / dfdx_val);
-                        pairingError += Math.log(1 + Math.abs(result));
+                        double result = deltaX - dfdx_val;
+                        errorForVariable += Math.log(1 + Math.abs(result));
                         validDataRows++;
                     }
                 } catch (ArithmeticException ex) {
-                    LOGGER.error("Problems with computing result from: " + dfdx + " | " + dfdy, ex);
+                    LOGGER.error("Problems with computing result from: " + dfdx, ex);
                 }
             }
         }
 
         if (validDataRows == 0) {
-            pairingError = Double.MAX_VALUE;
+            errorForVariable = Double.MAX_VALUE;
         }
 
-        return pairingError;
+        return errorForVariable;
     }
 
-    private void logInvalidDataSample(String x, String y, int dataRow, double dfdx_val, double deltaY) {
+    private void logInvalidDataSample(String x, int dataRow, double dfdx_val, double deltaX) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Discarding data sample: " +
-                    " x:" + x +
-                    " y: " + y +
+                    " x: " + x +
                     " data row: " + dataRow +
-                    " deltaY: " + deltaY +
-                    " dfdx: " + dfdx_val +
-                    " dfdy: " + dfdx_val);
+                    " deltaX: " + deltaX +
+                    " dfdx: " + dfdx_val);
         }
     }
 
-    private boolean isNotValidDataSample(double dfdx_val, double dfdy_val, double deltaY) {
-        return deltaY == 0.0 || dfdx_val == 0.0 || isNotValidNumber(dfdx_val) || isNotValidNumber(dfdy_val);
+    private boolean isNotValidDataSample(double dfdx_val, double deltaX) {
+        return deltaX == 0.0 || dfdx_val == 0.0 || isNotValidNumber(dfdx_val);
     }
 
     private boolean isNotValidNumber(double dfdx_val) {
