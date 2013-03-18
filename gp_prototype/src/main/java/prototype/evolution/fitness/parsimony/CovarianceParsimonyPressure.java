@@ -41,7 +41,7 @@ public class CovarianceParsimonyPressure extends ParsimonyPressureFitnessFunctio
 
         double lengthsMean = 0.0;
         for (int i = 0; i < programs.length; i++) {
-            lengths[i] = programs[i].getChromosome(0).size();
+            lengths[i] = ((double) programs[i].getChromosome(0).size()) / 128;
             fitness[i] = programs[i].getFitnessValue();
             lengthsMean += lengths[i];
         }

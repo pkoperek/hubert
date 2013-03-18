@@ -22,7 +22,7 @@ public class LoessNumericalDifferentiationCalculator extends NumericalDifferenti
 
     @Override
     public boolean hasDifferential(String variable, int row) {
-        return row != 0;
+        return row != 0 && row != getDataContainer().getRowsCount() - 1;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LoessNumericalDifferentiationCalculator extends NumericalDifferenti
         }
 
         double[] differentials = loessInterpolations.get(variable);
-        return differentials[secondRow];
+        return (differentials[secondRow + 1] - differentials[secondRow - 1]) / 2;
     }
 
     @Override

@@ -11,7 +11,7 @@ import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.evolution.GPConfigurationBuilder;
 import prototype.evolution.engine.EvolutionEngineBuilder;
 import prototype.evolution.fitness.DifferentialFitnessFunction;
-import prototype.evolution.fitness.parsimony.NormalizedEuclidParsimonyPressure;
+import prototype.evolution.fitness.parsimony.CovarianceParsimonyPressure;
 import prototype.evolution.fitness.parsimony.NotifyingEvolutionHandler;
 import prototype.evolution.genotype.GenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
@@ -45,7 +45,7 @@ public class Main {
         // fitness function
         NumericalDifferentiationCalculator numericalDifferentiationCalculator = new LoessNumericalDifferentiationCalculator(dataContainer);
         DifferentialFitnessFunction fitnessFunction = new DifferentialFitnessFunction(dataContainer, numericalDifferentiationCalculator);
-        NormalizedEuclidParsimonyPressure parsimonyPressure = new NormalizedEuclidParsimonyPressure(fitnessFunction);
+        CovarianceParsimonyPressure parsimonyPressure = new CovarianceParsimonyPressure(fitnessFunction);
 
         // configuration
         GPConfiguration configuration = GPConfigurationBuilder
@@ -62,7 +62,7 @@ public class Main {
         EvolutionEngineBuilder.builder()
                 .addEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
                 .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(50))
-                .withMaxIterations(iterations)
+                        //.withMaxIterations(iterations)
                 .build()
                 .genotypeEvolve(genotype);
     }

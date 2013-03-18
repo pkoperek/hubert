@@ -7,10 +7,7 @@ import org.jgap.gp.impl.ProgramChromosome;
 import prototype.data.DataContainer;
 import prototype.data.VariablesValues;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
-import prototype.differentiation.symbolic.Function;
-import prototype.differentiation.symbolic.FunctionType;
-import prototype.differentiation.symbolic.TreeNode;
-import prototype.differentiation.symbolic.TreeNodeFactory;
+import prototype.differentiation.symbolic.*;
 import prototype.differentiation.symbolic.functions.PreviousValueVariable;
 import prototype.differentiation.symbolic.tree.SimpleTreeNode;
 import prototype.differentiation.symbolic.tree.VariableTreeNode;
@@ -78,7 +75,7 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
     }
 
     private double computeErrorForVariable(TreeNode f, String x) {
-        Function dfdx = f.differentiate(x);
+        Function function = new TreeNodeToFunctionTranslator().translate(f);
         variablesValues.clear();
         double errorForVariable = 0.0f;
 
@@ -87,21 +84,21 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)) {
                 populateVariableValues(dataRow, variablesValues);
 
-                double dfdx_val = dfdx.evaluate();
+                double f_x = function.evaluate();
 
                 double deltaX = numericalDifferentiationCalculator.getDifferential(x, dataRow);
 
                 try {
                     // if any of denominators is 0 - discard data sample
-                    if (isNotValidDataSample(dfdx_val, deltaX)) {
-                        logInvalidDataSample(x, dataRow, dfdx_val, deltaX);
+                    if (isNotValidDataSample(f_x, deltaX)) {
+                        logInvalidDataSample(x, dataRow, f_x, deltaX);
                     } else {
-                        double result = deltaX - dfdx_val;
+                        double result = deltaX - f_x;
                         errorForVariable += Math.log(1 + Math.abs(result));
                         validDataRows++;
                     }
                 } catch (ArithmeticException ex) {
-                    LOGGER.error("Problems with computing result from: " + dfdx, ex);
+                    LOGGER.error("Problems with computing result from: " + function, ex);
                 }
             }
         }

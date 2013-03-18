@@ -8,8 +8,7 @@ import org.jgap.gp.impl.GPGenotype;
 /**
  * /**
  * Minus tego rozwiązania (w wersji bez normalizacji) jest taki, że wysokie wartości
- * fitness i długości się anulują - więc efekt jest odwrotny od zamierzonego
- * <p/>
+ * długości powodują kompletne olewanie firness
  * Poza tym - juz na samym początku długość dominuje w wartości funkcji fitness - więc
  * poprawianie fitness niewiele daje bo wystarczy, że rozwiązanie ma o 1 element więcej
  * i już jest chałowe

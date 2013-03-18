@@ -8,7 +8,7 @@ import org.jgap.gp.impl.GPConfiguration;
 public class GPConfigurationBuilder {
 
     public static final int DEFAULT_MAX_INIT_DEPTH = 6; // 8 levels should be enough to contain 128 elements; lets not make it too complicated
-    public static final int DEFAULT_POPULATION_SIZE = 64; // 2048 according to article
+    public static final int DEFAULT_POPULATION_SIZE = 512; // 2048 according to article
     public static final float DEFAULT_CROSSOVER_PROBABILITY = 0.70f; // setting according to article 0.75
     public static final int DEFAULT_MAX_NODES = 128;        // 128 - maximum number of nodes in equation tree - set according to article
     public static final float DEFAULT_MUTATION_PROBABILITY = 0.03f; // setting according to article 0.01
