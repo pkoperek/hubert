@@ -4,6 +4,8 @@ import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
 import prototype.data.DataContainer;
 import prototype.data.VariableSeries;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,33 +31,31 @@ public class LoessNumericalDifferentiationCalculator extends NumericalDifferenti
     public double getDifferential(String variable, int secondRow) {
         if (!loessInterpolations.containsKey(variable)) {
             VariableSeries xSeries = getDataContainer().getVariableSeries(variable);
-            double[] time = new double[xSeries.getDataRowsCount()];
-            for (int i = 0; i < time.length; i++) {
-                time[i] = i;
-            }
-
-            double[] differentials = loessInterpolator.smooth(time, xSeries.getSeriesArray());
-
-            loessInterpolations.put(variable, differentials);
+            loessInterpolations.put(variable, interpolateSingleVariableWithImplicitTime(xSeries));
         }
 
         double[] differentials = loessInterpolations.get(variable);
         return (differentials[secondRow + 1] - differentials[secondRow - 1]) / 2;
     }
 
+    private double[] interpolateSingleVariableWithImplicitTime(VariableSeries xSeries) {
+        double[] time = new double[xSeries.getDataRowsCount()];
+        for (int i = 0; i < time.length; i++) {
+            time[i] = i;
+        }
+
+        return loessInterpolator.smooth(time, xSeries.getSeriesArray());
+    }
+
     @Override
     public double getDifferentialQuotient(String x, String y, int dataRow) {
         String key = getKey(x, y);
 
-        // TODO: sorting of arrays BEFORE putting data into interpolator
         if (!loessInterpolations.containsKey(key)) {
             VariableSeries xSeries = getDataContainer().getVariableSeries(x);
             VariableSeries ySeries = getDataContainer().getVariableSeries(y);
 
-            double[] xSeriesArray = xSeries.getSeriesArray();
-            double[] ySeriesArray = ySeries.getSeriesArray();
-
-            double[] differentials = loessInterpolator.smooth(xSeriesArray, ySeriesArray);
+            double[] differentials = interpolateTwoVariables(xSeries, ySeries);
 
             loessInterpolations.put(key, differentials);
         }
@@ -64,7 +64,61 @@ public class LoessNumericalDifferentiationCalculator extends NumericalDifferenti
         return differentials[dataRow];
     }
 
+    private double[] interpolateTwoVariables(VariableSeries xSeries, VariableSeries ySeries) {
+        Integer[] indexes = prepareIndexesArray(getDataContainer().getRowsCount());
+
+        Arrays.sort(indexes, new VariableValuesComparator(xSeries.getSeriesArray()));
+
+        double[] sortedX = translate(xSeries.getSeriesArray(), indexes);
+        double[] sortedY = translate(ySeries.getSeriesArray(), indexes);
+        double[] interpolated = loessInterpolator.smooth(sortedX, sortedY);
+
+        double[] unsorted = unsort(interpolated, indexes);
+        return unsorted;
+    }
+
+    private double[] unsort(double[] interpolated, Integer[] indexes) {
+        double[] unsorted = new double[interpolated.length];
+
+        for (int i = 0; i < indexes.length; i++) {
+            unsorted[indexes[i]] = interpolated[i];
+        }
+
+        return unsorted;
+    }
+
+    private double[] translate(double[] variableArray, Integer[] indexes) {
+        double[] sorted = new double[variableArray.length];
+
+        for (int i = 0; i < indexes.length; i++) {
+            sorted[i] = variableArray[indexes[i]];
+        }
+
+        return sorted;
+    }
+
+    private Integer[] prepareIndexesArray(int length) {
+        Integer[] sorted = new Integer[length];
+        for (int i = 0; i < sorted.length; i++) {
+            sorted[i] = i;
+        }
+        return sorted;
+    }
+
     private String getKey(String x, String y) {
         return x + "_" + y;
+    }
+
+    private class VariableValuesComparator implements Comparator<Integer> {
+        private final double[] variableSeries;
+
+        public VariableValuesComparator(double[] variableSeries) {
+            this.variableSeries = variableSeries;
+        }
+
+        @Override
+        public int compare(Integer left, Integer right) {
+            return (int) Math.signum(variableSeries[left] - variableSeries[right]);
+        }
     }
 }
