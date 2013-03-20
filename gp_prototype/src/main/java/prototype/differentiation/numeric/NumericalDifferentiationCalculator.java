@@ -27,7 +27,7 @@ public abstract class NumericalDifferentiationCalculator {
         double first = dataContainer.getValue(variable, firstRow);
         double second = dataContainer.getValue(variable, secondRow);
 
-        return first - second;
+        return second - first;
     }
 
     public double getDifferentialQuotient(String x, String y, int dataRow) {

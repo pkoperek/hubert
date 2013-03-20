@@ -41,7 +41,7 @@ public class CovarianceParsimonyPressure extends ParsimonyPressureFitnessFunctio
 
         double lengthsMean = 0.0;
         for (int i = 0; i < programs.length; i++) {
-            lengths[i] = ((double) programs[i].getChromosome(0).size()) / 128;
+            lengths[i] = getProgramSize(programs[i]);
             fitness[i] = programs[i].getFitnessValue();
             lengthsMean += lengths[i];
         }
@@ -52,6 +52,14 @@ public class CovarianceParsimonyPressure extends ParsimonyPressureFitnessFunctio
         double var = new Variance().evaluate(lengths, lengthsMean);
 
         setCt(cov / var);
+    }
+
+    private double getProgramSize(IGPProgram program) {
+        int size = 0;
+        for (int i = 0; i < program.size(); i++) {
+            size += program.getChromosome(i).size() / 64;
+        }
+        return (double) size;
     }
 
     @Override

@@ -93,8 +93,7 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
                     if (isNotValidDataSample(f_x, deltaX)) {
                         logInvalidDataSample(x, dataRow, f_x, deltaX);
                     } else {
-                        double result = deltaX - f_x;
-                        errorForVariable += Math.log(1 + Math.abs(result));
+                        errorForVariable += Math.abs(deltaX - f_x);
                         validDataRows++;
                     }
                 } catch (ArithmeticException ex) {

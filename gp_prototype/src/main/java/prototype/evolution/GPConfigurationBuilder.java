@@ -2,7 +2,6 @@ package prototype.evolution;
 
 import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.GPFitnessFunction;
-import org.jgap.gp.INaturalGPSelector;
 import org.jgap.gp.impl.DeltaGPFitnessEvaluator;
 import org.jgap.gp.impl.GPConfiguration;
 
@@ -11,7 +10,6 @@ public class GPConfigurationBuilder {
     public static final int DEFAULT_MAX_INIT_DEPTH = 6; // 8 levels should be enough to contain 128 elements; lets not make it too complicated
     public static final int DEFAULT_POPULATION_SIZE = 128; // 2048 according to article
     public static final float DEFAULT_CROSSOVER_PROBABILITY = 0.75f; // setting according to article 0.75
-    public static final int DEFAULT_MAX_NODES = 64;        // 128 - maximum number of nodes in equation tree - set according to article
     public static final float DEFAULT_MUTATION_PROBABILITY = 0.05f; // setting according to article 0.01
 
     private int maxInitDepth = DEFAULT_MAX_INIT_DEPTH;
@@ -20,10 +18,16 @@ public class GPConfigurationBuilder {
     private float mutationProbability = DEFAULT_MUTATION_PROBABILITY;
     private GPFitnessFunction fitnessFunction;
     private DeltaGPFitnessEvaluator fitnessEvaluator = new DeltaGPFitnessEvaluator();
-    private INaturalGPSelector naturalSelector;
+    private Double newChromsPercent; // by default 30%
+    private boolean deterministicCrowding = false;
 
-    public GPConfigurationBuilder setNaturalSelector(INaturalGPSelector naturalSelector) {
-        this.naturalSelector = naturalSelector;
+    public GPConfigurationBuilder withDeterministicCrowding() {
+        this.deterministicCrowding = true;
+        return this;
+    }
+
+    public GPConfigurationBuilder withNewChromsPercent(double newChromsPercent) {
+        this.newChromsPercent = newChromsPercent;
         return this;
     }
 
@@ -68,9 +72,17 @@ public class GPConfigurationBuilder {
         config.setMutationProb(mutationProbability);
         config.setGPFitnessEvaluator(fitnessEvaluator);
         config.setFitnessFunction(fitnessFunction);
-        if (naturalSelector != null) {
-            config.setSelectionMethod(naturalSelector);
+
+        if (newChromsPercent != null) {
+            config.getNewChromsPercent(newChromsPercent);
         }
+
+        if (deterministicCrowding) {
+            config.getNewChromsPercent(0.0);
+            config.setNaturalGPSelector(new DeterministicCrowdingSelector());
+            config.setCrossoverMethod(new DeterministicCrowdingCross(configuration));
+        }
+
         return config;
     }
 }

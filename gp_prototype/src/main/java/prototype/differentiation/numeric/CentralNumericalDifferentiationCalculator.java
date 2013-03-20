@@ -15,7 +15,7 @@ public class CentralNumericalDifferentiationCalculator extends NumericalDifferen
 
     @Override
     public boolean hasDifferential(String variable, int row) {
-        if (row == 0 || row == getDataContainer().getRowsCount() - 1) {
+        if (row == 0 || row >= getDataContainer().getRowsCount() - 2) {
             return false;
         }
 
@@ -25,9 +25,9 @@ public class CentralNumericalDifferentiationCalculator extends NumericalDifferen
     @Override
     public double getDifferential(String variable, int secondRow) {
         if (secondRow == 0) {
-            throw new IllegalArgumentException("Can't compute difference of " + secondRow + " and " + (secondRow - 1));
+            throw new IllegalArgumentException("Can't compute difference of " + (secondRow + 1) + " and " + (secondRow - 1));
         }
 
-        return getDifference(variable, secondRow - 1, secondRow) / 2.0;
+        return getDifference(variable, secondRow - 1, secondRow + 1) / 2.0;
     }
 }
