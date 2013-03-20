@@ -48,6 +48,7 @@ public class Main {
         // configuration
         GPConfiguration configuration = GPConfigurationBuilder
                 .builder(fitnessFunction)
+                .withDeterministicCrowding()
                 .buildConfiguration();
 
         // genotype

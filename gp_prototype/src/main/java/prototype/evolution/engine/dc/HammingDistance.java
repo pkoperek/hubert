@@ -37,6 +37,7 @@ public class HammingDistance implements IndividualDistance {
             if (!equal(leftGenes[i], rightGenes[i])) {
                 distance++;
             }
+            i++;
         }
 
         return distance;

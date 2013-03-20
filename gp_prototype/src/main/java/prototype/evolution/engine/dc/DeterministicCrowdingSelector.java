@@ -41,9 +41,9 @@ public class DeterministicCrowdingSelector implements INaturalGPSelector {
 
     @Override
     public IGPProgram select(GPGenotype a_genotype) {
-        int selectedIndex = configuration.getRandomGenerator().nextInt(freeIndexes.size());
-        freeIndexes.remove(selectedIndex);
-        return a_genotype.getGPPopulation().getGPProgram(selectedIndex);
+        int freeItem = configuration.getRandomGenerator().nextInt(freeIndexes.size());
+        int selectedGenotype = freeIndexes.remove(freeItem);
+        return a_genotype.getGPPopulation().getGPProgram(selectedGenotype);
     }
 
 
