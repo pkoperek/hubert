@@ -37,6 +37,11 @@ public class HammingDistance implements IndividualDistance {
             if (!equal(leftGenes[i], rightGenes[i])) {
                 distance++;
             }
+
+            // in such case there is no sense to stay in the loop
+            if (leftGenes[i] == null && rightGenes[i] == null) {
+                break;
+            }
             i++;
         }
 
@@ -44,6 +49,18 @@ public class HammingDistance implements IndividualDistance {
     }
 
     private boolean equal(CommandGene leftGene, CommandGene rightGene) {
+        if (leftGene == null && rightGene == null) {
+            return true;
+        }
+
+        if (leftGene != null && rightGene == null) {
+            return false;
+        }
+
+        if (leftGene == null && rightGene != null) {
+            return false;
+        }
+
         return leftGene.equals(rightGene);
     }
 }
