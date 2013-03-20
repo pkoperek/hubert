@@ -4,13 +4,14 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.CommandGene;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
-import prototype.evolution.GPConfigurationBuilder;
 
 public class GenotypeBuilder {
 
+    public static final int DEFAULT_MAX_NODES = 128;        // 128 - maximum number of nodes in equation tree - set according to article
+
     private GPConfiguration configuration;
     private AbstractGenotypeBuildingStrategy genotypeBuildingStrategy;
-    private int maxNodes = GPConfigurationBuilder.DEFAULT_MAX_NODES;
+    private int maxNodes = DEFAULT_MAX_NODES;
 
     public GenotypeBuilder(AbstractGenotypeBuildingStrategy genotypeBuildingStrategy, GPConfiguration configuration) {
         this.genotypeBuildingStrategy = genotypeBuildingStrategy;
