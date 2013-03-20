@@ -4,6 +4,8 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.DeltaGPFitnessEvaluator;
 import org.jgap.gp.impl.GPConfiguration;
+import prototype.evolution.engine.dc.DeterministicCrowdingCross;
+import prototype.evolution.engine.dc.DeterministicCrowdingSelector;
 
 public class GPConfigurationBuilder {
 
@@ -74,13 +76,13 @@ public class GPConfigurationBuilder {
         config.setFitnessFunction(fitnessFunction);
 
         if (newChromsPercent != null) {
-            config.getNewChromsPercent(newChromsPercent);
+            config.setNewChromsPercent(newChromsPercent);
         }
 
         if (deterministicCrowding) {
-            config.getNewChromsPercent(0.0);
-            config.setNaturalGPSelector(new DeterministicCrowdingSelector());
-            config.setCrossoverMethod(new DeterministicCrowdingCross(configuration));
+            config.setNewChromsPercent(0.0);
+            config.setSelectionMethod(new DeterministicCrowdingSelector(config));
+            config.setCrossoverMethod(new DeterministicCrowdingCross(config));
         }
 
         return config;
