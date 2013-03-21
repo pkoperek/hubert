@@ -41,7 +41,8 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
 
         for (int chromosomeIdx = 0; chromosomeIdx < ind.size(); chromosomeIdx++) {
             ProgramChromosome chromosome = ind.getChromosome(chromosomeIdx);
-            error += evaluateChromosome(chromosome);
+            String variableName = dataContainer.getVariableName(chromosomeIdx);
+            error += evaluateChromosome(chromosome, variableName);
         }
 
         // mean log error - but not negative; the DeltaGPFitnessEvaluator
@@ -59,19 +60,9 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
         return error;
     }
 
-    private double evaluateChromosome(ProgramChromosome chromosome) {
-        double chromosomeError = 0.0f;
-
+    private double evaluateChromosome(ProgramChromosome chromosome, String variable) {
         TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues);
-        for (String variable : dataContainer.getVariableNames()) {
-            double variableError = computeErrorForVariable(treeNodeFactory.createTreeNode(chromosome), variable);
-
-            if (variableError > chromosomeError) {
-                chromosomeError = variableError;
-            }
-        }
-
-        return chromosomeError;
+        return computeErrorForVariable(treeNodeFactory.createTreeNode(chromosome), variable);
     }
 
     private double computeErrorForVariable(TreeNode f, String x) {

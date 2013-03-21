@@ -9,7 +9,7 @@ import prototype.data.DataContainerFactory;
 import prototype.differentiation.numeric.CentralNumericalDifferentiationCalculator;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.evolution.GPConfigurationBuilder;
-import prototype.evolution.engine.EvolutionEngineBuilder;
+import prototype.evolution.engine.EvolutionEngine;
 import prototype.evolution.fitness.DifferentialFitnessFunction;
 import prototype.evolution.genotype.GenotypeBuilder;
 import prototype.evolution.genotype.MultipleChromosomesBuildingStrategy;
@@ -48,7 +48,9 @@ public class Main {
         // configuration
         GPConfiguration configuration = GPConfigurationBuilder
                 .builder(fitnessFunction)
+                .setPopulationSize(64)
                 .withDeterministicCrowding()
+                        //.withNewChromsPercent(0.25)
                 .buildConfiguration();
 
         // genotype
@@ -57,14 +59,15 @@ public class Main {
 
         GPGenotype genotype = GenotypeBuilder
                 .builder(buildingStrategy, configuration)
-                .setMaxNodes(32)
+                .setMaxNodes(128)
                 .build();
 
         // evolution
-        EvolutionEngineBuilder.builder()
+        EvolutionEngine.Builder.builder()
 //                .addEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
                 .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(50))
                         //.withMaxIterations(iterations)
+                .withDeterministicCrowdingIterations(configuration)
                 .build()
                 .genotypeEvolve(genotype);
     }

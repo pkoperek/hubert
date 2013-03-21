@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // deterministic crowding selector
+@Deprecated
 public class DeterministicCrowdingSelector implements INaturalGPSelector {
 
     private GPConfiguration configuration;

@@ -3,6 +3,7 @@ package prototype.evolution.engine.dc;
 import org.jgap.gp.CrossMethod;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPConfiguration;
+import prototype.evolution.engine.IndividualDistance;
 
 /**
  * User: koperek
@@ -14,6 +15,7 @@ import org.jgap.gp.impl.GPConfiguration;
  * BranchTypingCross zmienia tylko 1 losowo wybrany chromosom, tworzy nowe individuale
  * mozna bez problemu porównywac to co wchodzi z tym co wychodzi
  */
+@Deprecated
 public class DeterministicCrowdingCross extends CrossMethod {
 
     private CrossMethod delegate;

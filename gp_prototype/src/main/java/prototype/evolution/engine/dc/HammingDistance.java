@@ -3,6 +3,7 @@ package prototype.evolution.engine.dc;
 import org.jgap.gp.CommandGene;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
+import prototype.evolution.engine.IndividualDistance;
 
 // hamming distance
 // http://ti.arc.nasa.gov/m/pub-archive/1451/1451%20(Mengshoel).pdf p.3
@@ -61,6 +62,7 @@ public class HammingDistance implements IndividualDistance {
             return false;
         }
 
-        return leftGene.equals(rightGene);
+        return
+                leftGene.getClass().equals(rightGene.getClass()) && leftGene.equals(rightGene);
     }
 }

@@ -75,14 +75,14 @@ public class GPConfigurationBuilder {
         config.setGPFitnessEvaluator(fitnessEvaluator);
         config.setFitnessFunction(fitnessFunction);
 
-        if (newChromsPercent != null) {
-            config.setNewChromsPercent(newChromsPercent);
-        }
-
         if (deterministicCrowding) {
             config.setNewChromsPercent(0.0);
             config.setSelectionMethod(new DeterministicCrowdingSelector(config));
             config.setCrossoverMethod(new DeterministicCrowdingCross(config));
+        }
+
+        if (newChromsPercent != null) {
+            config.setNewChromsPercent(newChromsPercent);
         }
 
         return config;
