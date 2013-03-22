@@ -49,7 +49,7 @@ public abstract class AbstractGenotypeBuildingStrategy {
         commandGenes.add(new Subtract(configuration, CommandGene.FloatClass));
         commandGenes.add(new Multiply(configuration, CommandGene.FloatClass));
         commandGenes.add(new Divide(configuration, CommandGene.FloatClass));
-        commandGenes.add(new Terminal(configuration, CommandGene.FloatClass, 2.0d, 10.0d, false));
+        commandGenes.add(new Terminal(configuration, CommandGene.FloatClass, 0.0d, 10.0d, false));
         commandGenes.add(new Sine(configuration, CommandGene.FloatClass));
         commandGenes.add(new Cosine(configuration, CommandGene.FloatClass));
 
