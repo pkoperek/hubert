@@ -54,10 +54,6 @@ class DifferentialFitnessFunction extends GPFitnessFunction {
 
         long stop = System.nanoTime();
         LOGGER.debug("Fitness Function Time: " + (stop - start) + " ns Error: " + error);
-        if (error < 0.000001) {
-            error = 0.0d;
-        }
-
         return error;
     }
 
