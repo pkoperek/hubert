@@ -58,7 +58,7 @@ public class FitnessFunctionFactory {
     }
 
     @Configure
-    public void setCalculatorType(@Configuration(value = "fitness.calculator.type", defaultValue = "CENTRAL") String calculatorType) {
+    public void setCalculatorType(@Configuration(value = "fitness.diffcalculator.type", defaultValue = "CENTRAL") String calculatorType) {
         this.calculatorType =
                 NumericalDifferentiationCalculatorFactory
                         .CalculatorType.valueOf(calculatorType.toUpperCase());
