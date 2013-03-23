@@ -18,6 +18,7 @@ public class GPConfigurationBuilder {
     private int populationSize = DEFAULT_POPULATION_SIZE;
     private float crossoverProbability = DEFAULT_CROSSOVER_PROBABILITY;
     private float mutationProbability = DEFAULT_MUTATION_PROBABILITY;
+
     private GPFitnessFunction fitnessFunction;
     private DeltaGPFitnessEvaluator fitnessEvaluator = new DeltaGPFitnessEvaluator();
     private Double newChromsPercent; // by default 30%

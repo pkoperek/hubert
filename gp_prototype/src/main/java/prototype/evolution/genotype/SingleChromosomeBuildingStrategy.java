@@ -11,7 +11,7 @@ import java.util.List;
  * Date: 11.03.13
  * Time: 21:57
  */
-public class SingleChromosomeBuildingStrategy extends AbstractGenotypeBuildingStrategy {
+public class SingleChromosomeBuildingStrategy extends AbstractChromosomeBuildingStrategy {
 
     public SingleChromosomeBuildingStrategy(List<String> variableNames) {
         super(variableNames);

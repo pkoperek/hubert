@@ -10,19 +10,13 @@ import org.jgap.gp.terminal.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractGenotypeBuildingStrategy {
+public abstract class AbstractChromosomeBuildingStrategy implements ChromosomeBuildingStrategy {
 
     private final List<String> variableNames;
 
-    public AbstractGenotypeBuildingStrategy(List<String> variableNames) {
+    public AbstractChromosomeBuildingStrategy(List<String> variableNames) {
         this.variableNames = variableNames;
     }
-
-    public abstract CommandGene[][] createNodeSets(GPConfiguration configuration) throws InvalidConfigurationException;
-
-    public abstract Class[] createReturnTypes();
-
-    public abstract Class[][] createADFArgumentTypes();
 
     protected Class[][] createADFArgumentTypesOfSize(int size) {
         Class[][] adfArgumentTypes = new Class[size][];

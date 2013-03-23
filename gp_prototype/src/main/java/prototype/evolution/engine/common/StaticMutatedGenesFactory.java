@@ -66,7 +66,7 @@ public class StaticMutatedGenesFactory implements MutatedGenesFactory {
 
     private CommandGene createTerminalMutation(CommandGene toMutate) {
         try {
-            // TODO: tutaj nie powinno być hardkodowania wartości - jeden raz są już wykorzystane w AbstractGenotypeBuildingStrategy
+            // TODO: tutaj nie powinno być hardkodowania wartości - jeden raz są już wykorzystane w AbstractChromosomeBuildingStrategy
             return new Terminal(toMutate.getGPConfiguration(), CommandGene.FloatClass, 0.0d, 10.0d, false);
         } catch (InvalidConfigurationException e) {
             logger.error("Problems creating new terminal", e);

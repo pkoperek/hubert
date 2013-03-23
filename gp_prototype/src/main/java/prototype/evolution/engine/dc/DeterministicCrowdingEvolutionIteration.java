@@ -11,8 +11,8 @@ import org.jgap.gp.impl.GPGenotypeHacker;
 import org.jgap.gp.impl.GPPopulation;
 import prototype.evolution.engine.*;
 import prototype.evolution.engine.common.AllChromosomesCrossover;
+import prototype.evolution.engine.common.AllChromosomesMutator;
 import prototype.evolution.engine.common.RandomSelector;
-import prototype.evolution.engine.common.SingleChangeMutator;
 import prototype.evolution.engine.common.StaticMutatedGenesFactory;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
     public DeterministicCrowdingEvolutionIteration(GPConfiguration configuration) {
         this(
                 configuration,
-                new SingleChangeMutator(
+                new AllChromosomesMutator(
                         new StaticMutatedGenesFactory(configuration.getRandomGenerator()),
                         configuration.getRandomGenerator()),
                 new RandomSelector<Integer>(configuration.getRandomGenerator()),

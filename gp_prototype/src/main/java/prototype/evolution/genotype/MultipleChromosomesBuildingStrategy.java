@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 11.03.13
  * Time: 21:52
  */
-public class MultipleChromosomesBuildingStrategy extends AbstractGenotypeBuildingStrategy {
+public class MultipleChromosomesBuildingStrategy extends AbstractChromosomeBuildingStrategy {
 
     public MultipleChromosomesBuildingStrategy(List<String> variableNames) {
         super(variableNames);

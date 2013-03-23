@@ -11,6 +11,9 @@ import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.evolution.GPConfigurationBuilder;
 import prototype.evolution.engine.EvolutionEngine;
 import prototype.evolution.fitness.DifferentialFitnessFunction;
+import prototype.evolution.fitness.parsimony.CovarianceParsimonyPressure;
+import prototype.evolution.fitness.parsimony.EvolutionCycleAware;
+import prototype.evolution.fitness.parsimony.NotifyingEvolutionHandler;
 import prototype.evolution.genotype.GPGenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
 import prototype.evolution.reporting.ParetoFrontFileReporter;
@@ -23,19 +26,12 @@ import java.util.Arrays;
  * Date: 11.02.13
  * Time: 19:21
  */
-public class Main {
+public class ConfiguredExecution {
 
     private static final int ITERATIONS = 500;
 
     public static void main(String[] args) throws InvalidConfigurationException, IOException {
         DOMConfigurator.configure("log4j.xml");
-
-        int iterations;
-        try {
-            iterations = Integer.parseInt(args[1]);
-        } catch (Exception e) {
-            iterations = ITERATIONS;
-        }
 
         // data
         DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
@@ -43,13 +39,10 @@ public class Main {
         // fitness function
         NumericalDifferentiationCalculator numericalDifferentiationCalculator = new CentralNumericalDifferentiationCalculator(dataContainer);
         DifferentialFitnessFunction fitnessFunction = new DifferentialFitnessFunction("sin", dataContainer, numericalDifferentiationCalculator);
+        EvolutionCycleAware parsimonyPressure = new CovarianceParsimonyPressure(fitnessFunction);
 
         // configuration
-        GPConfiguration configuration = GPConfigurationBuilder
-                .builder(fitnessFunction)
-                .setPopulationSize(64)
-                .withDeterministicCrowding()
-                .buildConfiguration();
+        GPConfiguration configuration = createConfiguration(fitnessFunction);
 
         // genotype
         SingleChromosomeBuildingStrategy buildingStrategy =
@@ -62,12 +55,22 @@ public class Main {
 
         // evolution
         EvolutionEngine evolutionEngine = EvolutionEngine.Builder.builder()
+                .addEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
                 .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(50))
-                .withMaxIterations(iterations)
+                .withMaxIterations(500)
                 .withDeterministicCrowdingIterations(configuration)
                 .build();
 
         evolutionEngine.genotypeEvolve(genotype);
+    }
+
+    private static GPConfiguration createConfiguration(DifferentialFitnessFunction fitnessFunction) throws InvalidConfigurationException {
+        return GPConfigurationBuilder
+                .builder(fitnessFunction)
+                .setPopulationSize(64)
+                .withDeterministicCrowding()
+                        //.withNewChromsPercent(0.25)
+                .buildConfiguration();
     }
 
 }

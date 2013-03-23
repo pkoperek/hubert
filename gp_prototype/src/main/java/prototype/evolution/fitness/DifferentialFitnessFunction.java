@@ -26,12 +26,14 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
     private final List<String> variables;
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
-    private VariablesValues variablesValues = new VariablesValues();
+    private final VariablesValues variablesValues = new VariablesValues();
+    private final String variableName;
 
-    public DifferentialFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
+    public DifferentialFitnessFunction(String variableName, DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.numericalDifferentiationCalculator = numericalDifferentiationCalculator;
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
+        this.variableName = variableName;
     }
 
     @Override
@@ -41,8 +43,7 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
 
         for (int chromosomeIdx = 0; chromosomeIdx < ind.size(); chromosomeIdx++) {
             ProgramChromosome chromosome = ind.getChromosome(chromosomeIdx);
-            String variableName = dataContainer.getVariableName(chromosomeIdx);
-            error += evaluateChromosome(chromosome, variableName);
+            error += computeChromosomeError(chromosome);
         }
 
         // mean log error - but not negative; the DeltaGPFitnessEvaluator
@@ -60,13 +61,10 @@ public class DifferentialFitnessFunction extends GPFitnessFunction {
         return error;
     }
 
-    private double evaluateChromosome(ProgramChromosome chromosome, String variable) {
+    private double computeChromosomeError(ProgramChromosome chromosome) {
         TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues);
-        return computeErrorForVariable(treeNodeFactory.createTreeNode(chromosome), variable);
-    }
-
-    private double computeErrorForVariable(TreeNode f, String x) {
-        Function function = new TreeNodeToFunctionTranslator().translate(f);
+        String x = variableName;
+        Function function = new TreeNodeToFunctionTranslator().translate(treeNodeFactory.createTreeNode(chromosome));
         variablesValues.clear();
         double errorForVariable = 0.0f;
 

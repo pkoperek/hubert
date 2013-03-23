@@ -5,26 +5,26 @@ import org.jgap.gp.CommandGene;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 
-public class GenotypeBuilder {
+public class GPGenotypeBuilder {
 
     public static final int DEFAULT_MAX_NODES = 128;        // 128 - maximum number of nodes in equation tree - set according to article
 
     private GPConfiguration configuration;
-    private AbstractGenotypeBuildingStrategy genotypeBuildingStrategy;
+    private ChromosomeBuildingStrategy chromosomeBuildingStrategy;
     private int maxNodes = DEFAULT_MAX_NODES;
 
-    public GenotypeBuilder(AbstractGenotypeBuildingStrategy genotypeBuildingStrategy, GPConfiguration configuration) {
-        this.genotypeBuildingStrategy = genotypeBuildingStrategy;
+    public GPGenotypeBuilder(ChromosomeBuildingStrategy chromosomeBuildingStrategy, GPConfiguration configuration) {
+        this.chromosomeBuildingStrategy = chromosomeBuildingStrategy;
         this.configuration = configuration;
     }
 
-    public GenotypeBuilder setMaxNodes(int maxNodes) {
+    public GPGenotypeBuilder setMaxNodes(int maxNodes) {
         this.maxNodes = maxNodes;
         return this;
     }
 
-    public static GenotypeBuilder builder(AbstractGenotypeBuildingStrategy genotypeBuildingStrategy, GPConfiguration configuration) {
-        return new GenotypeBuilder(genotypeBuildingStrategy, configuration);
+    public static GPGenotypeBuilder builder(ChromosomeBuildingStrategy chromosomeBuildingStrategy, GPConfiguration configuration) {
+        return new GPGenotypeBuilder(chromosomeBuildingStrategy, configuration);
     }
 
     public GPGenotype build() throws InvalidConfigurationException {
@@ -32,9 +32,9 @@ public class GenotypeBuilder {
     }
 
     private GPGenotype createGenotype(GPConfiguration configuration) throws InvalidConfigurationException {
-        Class[] returnTypes = genotypeBuildingStrategy.createReturnTypes();
-        Class[][] argTypes = genotypeBuildingStrategy.createADFArgumentTypes();
-        CommandGene[][] nodeSets = genotypeBuildingStrategy.createNodeSets(configuration);
+        Class[] returnTypes = chromosomeBuildingStrategy.createReturnTypes();
+        Class[][] argTypes = chromosomeBuildingStrategy.createADFArgumentTypes();
+        CommandGene[][] nodeSets = chromosomeBuildingStrategy.createNodeSets(configuration);
 
         return GPGenotype.randomInitialGenotype(configuration, returnTypes, argTypes, nodeSets, maxNodes, true);
     }
