@@ -11,12 +11,11 @@ import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFacto
 import prototype.evolution.configuration.GPConfigurationFactory;
 import prototype.evolution.engine.EvolutionEngine;
 import prototype.evolution.fitness.FitnessFunctionFactory;
-import prototype.evolution.genotype.GPGenotypeBuilder;
-import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
+import prototype.evolution.genotype.ChromosomeBuildingStrategyFactory;
+import prototype.evolution.genotype.GenotypeFactory;
 import prototype.evolution.reporting.ParetoFrontFileReporter;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * User: koperek
@@ -53,17 +52,14 @@ public class Main {
         GPConfiguration configuration = configurationFactory.createConfiguration(fitnessFunction);
 
         // genotype
-        SingleChromosomeBuildingStrategy buildingStrategy =
-                new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
-
-        GPGenotype genotype = GPGenotypeBuilder
-                .builder(buildingStrategy, configuration)
-                .setMaxNodes(128)
-                .build();
+        GenotypeFactory genotypeFactory = new GenotypeFactory();
+        genotypeFactory.setChromosomes(ChromosomeBuildingStrategyFactory.StrategyType.SINGLE);
+        genotypeFactory.setMaxNodes(128);
+        GPGenotype genotype = genotypeFactory.createGPGenotype(configuration, dataContainer);
 
         // evolution
         EvolutionEngine evolutionEngine = EvolutionEngine.Builder.builder()
-                .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(50))
+                .withEvolutionEngineEventHandler(new ParetoFrontFileReporter(50))
                 .withMaxIterations(iterations)
                 .withDeterministicCrowdingIterations(configuration)
                 .build();

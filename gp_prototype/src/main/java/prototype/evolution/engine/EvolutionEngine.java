@@ -83,7 +83,7 @@ public class EvolutionEngine {
         }
 
         @Override
-        public Builder addEvolutionEngineEventHandlers(EvolutionEngineEventHandler evolutionEngineEventHandler) {
+        public Builder withEvolutionEngineEventHandler(EvolutionEngineEventHandler evolutionEngineEventHandler) {
             this.evolutionEngineEventHandlers.add(evolutionEngineEventHandler);
             return this;
         }
@@ -130,7 +130,7 @@ public class EvolutionEngine {
     }
 
     public interface CommonStep {
-        Builder addEvolutionEngineEventHandlers(EvolutionEngineEventHandler evolutionEngineEventHandler);
+        Builder withEvolutionEngineEventHandler(EvolutionEngineEventHandler evolutionEngineEventHandler);
 
         Builder withMaxIterations(int maxIterations);
 

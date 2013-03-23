@@ -10,7 +10,7 @@ import org.jgap.gp.terminal.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractChromosomeBuildingStrategy implements ChromosomeBuildingStrategy {
+abstract class AbstractChromosomeBuildingStrategy implements ChromosomeBuildingStrategy {
 
     private final List<String> variableNames;
 

@@ -8,13 +8,13 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
-import prototype.configuration.EvolutionEngineFactory;
-import prototype.configuration.GenotypeFactory;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
 import prototype.evolution.configuration.GPConfigurationFactory;
 import prototype.evolution.engine.EvolutionEngine;
+import prototype.evolution.engine.EvolutionEngineFactory;
 import prototype.evolution.fitness.FitnessFunctionFactory;
+import prototype.evolution.genotype.GenotypeFactory;
 
 import java.io.IOException;
 
@@ -42,10 +42,12 @@ public class ConfiguredExecution {
         GPConfiguration configuration = configurationFactory.createConfiguration(fitnessFunction);
 
         // genotype
-        GPGenotype genotype = new GenotypeFactory().createGPGenotype(configuration, dataContainer);
+        GenotypeFactory genotypeFactory = constrettoConfiguration.as(GenotypeFactory.class);
+        GPGenotype genotype = genotypeFactory.createGPGenotype(configuration, dataContainer);
 
         // evolution
-        EvolutionEngine evolutionEngine = new EvolutionEngineFactory().createEvolutionEngine(configuration);
+        EvolutionEngineFactory evolutionEngineFactory = constrettoConfiguration.as(EvolutionEngineFactory.class);
+        EvolutionEngine evolutionEngine = evolutionEngineFactory.createDeterministicCrowdingEvolutionEngine(configuration);
 
         // evolve!!!
         evolutionEngine.genotypeEvolve(genotype);

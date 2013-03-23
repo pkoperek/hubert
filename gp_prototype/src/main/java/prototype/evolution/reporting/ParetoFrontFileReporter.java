@@ -13,6 +13,8 @@ import java.util.Arrays;
  * Time: 18:01
  */
 public class ParetoFrontFileReporter extends FilePopulationReporter {
+    public static final boolean DEFAULT_ENABLED = true;
+    public static final int DEFAULT_INTERVAL = 50;
     private double[] fitnesses = new double[128]; // 128 - max size of single solution
 
     public ParetoFrontFileReporter() {
