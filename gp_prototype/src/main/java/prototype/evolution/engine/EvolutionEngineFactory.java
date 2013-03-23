@@ -99,7 +99,7 @@ public class EvolutionEngineFactory {
     public void setIterationType(
             @Configuration(
                     value = "engine.iteration.type",
-                    defaultValue = "" + IterationType.DET_CROWDING)
+                    defaultValue = "DET_CROWDING")
             String iterationType) {
         this.iterationType = IterationType.valueOf(iterationType.toUpperCase());
     }

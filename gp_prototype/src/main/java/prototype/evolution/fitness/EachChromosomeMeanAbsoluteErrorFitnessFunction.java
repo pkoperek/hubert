@@ -8,8 +8,8 @@ import prototype.data.DataContainer;
  * Date: 11.03.13
  * Time: 20:53
  */
-class MeanAbsoluteErrorFitnessFunction extends AbsoluteErrorFitnessFunction {
-    public MeanAbsoluteErrorFitnessFunction(DataContainer dataContainer) {
+class EachChromosomeMeanAbsoluteErrorFitnessFunction extends EachChromosomeAbsoluteErrorFitnessFunction {
+    public EachChromosomeMeanAbsoluteErrorFitnessFunction(DataContainer dataContainer) {
         super(dataContainer);
     }
 

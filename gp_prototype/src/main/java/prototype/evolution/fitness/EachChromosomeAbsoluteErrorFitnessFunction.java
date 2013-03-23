@@ -9,7 +9,6 @@ import prototype.differentiation.symbolic.Function;
 import prototype.differentiation.symbolic.TreeNode;
 import prototype.differentiation.symbolic.TreeNodeFactory;
 import prototype.differentiation.symbolic.TreeNodeToFunctionTranslator;
-import prototype.differentiation.symbolic.functions.PreviousValueVariable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,12 +18,12 @@ import java.util.List;
  * Date: 10.03.13
  * Time: 23:32
  */
-class AbsoluteErrorFitnessFunction extends GPFitnessFunction {
+class EachChromosomeAbsoluteErrorFitnessFunction extends GPFitnessFunction {
 
     private List<String> variablesNames;
     private final DataContainer dataContainer;
 
-    public AbsoluteErrorFitnessFunction(DataContainer dataContainer) {
+    public EachChromosomeAbsoluteErrorFitnessFunction(DataContainer dataContainer) {
         this.variablesNames = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
     }
@@ -61,8 +60,6 @@ class AbsoluteErrorFitnessFunction extends GPFitnessFunction {
     private void populateVariableValues(int dataRow, VariablesValues variablesValues) {
         for (String variableName : variablesNames) {
             variablesValues.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow));
-            String previousValueVariableName = variableName + PreviousValueVariable.PREVIOUS_VALUE_VARIABLE_SUFFIX;
-            variablesValues.setVariableValue(previousValueVariableName, dataContainer.getValue(variableName, dataRow - 1));
         }
     }
 

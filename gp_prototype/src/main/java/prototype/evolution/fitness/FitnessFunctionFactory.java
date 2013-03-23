@@ -27,11 +27,11 @@ public class FitnessFunctionFactory {
             case DIFF:
                 return new DifferentialFitnessFunction(variableName, dataContainer, numericalDifferentiationCalculator);
             case ABSERR:
-                return new AbsoluteErrorFitnessFunction(dataContainer);
+                return new EachChromosomeAbsoluteErrorFitnessFunction(dataContainer);
             case ABSSQERR:
                 return new AbsoluteSquareErrorFitnessFunction(dataContainer);
             case MEANABSERR:
-                return new MeanAbsoluteErrorFitnessFunction(dataContainer);
+                return new EachChromosomeMeanAbsoluteErrorFitnessFunction(dataContainer);
             case DIFFQ:
                 return new DifferentialQuotientFitnessFunction(dataContainer, numericalDifferentiationCalculator);
         }
@@ -40,7 +40,7 @@ public class FitnessFunctionFactory {
     }
 
     @Configure
-    public void setVariableName(@Configuration(value = "fitness.variable.name") String variableName) {
+    public void setVariableName(@Configuration(value = "fitness.variable.name", required = false) String variableName) {
         this.variableName = variableName;
     }
 
@@ -58,7 +58,7 @@ public class FitnessFunctionFactory {
     }
 
     @Configure
-    public void setCalculatorType(@Configuration(value = "fitness.calculator.type", defaultValue = "ABSOLUTE_ERROR") String calculatorType) {
+    public void setCalculatorType(@Configuration(value = "fitness.calculator.type", defaultValue = "CENTRAL") String calculatorType) {
         this.calculatorType =
                 NumericalDifferentiationCalculatorFactory
                         .CalculatorType.valueOf(calculatorType.toUpperCase());

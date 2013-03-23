@@ -38,7 +38,7 @@ public class GenotypeFactory {
     public void setChromosomes(
             @Configuration(
                     value = "genotype.chromosomes",
-                    defaultValue = "" + ChromosomeBuildingStrategyFactory.StrategyType.SINGLE
+                    defaultValue = "SINGLE"
             )
             String chromosomes) {
         this.chromosomes = ChromosomeBuildingStrategyFactory.StrategyType.valueOf(chromosomes);

@@ -7,10 +7,10 @@ import org.jgap.gp.impl.ProgramChromosome;
 import prototype.data.DataContainer;
 import prototype.data.VariablesValues;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
-import prototype.differentiation.symbolic.*;
+import prototype.differentiation.symbolic.Function;
+import prototype.differentiation.symbolic.TreeNodeFactory;
+import prototype.differentiation.symbolic.TreeNodeToFunctionTranslator;
 import prototype.differentiation.symbolic.functions.PreviousValueVariable;
-import prototype.differentiation.symbolic.tree.SimpleTreeNode;
-import prototype.differentiation.symbolic.tree.VariableTreeNode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -114,16 +114,6 @@ class DifferentialFitnessFunction extends GPFitnessFunction {
 
     private boolean isNotValidNumber(double dfdx_val) {
         return Double.isNaN(dfdx_val) || Double.isInfinite(dfdx_val);
-    }
-
-    private TreeNode reverseEquation(TreeNode chromosomeAsTree, String firstVariableName, String interdependentVariableName, VariablesValues variablesValues) {
-        return new SimpleTreeNode(
-                FunctionType.SUBTRACT,
-                new TreeNode[]{
-                        chromosomeAsTree,
-                        new VariableTreeNode(variablesValues, firstVariableName, interdependentVariableName)
-                }
-        );
     }
 
     private void populateVariableValues(int dataRow, VariablesValues variablesValues) {

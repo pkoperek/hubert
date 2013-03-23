@@ -7,7 +7,6 @@ import org.jgap.gp.impl.GPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
 import org.jgap.gp.terminal.Variable;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
@@ -29,7 +28,6 @@ public class DifferentialFitnessFunctionTest {
 
     @Before
     public void setUp() throws Exception {
-
         dataContainer = new DataContainerFactory("src/test/resources/sin_implicit_time.csv").getDataContainer();
         NumericalDifferentiationCalculator numericalDifferentiationCalculator =
                 new NumericalDifferentiationCalculatorFactory()
@@ -37,7 +35,6 @@ public class DifferentialFitnessFunctionTest {
         differentialFitnessFunction = new DifferentialFitnessFunction("sin", dataContainer, numericalDifferentiationCalculator);
     }
 
-    @Ignore
     @Test
     public void shouldAcceptExactSolution() throws Exception {
 
