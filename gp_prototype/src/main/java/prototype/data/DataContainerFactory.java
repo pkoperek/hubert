@@ -1,6 +1,7 @@
 package prototype.data;
 
 import org.apache.log4j.Logger;
+import org.constretto.ConstrettoConfiguration;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,8 +10,21 @@ import java.io.IOException;
 public class DataContainerFactory {
 
     private static Logger logger = Logger.getLogger(DataContainerFactory.class);
+    private final String inputFileName;
 
-    public DataContainer getDataContainer(String filename) throws IOException {
+    public DataContainerFactory(String inputFileName) {
+        this.inputFileName = inputFileName;
+    }
+
+    public DataContainerFactory(ConstrettoConfiguration constrettoConfiguration) {
+        inputFileName = constrettoConfiguration.evaluateToString("data.file");
+    }
+
+    public DataContainer getDataContainer() throws IOException {
+        return getDataContainer(inputFileName);
+    }
+
+    private DataContainer getDataContainer(String filename) throws IOException {
         DataContainer dataContainer = null;
         BufferedReader reader = null;
         try {

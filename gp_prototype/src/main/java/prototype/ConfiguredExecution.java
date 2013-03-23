@@ -1,25 +1,22 @@
 package prototype;
 
 import org.apache.log4j.xml.DOMConfigurator;
+import org.constretto.ConstrettoBuilder;
+import org.constretto.ConstrettoConfiguration;
+import org.constretto.model.Resource;
 import org.jgap.InvalidConfigurationException;
+import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
+import prototype.configuration.EvolutionEngineFactory;
+import prototype.configuration.GenotypeFactory;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
-import prototype.differentiation.numeric.CentralNumericalDifferentiationCalculator;
-import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
-import prototype.evolution.GPConfigurationBuilder;
+import prototype.evolution.configuration.GPConfigurationFactory;
 import prototype.evolution.engine.EvolutionEngine;
-import prototype.evolution.fitness.DifferentialFitnessFunction;
-import prototype.evolution.fitness.parsimony.CovarianceParsimonyPressure;
-import prototype.evolution.fitness.parsimony.EvolutionCycleAware;
-import prototype.evolution.fitness.parsimony.NotifyingEvolutionHandler;
-import prototype.evolution.genotype.GPGenotypeBuilder;
-import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
-import prototype.evolution.reporting.ParetoFrontFileReporter;
+import prototype.evolution.fitness.FitnessFunctionFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * User: koperek
@@ -28,49 +25,34 @@ import java.util.Arrays;
  */
 public class ConfiguredExecution {
 
-    private static final int ITERATIONS = 500;
-
     public static void main(String[] args) throws InvalidConfigurationException, IOException {
         DOMConfigurator.configure("log4j.xml");
 
+        ConstrettoConfiguration constrettoConfiguration = initializeConfiguration(args[0]);
+
         // data
-        DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
+        DataContainer dataContainer = new DataContainerFactory(constrettoConfiguration).getDataContainer();
 
         // fitness function
-        NumericalDifferentiationCalculator numericalDifferentiationCalculator = new CentralNumericalDifferentiationCalculator(dataContainer);
-        DifferentialFitnessFunction fitnessFunction = new DifferentialFitnessFunction("sin", dataContainer, numericalDifferentiationCalculator);
-        EvolutionCycleAware parsimonyPressure = new CovarianceParsimonyPressure(fitnessFunction);
+        FitnessFunctionFactory fitnessFunctionFactory = constrettoConfiguration.as(FitnessFunctionFactory.class);
+        GPFitnessFunction fitnessFunction = fitnessFunctionFactory.createFitnessFunction(dataContainer);
 
         // configuration
-        GPConfiguration configuration = createConfiguration(fitnessFunction);
+        GPConfigurationFactory configurationFactory = constrettoConfiguration.as(GPConfigurationFactory.class);
+        GPConfiguration configuration = configurationFactory.createConfiguration(fitnessFunction);
 
         // genotype
-        SingleChromosomeBuildingStrategy buildingStrategy =
-                new SingleChromosomeBuildingStrategy(Arrays.asList(dataContainer.getVariableNames()));
-
-        GPGenotype genotype = GPGenotypeBuilder
-                .builder(buildingStrategy, configuration)
-                .setMaxNodes(128)
-                .build();
+        GPGenotype genotype = new GenotypeFactory().createGPGenotype(configuration, dataContainer);
 
         // evolution
-        EvolutionEngine evolutionEngine = EvolutionEngine.Builder.builder()
-                .addEvolutionEngineEventHandlers(new NotifyingEvolutionHandler(parsimonyPressure))
-                .addEvolutionEngineEventHandlers(new ParetoFrontFileReporter(50))
-                .withMaxIterations(500)
-                .withDeterministicCrowdingIterations(configuration)
-                .build();
+        EvolutionEngine evolutionEngine = new EvolutionEngineFactory().createEvolutionEngine(configuration);
 
+        // evolve!!!
         evolutionEngine.genotypeEvolve(genotype);
     }
 
-    private static GPConfiguration createConfiguration(DifferentialFitnessFunction fitnessFunction) throws InvalidConfigurationException {
-        return GPConfigurationBuilder
-                .builder(fitnessFunction)
-                .setPopulationSize(64)
-                .withDeterministicCrowding()
-                        //.withNewChromsPercent(0.25)
-                .buildConfiguration();
+    private static ConstrettoConfiguration initializeConfiguration(String configurationFilePath) {
+        return new ConstrettoBuilder().createPropertiesStore().addResource(Resource.create("file:" + configurationFilePath)).done().getConfiguration();
     }
 
 }

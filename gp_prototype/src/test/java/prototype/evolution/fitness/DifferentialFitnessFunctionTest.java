@@ -11,7 +11,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
-import prototype.differentiation.numeric.CentralNumericalDifferentiationCalculator;
+import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
+import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -28,8 +29,12 @@ public class DifferentialFitnessFunctionTest {
 
     @Before
     public void setUp() throws Exception {
-        dataContainer = new DataContainerFactory().getDataContainer("src/test/resources/sin_implicit_time.csv");
-        differentialFitnessFunction = new DifferentialFitnessFunction("sin", dataContainer, new CentralNumericalDifferentiationCalculator(dataContainer));
+
+        dataContainer = new DataContainerFactory("src/test/resources/sin_implicit_time.csv").getDataContainer();
+        NumericalDifferentiationCalculator numericalDifferentiationCalculator =
+                new NumericalDifferentiationCalculatorFactory()
+                        .createCalculator(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL, dataContainer);
+        differentialFitnessFunction = new DifferentialFitnessFunction("sin", dataContainer, numericalDifferentiationCalculator);
     }
 
     @Ignore

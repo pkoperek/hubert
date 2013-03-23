@@ -22,7 +22,7 @@ import java.util.List;
  * Date: 11.02.13
  * Time: 19:22
  */
-public class DifferentialQuotientFitnessFunction extends GPFitnessFunction {
+class DifferentialQuotientFitnessFunction extends GPFitnessFunction {
 
     private static final Logger LOGGER = Logger.getLogger(DifferentialQuotientFitnessFunction.class);
 

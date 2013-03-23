@@ -7,7 +7,7 @@ import prototype.data.DataContainer;
  * Date: 16.02.13
  * Time: 11:49
  */
-public class ForwardNumericalDifferentiationCalculator extends NumericalDifferentiationCalculator {
+class ForwardNumericalDifferentiationCalculator extends AbstractNumericalDifferentiationCalculator {
 
     public ForwardNumericalDifferentiationCalculator(DataContainer dataContainer) {
         super(dataContainer);

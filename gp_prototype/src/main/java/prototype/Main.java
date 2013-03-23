@@ -2,15 +2,15 @@ package prototype;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.jgap.InvalidConfigurationException;
+import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.DataContainer;
 import prototype.data.DataContainerFactory;
-import prototype.differentiation.numeric.CentralNumericalDifferentiationCalculator;
-import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
-import prototype.evolution.GPConfigurationBuilder;
+import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
+import prototype.evolution.configuration.GPConfigurationFactory;
 import prototype.evolution.engine.EvolutionEngine;
-import prototype.evolution.fitness.DifferentialFitnessFunction;
+import prototype.evolution.fitness.FitnessFunctionFactory;
 import prototype.evolution.genotype.GPGenotypeBuilder;
 import prototype.evolution.genotype.SingleChromosomeBuildingStrategy;
 import prototype.evolution.reporting.ParetoFrontFileReporter;
@@ -38,18 +38,19 @@ public class Main {
         }
 
         // data
-        DataContainer dataContainer = new DataContainerFactory().getDataContainer(args[0]);
+        DataContainer dataContainer = new DataContainerFactory(args[0]).getDataContainer();
 
         // fitness function
-        NumericalDifferentiationCalculator numericalDifferentiationCalculator = new CentralNumericalDifferentiationCalculator(dataContainer);
-        DifferentialFitnessFunction fitnessFunction = new DifferentialFitnessFunction("sin", dataContainer, numericalDifferentiationCalculator);
+        FitnessFunctionFactory fitnessFunctionFactory = new FitnessFunctionFactory();
+        fitnessFunctionFactory.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL);
+        fitnessFunctionFactory.setFunctionType(FitnessFunctionFactory.FitnessFunctionType.DIFF);
+        fitnessFunctionFactory.setVariableName("sin");
+        GPFitnessFunction fitnessFunction = fitnessFunctionFactory.createFitnessFunction(dataContainer);
 
         // configuration
-        GPConfiguration configuration = GPConfigurationBuilder
-                .builder(fitnessFunction)
-                .setPopulationSize(64)
-                .withDeterministicCrowding()
-                .buildConfiguration();
+        GPConfigurationFactory configurationFactory = new GPConfigurationFactory();
+        configurationFactory.setPopulationSize(64);
+        GPConfiguration configuration = configurationFactory.createConfiguration(fitnessFunction);
 
         // genotype
         SingleChromosomeBuildingStrategy buildingStrategy =

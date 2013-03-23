@@ -14,7 +14,7 @@ import java.util.Map;
  * Date: 17.03.13
  * Time: 18:09
  */
-public class LoessNumericalDifferentiationCalculator extends NumericalDifferentiationCalculator {
+class LoessNumericalDifferentiationCalculator extends AbstractNumericalDifferentiationCalculator {
     private Map<String, double[]> loessInterpolations = new HashMap<>();
     private LoessInterpolator loessInterpolator = new LoessInterpolator();
 

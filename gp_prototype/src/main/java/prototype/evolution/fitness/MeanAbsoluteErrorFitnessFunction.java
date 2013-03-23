@@ -8,7 +8,7 @@ import prototype.data.DataContainer;
  * Date: 11.03.13
  * Time: 20:53
  */
-public class MeanAbsoluteErrorFitnessFunction extends AbsoluteErrorFitnessFunction {
+class MeanAbsoluteErrorFitnessFunction extends AbsoluteErrorFitnessFunction {
     public MeanAbsoluteErrorFitnessFunction(DataContainer dataContainer) {
         super(dataContainer);
     }

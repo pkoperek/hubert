@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 10.03.13
  * Time: 23:32
  */
-public class AbsoluteSquareErrorFitnessFunction extends GPFitnessFunction {
+class AbsoluteSquareErrorFitnessFunction extends GPFitnessFunction {
 
     private List<String> variablesNames;
     private final DataContainer dataContainer;

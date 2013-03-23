@@ -20,7 +20,7 @@ import java.util.List;
  * Date: 17.03.13
  * Time: 22:48
  */
-public class DifferentialFitnessFunction extends GPFitnessFunction {
+class DifferentialFitnessFunction extends GPFitnessFunction {
     private static final Logger LOGGER = Logger.getLogger(DifferentialQuotientFitnessFunction.class);
 
     private final List<String> variables;
