@@ -23,11 +23,11 @@ class CentralNumericalDifferentiationCalculator extends AbstractNumericalDiffere
     }
 
     @Override
-    public double getDifferential(String variable, int row) {
+    public double getDirectionalDerivative(String differentiated, String direction, int row) {
         if (row == 0) {
             throw new IllegalArgumentException("Can't compute difference of " + (row + 1) + " and " + (row - 1));
         }
 
-        return getDifference(variable, row - 1, row + 1) / getTimeDifference(row - 1, row + 1);
+        return getDifference(differentiated, row - 1, row + 1) / getDifference(direction, row - 1, row + 1);
     }
 }

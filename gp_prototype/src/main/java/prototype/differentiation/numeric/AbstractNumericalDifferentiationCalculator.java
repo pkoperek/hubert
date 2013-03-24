@@ -25,12 +25,4 @@ abstract class AbstractNumericalDifferentiationCalculator implements NumericalDi
 
         return second - first;
     }
-
-    public double getDifferentialQuotient(String x, String y, int dataRow) {
-        return getDifferential(x, dataRow) / getDifferential(y, dataRow);
-    }
-
-    protected double getTimeDifference(int firstRow, int secondRow) {
-        return dataContainer.getTimeDifference(firstRow, secondRow);
-    }
 }

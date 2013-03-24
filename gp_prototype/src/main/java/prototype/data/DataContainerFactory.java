@@ -3,6 +3,8 @@ package prototype.data;
 import org.apache.log4j.Logger;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
+import prototype.data.container.DefaultDataContainer;
+import prototype.data.container.ImplicitTimeDataContainer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,7 +23,26 @@ public class DataContainerFactory {
     }
 
     private DataContainer getDataContainer(String filename) throws IOException {
-        DataContainer dataContainer = new DataContainer(timeVariable, implicitTime);
+        DataContainer dataContainer = createDataContainer();
+        fillContainerWithData(filename, dataContainer);
+        return dataContainer;
+    }
+
+    private DataContainer createDataContainer() {
+        DataContainer dataContainer = new DefaultDataContainer(timeVariable);
+
+        if (implicitTime) {
+            dataContainer = decorateWithImplicitTime(dataContainer);
+        }
+
+        return dataContainer;
+    }
+
+    private DataContainer decorateWithImplicitTime(DataContainer dataContainer) {
+        return new ImplicitTimeDataContainer(dataContainer);
+    }
+
+    private void fillContainerWithData(String filename, DataContainer dataContainer) throws IOException {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(filename));
@@ -33,7 +54,6 @@ public class DataContainerFactory {
                 reader.close();
             }
         }
-        return dataContainer;
     }
 
     @Configure

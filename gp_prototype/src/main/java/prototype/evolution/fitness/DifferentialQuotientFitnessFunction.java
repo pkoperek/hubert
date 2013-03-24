@@ -31,12 +31,18 @@ class DifferentialQuotientFitnessFunction extends GPFitnessFunction {
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
     private VariablesValues variablesValues = new VariablesValues();
+    private final String timeVariableName;
 
     public DifferentialQuotientFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.pairs = new PairGenerator<String>().generatePairs(Arrays.asList(dataContainer.getVariableNames()));
         this.numericalDifferentiationCalculator = numericalDifferentiationCalculator;
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
+        this.timeVariableName = dataContainer.getTimeVariable();
+
+        if (this.timeVariableName == null) {
+            throw new IllegalArgumentException("No time variable set! Set time variable or use implicit time!");
+        }
     }
 
     @Override
@@ -99,8 +105,8 @@ class DifferentialQuotientFitnessFunction extends GPFitnessFunction {
                 double dfdx_val = dfdx.evaluate();
                 double dfdy_val = dfdy.evaluate();
 
-                double deltaX = numericalDifferentiationCalculator.getDifferential(x, dataRow);
-                double deltaY = numericalDifferentiationCalculator.getDifferential(y, dataRow);
+                double deltaX = numericalDifferentiationCalculator.getDirectionalDerivative(x, timeVariableName, dataRow);
+                double deltaY = numericalDifferentiationCalculator.getDirectionalDerivative(y, timeVariableName, dataRow);
 
                 try {
                     // if any of denominators is 0 - discard data sample

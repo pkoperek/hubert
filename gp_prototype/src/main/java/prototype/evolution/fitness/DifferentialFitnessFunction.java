@@ -28,12 +28,14 @@ class DifferentialFitnessFunction extends GPFitnessFunction {
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
     private final VariablesValues variablesValues = new VariablesValues();
     private final String variableName;
+    private final String timeVariableName;
 
     public DifferentialFitnessFunction(String variableName, DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.numericalDifferentiationCalculator = numericalDifferentiationCalculator;
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;
         this.variableName = variableName;
+        this.timeVariableName = dataContainer.getTimeVariable();
     }
 
     @Override
@@ -71,7 +73,7 @@ class DifferentialFitnessFunction extends GPFitnessFunction {
 
                 double f_x = function.evaluate();
 
-                double deltaX = numericalDifferentiationCalculator.getDifferential(x, dataRow);
+                double deltaX = numericalDifferentiationCalculator.getDirectionalDerivative(x, timeVariableName, dataRow);
 
                 try {
                     // if any of denominators is 0 - discard data sample

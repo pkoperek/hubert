@@ -28,16 +28,17 @@ class LoessNumericalDifferentiationCalculator extends AbstractNumericalDifferent
     }
 
     @Override
-    public double getDifferential(String variable, int secondRow) {
-        if (!loessInterpolations.containsKey(variable)) {
-            VariableSeries xSeries = getDataContainer().getVariableSeries(variable);
-            loessInterpolations.put(variable, interpolateSingleVariableWithImplicitTime(xSeries));
+    public double getDirectionalDerivative(String differentiated, String direction, int secondRow) {
+        if (!loessInterpolations.containsKey(differentiated)) {
+            VariableSeries xSeries = getDataContainer().getVariableSeries(differentiated);
+            loessInterpolations.put(differentiated, interpolateSingleVariableWithImplicitTime(xSeries));
         }
 
-        double[] differentials = loessInterpolations.get(variable);
+        double[] differentials = loessInterpolations.get(differentiated);
         return (differentials[secondRow + 1] - differentials[secondRow - 1])
-                / getTimeDifference(secondRow - 1, secondRow + 1);
+                / getDifference(direction, secondRow - 1, secondRow + 1);
     }
+
 
     private double[] interpolateSingleVariableWithImplicitTime(VariableSeries xSeries) {
         double[] time = new double[xSeries.getDataRowsCount()];
@@ -48,7 +49,6 @@ class LoessNumericalDifferentiationCalculator extends AbstractNumericalDifferent
         return loessInterpolator.smooth(time, xSeries.getSeriesArray());
     }
 
-    @Override
     public double getDifferentialQuotient(String x, String y, int dataRow) {
         String key = getKey(x, y);
 

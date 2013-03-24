@@ -8,5 +8,5 @@ package prototype.differentiation.numeric;
 public interface NumericalDifferentiationCalculator {
     boolean hasDifferential(String variable, int row);
 
-    double getDifferential(String variable, int secondRow);
+    double getDirectionalDerivative(String differentiated, String direction, int secondRow);
 }
