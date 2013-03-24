@@ -27,11 +27,11 @@ public class FitnessFunctionFactory {
             case DIFF:
                 return new DifferentialFitnessFunction(variableName, dataContainer, numericalDifferentiationCalculator);
             case ABSERR:
-                return new EachChromosomeAbsoluteErrorFitnessFunction(dataContainer);
+                return new AllChromosomesAbsoluteErrorFitnessFunction(dataContainer);
             case ABSSQERR:
-                return new AbsoluteSquareErrorFitnessFunction(dataContainer);
+                return new AllChromosomesAbsoluteSquareErrorFitnessFunction(dataContainer);
             case MEANABSERR:
-                return new EachChromosomeMeanAbsoluteErrorFitnessFunction(dataContainer);
+                return new AllChromosomesMeanAbsoluteErrorFitnessFunction(dataContainer);
             case DIFFQ:
                 return new DifferentialQuotientFitnessFunction(dataContainer, numericalDifferentiationCalculator);
         }
