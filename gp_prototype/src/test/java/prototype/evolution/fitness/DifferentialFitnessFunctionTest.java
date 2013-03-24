@@ -36,6 +36,7 @@ public class DifferentialFitnessFunctionTest {
         DataContainerFactory dataContainerFactory = new DataContainerFactory();
         dataContainerFactory.setInputFileName("src/test/resources/sin_implicit_time.csv");
         dataContainerFactory.setImplicitTime(true);
+        dataContainerFactory.setTimedData(true);
         dataContainer = dataContainerFactory.getDataContainer();
         NumericalDifferentiationCalculator numericalDifferentiationCalculator =
                 new NumericalDifferentiationCalculatorFactory()
