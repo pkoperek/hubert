@@ -10,22 +10,20 @@ import java.io.IOException;
  */
 public class CSVReader {
 
-    private BufferedReader reader;
+    private final BufferedReader reader;
     private String[] legend;
 
     public CSVReader(BufferedReader reader) {
         this.reader = reader;
     }
 
-    public DataContainer read() throws IOException {
-        readLegend();
-        return readContent();
+    public void fillIn(DataContainer dataContainer) throws IOException {
+        fillInLegend(dataContainer);
+        fillInContent(dataContainer);
     }
 
-    private DataContainer readContent() throws IOException {
-        DataContainer dataContainer = new DataContainer(legend);
+    private void fillInContent(DataContainer dataContainer) throws IOException {
         String line;
-
         while ((line = reader.readLine()) != null) {
             if (isNotEmpty(line)) {
                 String[] values = line.split(",");
@@ -34,16 +32,16 @@ public class CSVReader {
                 }
             }
         }
-
-        return dataContainer;
     }
 
-    private void readLegend() throws IOException {
+    private void fillInLegend(DataContainer dataContainer) throws IOException {
         String names = reader.readLine();
         if (names.startsWith("#")) {
             names = names.substring(1);
         }
         legend = names.split(",");
+
+        dataContainer.initializeVariables(legend);
     }
 
     private boolean isNotEmpty(String line) {

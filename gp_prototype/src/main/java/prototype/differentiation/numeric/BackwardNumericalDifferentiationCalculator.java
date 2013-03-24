@@ -23,11 +23,11 @@ class BackwardNumericalDifferentiationCalculator extends AbstractNumericalDiffer
     }
 
     @Override
-    public double getDifferential(String variable, int secondRow) {
-        if (secondRow == 0) {
-            throw new IllegalArgumentException("Can't compute difference of " + secondRow + " and " + (secondRow - 1));
+    public double getDifferential(String variable, int row) {
+        if (row == 0) {
+            throw new IllegalArgumentException("Can't compute difference of " + row + " and " + (row - 1));
         }
 
-        return getDifference(variable, secondRow - 1, secondRow);
+        return getDifference(variable, row - 1, row) / getTimeDifference(row - 1, row);
     }
 }

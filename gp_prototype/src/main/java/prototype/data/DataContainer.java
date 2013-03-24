@@ -11,16 +11,41 @@ import java.util.Map;
  */
 public class DataContainer {
 
-    private Map<String, VariableSeries> data = new HashMap<String, VariableSeries>();
+    private final Map<String, VariableSeries> data = new HashMap<String, VariableSeries>();
     private int rowsCount = 0;
     private String[] variableNames;
+    private final String timeVariable;
+    private final boolean implicitTime;
 
-    public DataContainer(String[] variableNames) {
+    public DataContainer(String timeVariable, boolean implicitTime) {
+        this.timeVariable = timeVariable;
+        this.implicitTime = implicitTime;
+    }
+
+    public void initializeVariables(String[] variableNames) {
         this.variableNames = variableNames;
+
+        data.clear();
 
         for (String variableName : variableNames) {
             data.put(variableName, new VariableSeries(variableName));
         }
+    }
+
+    public double getTimeDifference(int firstRow, int secondRow) {
+        if (hasImplicitTime()) {
+            return secondRow - firstRow;
+        }
+
+        if (timeVariable == null) {
+            throw new IllegalArgumentException("Time variable name not set! Please set it with data.variable.time or use data.implicit.time!");
+        }
+
+        return getValue(timeVariable, secondRow) - getValue(timeVariable, firstRow);
+    }
+
+    private boolean hasImplicitTime() {
+        return implicitTime;
     }
 
     public double getValue(String variable, int row) {

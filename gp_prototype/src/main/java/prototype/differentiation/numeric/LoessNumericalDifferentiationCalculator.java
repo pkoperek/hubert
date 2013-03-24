@@ -35,7 +35,8 @@ class LoessNumericalDifferentiationCalculator extends AbstractNumericalDifferent
         }
 
         double[] differentials = loessInterpolations.get(variable);
-        return (differentials[secondRow + 1] - differentials[secondRow - 1]) / 2;
+        return (differentials[secondRow + 1] - differentials[secondRow - 1])
+                / getTimeDifference(secondRow - 1, secondRow + 1);
     }
 
     private double[] interpolateSingleVariableWithImplicitTime(VariableSeries xSeries) {

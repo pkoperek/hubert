@@ -23,11 +23,11 @@ class ForwardNumericalDifferentiationCalculator extends AbstractNumericalDiffere
     }
 
     @Override
-    public double getDifferential(String variable, int secondRow) {
-        if (secondRow == 0) {
-            throw new IllegalArgumentException("Can't compute difference of " + secondRow + " and " + (secondRow - 1));
+    public double getDifferential(String variable, int row) {
+        if (row == 0) {
+            throw new IllegalArgumentException("Can't compute difference of " + row + " and " + (row - 1));
         }
 
-        return getDifference(variable, secondRow, secondRow + 1);
+        return getDifference(variable, row, row + 1) / getTimeDifference(row, row + 1);
     }
 }

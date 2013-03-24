@@ -31,7 +31,8 @@ public class ConfiguredExecution {
         ConstrettoConfiguration constrettoConfiguration = initializeConfiguration(args[0]);
 
         // data
-        DataContainer dataContainer = new DataContainerFactory(constrettoConfiguration).getDataContainer();
+        DataContainerFactory dataContainerFactory = constrettoConfiguration.as(DataContainerFactory.class);
+        DataContainer dataContainer = dataContainerFactory.getDataContainer();
 
         // fitness function
         FitnessFunctionFactory fitnessFunctionFactory = constrettoConfiguration.as(FitnessFunctionFactory.class);

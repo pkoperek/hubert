@@ -37,7 +37,10 @@ public class Main {
         }
 
         // data
-        DataContainer dataContainer = new DataContainerFactory(args[0]).getDataContainer();
+        DataContainerFactory dataContainerFactory = new DataContainerFactory();
+        dataContainerFactory.setInputFileName(args[0]);
+        dataContainerFactory.setImplicitTime(true);
+        DataContainer dataContainer = dataContainerFactory.getDataContainer();
 
         // fitness function
         FitnessFunctionFactory fitnessFunctionFactory = new FitnessFunctionFactory();
