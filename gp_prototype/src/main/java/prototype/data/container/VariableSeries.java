@@ -1,4 +1,4 @@
-package prototype.data;
+package prototype.data.container;
 
 import java.util.ArrayList;
 import java.util.List;

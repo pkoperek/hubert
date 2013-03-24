@@ -1,7 +1,5 @@
 package prototype.data.container;
 
-import prototype.data.VariableSeries;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

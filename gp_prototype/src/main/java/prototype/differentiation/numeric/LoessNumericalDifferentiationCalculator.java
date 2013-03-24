@@ -1,8 +1,8 @@
 package prototype.differentiation.numeric;
 
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
-import prototype.data.VariableSeries;
 import prototype.data.container.DataContainer;
+import prototype.data.container.VariableSeries;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -28,33 +28,12 @@ class LoessNumericalDifferentiationCalculator extends AbstractNumericalDifferent
     }
 
     @Override
-    public double getDirectionalDerivative(String differentiated, String direction, int secondRow) {
-        if (!loessInterpolations.containsKey(differentiated)) {
-            VariableSeries xSeries = getDataContainer().getVariableSeries(differentiated);
-            loessInterpolations.put(differentiated, interpolateSingleVariableWithImplicitTime(xSeries));
-        }
-
-        double[] differentials = loessInterpolations.get(differentiated);
-        return (differentials[secondRow + 1] - differentials[secondRow - 1])
-                / getDifference(direction, secondRow - 1, secondRow + 1);
-    }
-
-
-    private double[] interpolateSingleVariableWithImplicitTime(VariableSeries xSeries) {
-        double[] time = new double[xSeries.getDataRowsCount()];
-        for (int i = 0; i < time.length; i++) {
-            time[i] = i;
-        }
-
-        return loessInterpolator.smooth(time, xSeries.getSeriesArray());
-    }
-
-    public double getDifferentialQuotient(String x, String y, int dataRow) {
-        String key = getKey(x, y);
+    public double getDirectionalDerivative(String differentiated, String direction, int row) {
+        String key = getKey(differentiated, direction);
 
         if (!loessInterpolations.containsKey(key)) {
-            VariableSeries xSeries = getDataContainer().getVariableSeries(x);
-            VariableSeries ySeries = getDataContainer().getVariableSeries(y);
+            VariableSeries ySeries = getDataContainer().getVariableSeries(differentiated);
+            VariableSeries xSeries = getDataContainer().getVariableSeries(direction);
 
             double[] differentials = interpolateTwoVariables(xSeries, ySeries);
 
@@ -62,7 +41,7 @@ class LoessNumericalDifferentiationCalculator extends AbstractNumericalDifferent
         }
 
         double[] differentials = loessInterpolations.get(key);
-        return differentials[dataRow];
+        return differentials[row];
     }
 
     private double[] interpolateTwoVariables(VariableSeries xSeries, VariableSeries ySeries) {

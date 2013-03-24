@@ -16,7 +16,7 @@ public class FitnessFunctionFactory {
     private String variableName;
 
     public enum FitnessFunctionType {
-        DIFF, ABSERR, ABSSQERR, DIFFQ, MEANABSERR
+        DIFF, ABSERR, ABSSQERR, DIFFQ, MEANABSERR, TLESS_DIFFQ
     }
 
     public GPFitnessFunction createFitnessFunction(DataContainer dataContainer) {
@@ -33,7 +33,9 @@ public class FitnessFunctionFactory {
             case MEANABSERR:
                 return new AllChromosomesMeanAbsoluteErrorFitnessFunction(dataContainer);
             case DIFFQ:
-                return new DifferentialQuotientFitnessFunction(dataContainer, numericalDifferentiationCalculator);
+                return new TimeDifferentialQuotientFitnessFunction(dataContainer, numericalDifferentiationCalculator);
+            case TLESS_DIFFQ:
+                return new TimelessDifferentialQuotientFitnessFunction(dataContainer, numericalDifferentiationCalculator);
         }
 
         throw new IllegalArgumentException("Unsupported function type!" + functionType);

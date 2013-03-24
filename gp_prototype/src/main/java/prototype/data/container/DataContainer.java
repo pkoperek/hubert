@@ -1,7 +1,5 @@
 package prototype.data.container;
 
-import prototype.data.VariableSeries;
-
 /**
  * User: koperek
  * Date: 24.03.13

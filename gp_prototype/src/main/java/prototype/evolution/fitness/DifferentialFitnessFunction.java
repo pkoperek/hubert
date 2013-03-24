@@ -21,7 +21,7 @@ import java.util.List;
  * Time: 22:48
  */
 class DifferentialFitnessFunction extends GPFitnessFunction {
-    private static final Logger LOGGER = Logger.getLogger(DifferentialQuotientFitnessFunction.class);
+    private static final Logger LOGGER = Logger.getLogger(TimeDifferentialQuotientFitnessFunction.class);
 
     private final List<String> variables;
     private final DataContainer dataContainer;

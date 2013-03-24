@@ -22,18 +22,18 @@ import java.util.List;
  * Date: 11.02.13
  * Time: 19:22
  */
-class DifferentialQuotientFitnessFunction extends GPFitnessFunction {
+class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
 
-    private static final Logger LOGGER = Logger.getLogger(DifferentialQuotientFitnessFunction.class);
+    private static final Logger LOGGER = Logger.getLogger(TimeDifferentialQuotientFitnessFunction.class);
 
     private final List<Pair<String>> pairs;
     private final List<String> variables;
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
-    private VariablesValues variablesValues = new VariablesValues();
     private final String timeVariableName;
+    private VariablesValues variablesValues = new VariablesValues();
 
-    public DifferentialQuotientFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
+    public TimeDifferentialQuotientFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.pairs = new PairGenerator<String>().generatePairs(Arrays.asList(dataContainer.getVariableNames()));
         this.numericalDifferentiationCalculator = numericalDifferentiationCalculator;
         this.variables = Arrays.asList(dataContainer.getVariableNames());
