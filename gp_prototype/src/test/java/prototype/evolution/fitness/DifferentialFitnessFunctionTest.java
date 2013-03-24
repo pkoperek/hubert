@@ -12,8 +12,8 @@ import org.jgap.gp.terminal.Terminal;
 import org.jgap.gp.terminal.Variable;
 import org.junit.Before;
 import org.junit.Test;
-import prototype.data.DataContainer;
-import prototype.data.DataContainerFactory;
+import prototype.data.container.DataContainer;
+import prototype.data.container.DataContainerFactory;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
 

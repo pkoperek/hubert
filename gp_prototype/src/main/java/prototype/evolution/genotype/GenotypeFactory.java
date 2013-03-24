@@ -5,7 +5,7 @@ import org.constretto.annotation.Configure;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
-import prototype.data.DataContainer;
+import prototype.data.container.DataContainer;
 
 import java.util.Arrays;
 

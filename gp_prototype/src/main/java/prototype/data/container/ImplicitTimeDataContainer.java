@@ -1,6 +1,5 @@
 package prototype.data.container;
 
-import prototype.data.DataContainer;
 import prototype.data.VariableSeries;
 
 /**
@@ -8,7 +7,7 @@ import prototype.data.VariableSeries;
  * Date: 24.03.13
  * Time: 16:22
  */
-public class ImplicitTimeDataContainer implements DataContainer {
+class ImplicitTimeDataContainer implements DataContainer {
     public final static String IMPLICIT_TIME_VARIABLE_NAME = "_IMPLICIT_TIME_";
 
     private final DataContainer delegate;

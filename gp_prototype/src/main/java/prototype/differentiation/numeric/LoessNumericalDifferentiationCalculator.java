@@ -1,8 +1,8 @@
 package prototype.differentiation.numeric;
 
 import org.apache.commons.math3.analysis.interpolation.LoessInterpolator;
-import prototype.data.DataContainer;
 import prototype.data.VariableSeries;
+import prototype.data.container.DataContainer;
 
 import java.util.Arrays;
 import java.util.Comparator;

@@ -1,10 +1,9 @@
-package prototype.data;
+package prototype.data.container;
 
 import org.apache.log4j.Logger;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
-import prototype.data.container.DefaultDataContainer;
-import prototype.data.container.ImplicitTimeDataContainer;
+import prototype.data.CSVReader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -1,6 +1,6 @@
 package prototype.differentiation.numeric;
 
-import prototype.data.DataContainer;
+import prototype.data.container.DataContainer;
 
 /**
  * User: koperek

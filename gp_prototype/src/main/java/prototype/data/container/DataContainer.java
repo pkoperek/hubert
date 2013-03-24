@@ -1,4 +1,6 @@
-package prototype.data;
+package prototype.data.container;
+
+import prototype.data.VariableSeries;
 
 /**
  * User: koperek

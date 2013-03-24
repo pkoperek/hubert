@@ -1,6 +1,5 @@
 package prototype.data.container;
 
-import prototype.data.DataContainer;
 import prototype.data.VariableSeries;
 
 import java.util.Arrays;
@@ -12,7 +11,7 @@ import java.util.Map;
  * Date: 14.02.13
  * Time: 19:39
  */
-public class DefaultDataContainer implements DataContainer {
+class DefaultDataContainer implements DataContainer {
 
     private final Map<String, VariableSeries> data = new HashMap<String, VariableSeries>();
     private int rowsCount = 0;

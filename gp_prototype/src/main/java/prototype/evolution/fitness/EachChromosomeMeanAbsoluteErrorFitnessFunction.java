@@ -1,7 +1,7 @@
 package prototype.evolution.fitness;
 
 import org.jgap.gp.IGPProgram;
-import prototype.data.DataContainer;
+import prototype.data.container.DataContainer;
 
 /**
  * User: koperek

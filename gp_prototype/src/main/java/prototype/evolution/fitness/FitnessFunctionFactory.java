@@ -3,7 +3,7 @@ package prototype.evolution.fitness;
 import org.constretto.annotation.Configuration;
 import org.constretto.annotation.Configure;
 import org.jgap.gp.GPFitnessFunction;
-import prototype.data.DataContainer;
+import prototype.data.container.DataContainer;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
 
