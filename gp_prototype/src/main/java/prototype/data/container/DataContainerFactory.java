@@ -16,6 +16,7 @@ public class DataContainerFactory {
     private String inputFileName;
     private String timeVariable;
     private boolean implicitTime;
+    private boolean timedData;
 
     public DataContainer getDataContainer() throws IOException {
         return getDataContainer(inputFileName);
@@ -30,7 +31,7 @@ public class DataContainerFactory {
     private DataContainer createDataContainer() {
         DataContainer dataContainer = new DefaultDataContainer(timeVariable);
 
-        if (implicitTime) {
+        if (timedData && implicitTime) {
             dataContainer = decorateWithImplicitTime(dataContainer);
         }
 
@@ -61,12 +62,17 @@ public class DataContainerFactory {
     }
 
     @Configure
-    public void setTimeVariable(@Configuration(value = "data.variable.time", required = false) String timeVariable) {
+    public void setTimeVariable(@Configuration(value = "data.time.variable", required = false) String timeVariable) {
         this.timeVariable = timeVariable;
     }
 
     @Configure
-    public void setImplicitTime(@Configuration(value = "data.implicit.time", defaultValue = "false") boolean implicitTime) {
+    public void setImplicitTime(@Configuration(value = "data.time.implicit", defaultValue = "false") boolean implicitTime) {
         this.implicitTime = implicitTime;
+    }
+
+    @Configure
+    public void setTimedData(@Configuration(value = "data.time", defaultValue = "true") boolean timedData) {
+        this.timedData = timedData;
     }
 }

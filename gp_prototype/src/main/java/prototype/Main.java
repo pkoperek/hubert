@@ -40,6 +40,7 @@ public class Main {
         DataContainerFactory dataContainerFactory = new DataContainerFactory();
         dataContainerFactory.setInputFileName(args[0]);
         dataContainerFactory.setImplicitTime(true);
+        dataContainerFactory.setTimedData(true);
         DataContainer dataContainer = dataContainerFactory.getDataContainer();
 
         // fitness function
