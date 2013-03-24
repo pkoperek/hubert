@@ -21,11 +21,25 @@
 
     <fileSets>
         <fileSet>
+            <directory>src/main/resources/schmidt_lipson</directory>
+            <includes>
+                <include>*.csv</include>
+            </includes>
+            <outputDirectory>data/schmidt_lipson</outputDirectory>
+        </fileSet>
+        <fileSet>
             <directory>src/main/resources</directory>
             <includes>
                 <include>*.csv</include>
             </includes>
             <outputDirectory>data</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources/config</directory>
+            <includes>
+                <include>*.properties</include>
+            </includes>
+            <outputDirectory>config</outputDirectory>
         </fileSet>
     </fileSets>
 
