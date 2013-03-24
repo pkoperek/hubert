@@ -1,3 +1,4 @@
 #!/bin/bash
 
-java -jar lib/gp_prototype-1.0-SNAPSHOT.jar data/circle.csv 1000
+echo "Running with configuration: " $1
+java -jar lib/gp_prototype-1.0-SNAPSHOT.jar $1
