@@ -16,6 +16,7 @@ public class VariablesValues {
         variablesValues.put(variable, value);
     }
 
+    // TODO: optimize
     public double getVariableValue(String variable) {
         return variablesValues.get(variable);
     }
