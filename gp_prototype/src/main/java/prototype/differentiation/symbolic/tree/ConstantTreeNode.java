@@ -10,13 +10,13 @@ import prototype.differentiation.symbolic.TreeNode;
  */
 public class ConstantTreeNode extends TreeNode {
 
-    private Number number;
+    private double number;
 
-    public ConstantTreeNode(Number number) {
+    public ConstantTreeNode(double number) {
         this.number = number;
     }
 
-    public Number getNumber() {
+    public double getNumber() {
         return number;
     }
 

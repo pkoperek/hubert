@@ -20,8 +20,7 @@ public class Variable extends Function {
 
     @Override
     public double evaluate() {
-        Number variableValue = valuesContainer.getVariableValue(variableName);
-        return variableValue.doubleValue();
+        return valuesContainer.getVariableValue(variableName);
     }
 
     @Override

@@ -10,13 +10,13 @@ import java.util.Map;
  */
 public class VariablesValues {
 
-    private Map<String, Number> variablesValues = new HashMap<>();
+    private Map<String, Double> variablesValues = new HashMap<>();
 
-    public void setVariableValue(String variable, Number value) {
+    public void setVariableValue(String variable, double value) {
         variablesValues.put(variable, value);
     }
 
-    public Number getVariableValue(String variable) {
+    public double getVariableValue(String variable) {
         return variablesValues.get(variable);
     }
 

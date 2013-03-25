@@ -14,7 +14,7 @@ public abstract class AbstractSimplificationRule implements SimplificationRule {
     protected boolean isConstantZero(Function function) {
         if (isConstant(function)) {
             Constant constant = (Constant) function;
-            if (Math.abs(constant.getNumber().doubleValue()) < THRESHOLD) {
+            if (Math.abs(constant.getNumber()) < THRESHOLD) {
                 return true;
             }
         }

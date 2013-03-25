@@ -9,24 +9,24 @@ import prototype.differentiation.symbolic.Function;
  */
 public class Constant extends Function {
 
-    private Number number;
+    private double number;
 
-    public Constant(Number number) {
+    public Constant(double number) {
         this.number = number;
     }
 
-    public Number getNumber() {
+    public double getNumber() {
         return number;
     }
 
     @Override
     public double evaluate() {
-        return number.doubleValue();
+        return number;
     }
 
     @Override
     public Function clone() {
-        return new Constant(number.doubleValue());
+        return new Constant(number);
     }
 
     @Override
