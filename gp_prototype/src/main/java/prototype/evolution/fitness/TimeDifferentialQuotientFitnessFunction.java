@@ -32,7 +32,6 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
     private final String timeVariableName;
-    private VariablesValuesContainer variablesValuesContainer = new MapVariablesValuesContainer();
 
     public TimeDifferentialQuotientFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.pairs = new PairGenerator<String>().generatePairs(Arrays.asList(dataContainer.getVariableNames()));
@@ -72,7 +71,7 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         double chromosomeError = 0.0f;
 
         for (Pair<String> pairing : pairs) {
-            double pairingError = evaluatePairing(chromosome, pairing);
+            double pairingError = computeErrorForVariables(chromosome, pairing);
 
             if (pairingError > chromosomeError) {
                 chromosomeError = pairingError;
@@ -82,13 +81,14 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         return chromosomeError;
     }
 
-    private double evaluatePairing(ProgramChromosome chromosome, Pair<String> pairing) {
-        // we need to assume variables are dependent - if all are independent there are no relations in data!
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValuesContainer, pairing);
-        return computeErrorForVariables(treeNodeFactory.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
-    }
+    private double computeErrorForVariables(ProgramChromosome chromosome, Pair<String> pairing) {
+        VariablesValuesContainer valuesContainer = new MapVariablesValuesContainer();
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(valuesContainer, pairing);
+        TreeNode f = treeNodeFactory.createTreeNode(chromosome);
 
-    private double computeErrorForVariables(TreeNode f, String x, String y) {
+        String x = pairing.getOne();
+        String y = pairing.getTwo();
+
         Function dfdx = f.differentiate(x);
         Function dfdy = f.differentiate(y);
 
@@ -99,8 +99,8 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)
                     && numericalDifferentiationCalculator.hasDifferential(y, dataRow)) {
 
-                variablesValuesContainer.clear();
-                populateVariableValues(dataRow, variablesValuesContainer);
+                valuesContainer.clear();
+                populateVariableValues(dataRow, valuesContainer);
 
                 double dfdx_val = dfdx.evaluate();
                 double dfdy_val = dfdy.evaluate();

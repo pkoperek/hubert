@@ -11,6 +11,7 @@ import prototype.data.container.DataContainerFactory;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
 import prototype.evolution.configuration.GPConfigurationFactory;
 import prototype.evolution.engine.EvolutionEngine;
+import prototype.evolution.engine.dc.DeterministicCrowdingConfiguration;
 import prototype.evolution.fitness.FitnessFunctionConfiguration;
 import prototype.evolution.fitness.FitnessFunctionFactory;
 import prototype.evolution.genotype.ChromosomeBuildingStrategyFactory;
@@ -67,10 +68,12 @@ public class Main {
         GPGenotype genotype = new GenotypeFactory().createGPGenotype(genotypeConfiguration);
 
         // evolution
+        DeterministicCrowdingConfiguration deterministicCrowdingConfiguration = new DeterministicCrowdingConfiguration();
+        deterministicCrowdingConfiguration.setGpConfiguration(gpConfiguration);
         EvolutionEngine evolutionEngine = EvolutionEngine.Builder.builder()
                 .withEvolutionEngineEventHandler(new ParetoFrontFileReporter(50))
                 .withMaxIterations(iterations)
-                .withDeterministicCrowdingIterations(gpConfiguration)
+                .withDeterministicCrowdingIterations(deterministicCrowdingConfiguration)
                 .build();
 
         evolutionEngine.genotypeEvolve(genotype);

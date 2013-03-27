@@ -10,7 +10,7 @@ public class EvolutionEngineFactory {
         switch (configuration.getIterationType()) {
             case DET_CROWDING:
                 return builder
-                        .withDeterministicCrowdingIterations(configuration.getGpConfiguration())
+                        .withDeterministicCrowdingIterations(configuration.getDeterministicCrowdingConfiguration())
                         .build();
             case REGULAR:
                 return builder

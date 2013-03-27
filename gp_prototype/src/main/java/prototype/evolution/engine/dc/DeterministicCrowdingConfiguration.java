@@ -10,7 +10,7 @@ import org.jgap.gp.impl.GPConfiguration;
 public class DeterministicCrowdingConfiguration {
 
     private GPConfiguration gpConfiguration;
-    private int threadsNum;
+    private int threadsNum = DeterministicCrowdingEvolutionIteration.DEFAULT_THREADS_NUMBER;
 
     public GPConfiguration getGpConfiguration() {
         return gpConfiguration;
