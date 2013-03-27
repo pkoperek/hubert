@@ -24,7 +24,7 @@ public class EvolutionEngine {
     private final List<EvolutionEngineEventHandler> eventHandlers;
     private final EvolutionIteration evolutionIteration;
 
-    public EvolutionEngine(int iterations, double targetError, EvolutionIteration evolutionIteration, List<EvolutionEngineEventHandler> eventHandlers) {
+    EvolutionEngine(int iterations, double targetError, EvolutionIteration evolutionIteration, List<EvolutionEngineEventHandler> eventHandlers) {
         this.iterations = iterations;
         this.targetError = targetError;
         this.evolutionIteration = evolutionIteration;

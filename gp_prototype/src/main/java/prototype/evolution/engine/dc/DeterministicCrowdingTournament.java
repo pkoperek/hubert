@@ -17,7 +17,7 @@ public class DeterministicCrowdingTournament implements Tournament {
         this.individualDistance = individualDistance;
     }
 
-    private IGPProgram pickWithMaxFitness(IGPProgram left, IGPProgram right) {
+    private IGPProgram pickWithBestFitness(IGPProgram left, IGPProgram right) {
         return left.getFitnessValue() > right.getFitnessValue() ? right : left;
     }
 
@@ -26,11 +26,11 @@ public class DeterministicCrowdingTournament implements Tournament {
         IGPProgram[] winners = new IGPProgram[2];
         if (individualDistance.distance(parentA, childA) + individualDistance.distance(parentB, childB) <
                 individualDistance.distance(parentA, childB) + individualDistance.distance(parentB, childA)) {
-            winners[0] = pickWithMaxFitness(parentA, childA);
-            winners[1] = pickWithMaxFitness(parentB, childB);
+            winners[0] = pickWithBestFitness(parentA, childA);
+            winners[1] = pickWithBestFitness(parentB, childB);
         } else {
-            winners[0] = pickWithMaxFitness(parentA, childB);
-            winners[1] = pickWithMaxFitness(parentB, childA);
+            winners[0] = pickWithBestFitness(parentA, childB);
+            winners[1] = pickWithBestFitness(parentB, childA);
         }
         return winners;
     }
