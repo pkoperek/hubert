@@ -9,13 +9,18 @@ public class ErrorCalculatorFactory {
 
     public enum ErrorCalculatorType {
         ABSERR,
-        ABSSQERR
+        ABSSQERR,
+        LOGABSERR
     }
 
     public ErrorCalculator createErrorCalculator(ErrorCalculatorType errorCalculatorType) {
         switch (errorCalculatorType) {
             case ABSERR:
+                return new AbsDiffErrorCalculator();
             case ABSSQERR:
+                return new AbsDiffSquareErrorCalculator();
+            case LOGABSERR:
+                return new LogAbsCalculator();
         }
 
         throw new IllegalArgumentException("Unsupported error type! " + errorCalculatorType);
