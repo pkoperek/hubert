@@ -1,4 +1,4 @@
-package prototype.evolution.fitness.parsimony;
+package prototype.evolution.engine;
 
 import org.jgap.gp.impl.GPGenotype;
 

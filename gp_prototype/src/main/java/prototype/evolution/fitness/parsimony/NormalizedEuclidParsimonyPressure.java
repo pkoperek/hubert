@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPGenotype;
 import org.jgap.gp.impl.ProgramChromosome;
-import prototype.evolution.engine.EvolutionCycleAware;
 
 /**
  * /**
@@ -18,7 +17,7 @@ import prototype.evolution.engine.EvolutionCycleAware;
  * Date: 12.03.13
  * Time: 18:52
  */
-public class NormalizedEuclidParsimonyPressure implements ParsimonyPressure, EvolutionCycleAware {
+public class NormalizedEuclidParsimonyPressure implements ParsimonyPressure {
 
     private static final Logger logger = Logger.getLogger(NormalizedEuclidParsimonyPressure.class);
     private double maxLength = 1.0; // if not set - doesn't matter

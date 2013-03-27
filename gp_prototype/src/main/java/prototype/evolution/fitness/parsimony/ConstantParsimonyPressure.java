@@ -1,5 +1,6 @@
 package prototype.evolution.fitness.parsimony;
 
+import org.jgap.gp.impl.GPGenotype;
 import org.jgap.gp.impl.ProgramChromosome;
 
 /**
@@ -19,5 +20,15 @@ public class ConstantParsimonyPressure implements ParsimonyPressure {
     public double pressure(double fitness, ProgramChromosome a_subject) {
         // + - because we minimize this function :)
         return fitness + a_subject.size() * constantParsimonyPressure;
+    }
+
+    @Override
+    public void handleBeforeEvolution(GPGenotype genotype) {
+        // does nothing
+    }
+
+    @Override
+    public void handleAfterEvolution(GPGenotype genotype) {
+        // does nothing
     }
 }

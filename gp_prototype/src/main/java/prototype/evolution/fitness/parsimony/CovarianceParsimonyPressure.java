@@ -5,14 +5,13 @@ import org.apache.commons.math3.stat.descriptive.moment.Variance;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPGenotype;
 import org.jgap.gp.impl.ProgramChromosome;
-import prototype.evolution.engine.EvolutionCycleAware;
 
 /**
  * User: koperek
  * Date: 12.03.13
  * Time: 22:07
  */
-public class CovarianceParsimonyPressure implements ParsimonyPressure, EvolutionCycleAware {
+public class CovarianceParsimonyPressure implements ParsimonyPressure {
 
     private double ct = 0.0; // initially ignore
 
