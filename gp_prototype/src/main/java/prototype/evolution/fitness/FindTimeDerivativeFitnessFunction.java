@@ -70,6 +70,7 @@ class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
         int validDataRows = 0;
         for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)) {
+                variablesValuesContainer.clear();
                 populateVariableValues(dataRow, variablesValuesContainer);
 
                 double f_x = function.evaluate();

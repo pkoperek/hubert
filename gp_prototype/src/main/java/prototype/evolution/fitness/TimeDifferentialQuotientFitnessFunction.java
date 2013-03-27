@@ -94,13 +94,12 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
 
         double pairingError = 0.0f;
 
-        variablesValuesContainer.clear();
-
         int validDataRows = 0;
         for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)
                     && numericalDifferentiationCalculator.hasDifferential(y, dataRow)) {
 
+                variablesValuesContainer.clear();
                 populateVariableValues(dataRow, variablesValuesContainer);
 
                 double dfdx_val = dfdx.evaluate();
