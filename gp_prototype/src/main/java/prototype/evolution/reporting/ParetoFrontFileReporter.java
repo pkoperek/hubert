@@ -1,11 +1,9 @@
 package prototype.evolution.reporting;
 
-import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPPopulation;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * User: koperek
@@ -15,7 +13,7 @@ import java.util.Arrays;
 public class ParetoFrontFileReporter extends FilePopulationReporter {
     public static final boolean DEFAULT_ENABLED = true;
     public static final int DEFAULT_INTERVAL = 50;
-    private double[] fitnesses = new double[128]; // 128 - max size of single solution
+    private final ParetoFrontGenerator paretoFrontGenerator = new ParetoFrontGenerator(128);
 
     public ParetoFrontFileReporter() {
         this(1);
@@ -26,9 +24,7 @@ public class ParetoFrontFileReporter extends FilePopulationReporter {
     }
 
     protected void writePopulationData(GPPopulation gpPopulation, BufferedWriter writer) throws IOException {
-        Arrays.fill(fitnesses, Double.MAX_VALUE);
-
-        generateParetoFront(gpPopulation);
+        double[] fitnesses = paretoFrontGenerator.generateParetoFrontFitness(gpPopulation);
 
         for (int i = 0; i < fitnesses.length; i++) {
             if (fitnesses[i] != Double.MAX_VALUE) {
@@ -39,24 +35,4 @@ public class ParetoFrontFileReporter extends FilePopulationReporter {
 
     }
 
-    private void generateParetoFront(GPPopulation gpPopulation) {
-        for (IGPProgram program : gpPopulation.getGPPrograms()) {
-            double fitness = program.getFitnessValue();
-            int size = program.getChromosome(0).size();
-
-            if (fitnesses[size] > fitness) {
-                fitnesses[size] = fitness;
-            }
-        }
-
-        for (int i = 0; i < fitnesses.length; i++) {
-            if (fitnesses[i] != Double.MAX_VALUE) {
-                for (int j = i + 1; j < fitnesses.length; j++) {
-                    if (fitnesses[j] != Double.MAX_VALUE && fitnesses[j] > fitnesses[i]) {
-                        fitnesses[j] = Double.MAX_VALUE;
-                    }
-                }
-            }
-        }
-    }
 }

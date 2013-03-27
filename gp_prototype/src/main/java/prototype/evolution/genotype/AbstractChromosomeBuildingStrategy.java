@@ -2,7 +2,10 @@ package prototype.evolution.genotype;
 
 import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.CommandGene;
-import org.jgap.gp.function.*;
+import org.jgap.gp.function.Add;
+import org.jgap.gp.function.Divide;
+import org.jgap.gp.function.Multiply;
+import org.jgap.gp.function.Subtract;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.terminal.Terminal;
 import org.jgap.gp.terminal.Variable;
@@ -44,8 +47,8 @@ abstract class AbstractChromosomeBuildingStrategy implements ChromosomeBuildingS
         commandGenes.add(new Multiply(configuration, CommandGene.FloatClass));
         commandGenes.add(new Divide(configuration, CommandGene.FloatClass));
         commandGenes.add(new Terminal(configuration, CommandGene.FloatClass, 0.0d, 10.0d, false));
-        commandGenes.add(new Sine(configuration, CommandGene.FloatClass));
-        commandGenes.add(new Cosine(configuration, CommandGene.FloatClass));
+//        commandGenes.add(new Sine(configuration, CommandGene.FloatClass));
+//        commandGenes.add(new Cosine(configuration, CommandGene.FloatClass));
 
         commandGenes.addAll(createJGAPVariables(variables, configuration));
 

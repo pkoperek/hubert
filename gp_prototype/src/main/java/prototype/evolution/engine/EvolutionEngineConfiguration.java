@@ -20,6 +20,7 @@ public class EvolutionEngineConfiguration {
     private int paretoFrontReporterFileInterval = ParetoFrontFileReporter.DEFAULT_INTERVAL;
     private int threadsNum;
     private IterationType iterationType;
+    private boolean paretoLoggerReporter = false;
 
     public int getMaxIterations() {
         return maxIterations;
@@ -37,7 +38,7 @@ public class EvolutionEngineConfiguration {
         return targetError;
     }
 
-    public boolean isParetoFrontReporter() {
+    public boolean isParetoFrontFileReporter() {
         return paretoFrontReporter;
     }
 
@@ -112,6 +113,20 @@ public class EvolutionEngineConfiguration {
                     defaultValue = "DET_CROWDING")
             String iterationType) {
         this.iterationType = IterationType.valueOf(iterationType.toUpperCase());
+    }
+
+    @Configure
+    public void setParetoLoggerReporter(
+            @Configuration(
+                    value = "engine.reporter.pareto.logger",
+                    defaultValue = "false"
+            )
+            boolean paretoLoggerReporter) {
+        this.paretoLoggerReporter = paretoLoggerReporter;
+    }
+
+    public boolean isParetoFrontLoggerReporter() {
+        return paretoLoggerReporter;
     }
 
     public DeterministicCrowdingConfiguration getDeterministicCrowdingConfiguration() {

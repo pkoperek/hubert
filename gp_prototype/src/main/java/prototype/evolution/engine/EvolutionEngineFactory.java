@@ -1,6 +1,7 @@
 package prototype.evolution.engine;
 
 import prototype.evolution.reporting.ParetoFrontFileReporter;
+import prototype.evolution.reporting.ParetoFrontLoggingReporter;
 
 public class EvolutionEngineFactory {
 
@@ -23,10 +24,14 @@ public class EvolutionEngineFactory {
 
     private EvolutionEngine.Builder preConfiguredBuilder(EvolutionEngineConfiguration evolutionEngineConfiguration) {
         EvolutionEngine.Builder builder = EvolutionEngine.Builder.builder();
-        if (evolutionEngineConfiguration.isParetoFrontReporter()) {
+        if (evolutionEngineConfiguration.isParetoFrontFileReporter()) {
             builder.withEvolutionEngineEventHandler(new ParetoFrontFileReporter(
                     evolutionEngineConfiguration.getParetoFrontReporterFileInterval()));
         }
+        if (evolutionEngineConfiguration.isParetoFrontLoggerReporter()) {
+            builder.withEvolutionEngineEventHandler(new ParetoFrontLoggingReporter());
+        }
+
         return builder
                 .withMaxIterations(evolutionEngineConfiguration.getMaxIterations())
                 .withTargetError(evolutionEngineConfiguration.getTargetError());
