@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
  */
 public class DifferentialFitnessFunctionTest {
 
-    private DifferentialFitnessFunction differentialFitnessFunction;
+    private FindTimeDerivativeFitnessFunction findTimeDerivativeFitnessFunction;
     private DataContainer dataContainer;
 
     @Before
@@ -41,7 +41,7 @@ public class DifferentialFitnessFunctionTest {
         NumericalDifferentiationCalculator numericalDifferentiationCalculator =
                 new NumericalDifferentiationCalculatorFactory()
                         .createCalculator(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL, dataContainer);
-        differentialFitnessFunction = new DifferentialFitnessFunction("s", dataContainer, numericalDifferentiationCalculator);
+        findTimeDerivativeFitnessFunction = new FindTimeDerivativeFitnessFunction("s", dataContainer, numericalDifferentiationCalculator);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class DifferentialFitnessFunctionTest {
         GPProgram gpProgram = createExactSolution(gpConfiguration);
 
         // When
-        double error = differentialFitnessFunction.evaluate(gpProgram);
+        double error = findTimeDerivativeFitnessFunction.evaluate(gpProgram);
 
         // Then
         assertThat(error).isEqualTo(0.0d, Delta.delta(0.0001));

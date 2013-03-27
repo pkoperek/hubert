@@ -16,7 +16,7 @@ public class FitnessFunctionFactory {
     private String variableName;
 
     public enum FitnessFunctionType {
-        DIFF, ABSERR, ABSSQERR, DIFFQ, MEANABSERR, TLESS_DIFFQ
+        TIME_DERIV, ABSERR, ABSSQERR, DIFFQ, MEANABSERR, TLESS_DIFFQ
     }
 
     public GPFitnessFunction createFitnessFunction(DataContainer dataContainer) {
@@ -24,8 +24,8 @@ public class FitnessFunctionFactory {
                 DIFFERENTIATION_CALCULATOR_FACTORY.createCalculator(calculatorType, dataContainer);
 
         switch (functionType) {
-            case DIFF:
-                return new DifferentialFitnessFunction(variableName, dataContainer, numericalDifferentiationCalculator);
+            case TIME_DERIV:
+                return new FindTimeDerivativeFitnessFunction(variableName, dataContainer, numericalDifferentiationCalculator);
             case ABSERR:
                 return new AllChromosomesAbsoluteErrorFitnessFunction(dataContainer);
             case ABSSQERR:

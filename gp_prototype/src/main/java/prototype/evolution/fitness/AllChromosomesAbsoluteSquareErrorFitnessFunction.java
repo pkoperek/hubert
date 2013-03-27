@@ -9,7 +9,6 @@ import prototype.differentiation.symbolic.Function;
 import prototype.differentiation.symbolic.TreeNode;
 import prototype.differentiation.symbolic.TreeNodeFactory;
 import prototype.differentiation.symbolic.TreeNodeToFunctionTranslator;
-import prototype.differentiation.symbolic.functions.PreviousValueVariable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,8 +61,6 @@ class AllChromosomesAbsoluteSquareErrorFitnessFunction extends GPFitnessFunction
     private void populateVariableValues(int dataRow, VariablesValues variablesValues) {
         for (String variableName : variablesNames) {
             variablesValues.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow));
-            String previousValueVariableName = variableName + PreviousValueVariable.PREVIOUS_VALUE_VARIABLE_SUFFIX;
-            variablesValues.setVariableValue(previousValueVariableName, dataContainer.getValue(variableName, dataRow - 1));
         }
     }
 

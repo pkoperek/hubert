@@ -20,7 +20,7 @@ import java.util.List;
  * Date: 17.03.13
  * Time: 22:48
  */
-class DifferentialFitnessFunction extends GPFitnessFunction {
+class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
     private static final Logger LOGGER = Logger.getLogger(TimeDifferentialQuotientFitnessFunction.class);
 
     private final List<String> variables;
@@ -30,7 +30,7 @@ class DifferentialFitnessFunction extends GPFitnessFunction {
     private final String variableName;
     private final String timeVariableName;
 
-    public DifferentialFitnessFunction(String variableName, DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
+    public FindTimeDerivativeFitnessFunction(String variableName, DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.numericalDifferentiationCalculator = numericalDifferentiationCalculator;
         this.variables = Arrays.asList(dataContainer.getVariableNames());
         this.dataContainer = dataContainer;

@@ -9,6 +9,7 @@ import prototype.differentiation.symbolic.Function;
 import prototype.differentiation.symbolic.TreeNode;
 import prototype.differentiation.symbolic.TreeNodeFactory;
 import prototype.differentiation.symbolic.TreeNodeToFunctionTranslator;
+import prototype.evolution.fitness.errorcalculator.ErrorCalculator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +23,7 @@ class AllChromosomesAbsoluteErrorFitnessFunction extends GPFitnessFunction {
 
     private List<String> variablesNames;
     private final DataContainer dataContainer;
+    private ErrorCalculator errorCalculator;
 
     public AllChromosomesAbsoluteErrorFitnessFunction(DataContainer dataContainer) {
         this.variablesNames = Arrays.asList(dataContainer.getVariableNames());
@@ -32,9 +34,8 @@ class AllChromosomesAbsoluteErrorFitnessFunction extends GPFitnessFunction {
     protected double evaluate(IGPProgram a_subject) {
         double error = 0.0;
 
-        for (int chromosomeIdx = 0; chromosomeIdx < a_subject.size(); chromosomeIdx++) {
-            String chromosomeVariableName = variablesNames.get(chromosomeIdx);
-            error += evaluateChromosome(a_subject.getChromosome(chromosomeIdx), chromosomeVariableName);
+        for (String variableName : variablesNames) {
+            error += evaluateChromosome(a_subject.getChromosome(0), variableName);
         }
 
         return error;

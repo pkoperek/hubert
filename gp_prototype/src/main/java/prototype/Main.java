@@ -46,7 +46,7 @@ public class Main {
         // fitness function
         FitnessFunctionFactory fitnessFunctionFactory = new FitnessFunctionFactory();
         fitnessFunctionFactory.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL);
-        fitnessFunctionFactory.setFunctionType(FitnessFunctionFactory.FitnessFunctionType.DIFF);
+        fitnessFunctionFactory.setFunctionType(FitnessFunctionFactory.FitnessFunctionType.TIME_DERIV);
         fitnessFunctionFactory.setVariableName("sin");
         GPFitnessFunction fitnessFunction = fitnessFunctionFactory.createFitnessFunction(dataContainer);
 
