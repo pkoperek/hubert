@@ -2,34 +2,21 @@ package prototype.evolution.fitness.parsimony;
 
 import org.apache.commons.math3.stat.correlation.Covariance;
 import org.apache.commons.math3.stat.descriptive.moment.Variance;
-import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPGenotype;
+import org.jgap.gp.impl.ProgramChromosome;
+import prototype.evolution.engine.EvolutionCycleAware;
 
 /**
  * User: koperek
  * Date: 12.03.13
  * Time: 22:07
  */
-public class CovarianceParsimonyPressure extends ParsimonyPressureFitnessFunction implements EvolutionCycleAware {
+public class CovarianceParsimonyPressure implements ParsimonyPressure, EvolutionCycleAware {
 
     private double ct = 0.0; // initially ignore
 
-    public CovarianceParsimonyPressure(GPFitnessFunction delegateFitnessFunction) {
-        super(delegateFitnessFunction);
-    }
-
-
-    @Override
-    protected double evaluate(IGPProgram a_subject) {
-        double fitnessValue = getDelegateFitnessFunction().getFitnessValue(a_subject);
-        double length = a_subject.getChromosome(0).size();
-
-        // TODO - this is sometime negative!!!
-        return fitnessValue + ct * length;
-    }
-
-    void setCt(double ct) {
+    public void setCt(double ct) {
         this.ct = ct;
     }
 
@@ -65,5 +52,13 @@ public class CovarianceParsimonyPressure extends ParsimonyPressureFitnessFunctio
     @Override
     public void handleAfterEvolution(GPGenotype genotype) {
         // does nothing
+    }
+
+    @Override
+    public double pressure(double fitness, ProgramChromosome a_subject) {
+        double length = a_subject.size();
+
+        // TODO - this is sometime negative!!!
+        return fitness + ct * length;
     }
 }

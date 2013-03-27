@@ -1,5 +1,6 @@
 package prototype.evolution.fitness.parsimony;
 
+import prototype.evolution.engine.EvolutionCycleAware;
 import prototype.evolution.engine.EvolutionEngineEvent;
 import prototype.evolution.engine.EvolutionEngineEventHandler;
 import prototype.evolution.engine.EvolutionEngineEventType;

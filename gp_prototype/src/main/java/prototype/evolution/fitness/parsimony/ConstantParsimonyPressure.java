@@ -1,25 +1,23 @@
 package prototype.evolution.fitness.parsimony;
 
-import org.jgap.gp.GPFitnessFunction;
-import org.jgap.gp.IGPProgram;
+import org.jgap.gp.impl.ProgramChromosome;
 
 /**
  * User: koperek
  * Date: 12.03.13
  * Time: 00:15
  */
-public class ConstantParsimonyPressure extends ParsimonyPressureFitnessFunction {
+public class ConstantParsimonyPressure implements ParsimonyPressure {
 
     private double constantParsimonyPressure = 0.0;
 
-    public ConstantParsimonyPressure(GPFitnessFunction delegateFitnessFunction, double constantParsimonyPressure) {
-        super(delegateFitnessFunction);
+    public ConstantParsimonyPressure(double constantParsimonyPressure) {
         this.constantParsimonyPressure = constantParsimonyPressure;
     }
 
     @Override
-    protected double evaluate(IGPProgram a_subject) {
+    public double pressure(double fitness, ProgramChromosome a_subject) {
         // + - because we minimize this function :)
-        return getDelegateFitnessFunction().getFitnessValue(a_subject) + a_subject.getChromosome(0).size() * constantParsimonyPressure;
+        return fitness + a_subject.size() * constantParsimonyPressure;
     }
 }
