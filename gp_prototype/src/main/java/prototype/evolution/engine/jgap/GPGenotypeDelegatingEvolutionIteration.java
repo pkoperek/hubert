@@ -9,4 +9,9 @@ public class GPGenotypeDelegatingEvolutionIteration implements EvolutionIteratio
     public void evolve(GPGenotype genotype) {
         genotype.evolve(1);
     }
+
+    @Override
+    public void shutdown() {
+        // does nothing
+    }
 }

@@ -74,6 +74,11 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
         configuration.incrementGenerationNr();
     }
 
+    @Override
+    public void shutdown() {
+        executorService.shutdownNow();
+    }
+
     private IGPProgram select(GPPopulation population, List<Integer> freeIndexes) {
         Integer selectedIndex = selector.select(freeIndexes);
         freeIndexes.remove(selectedIndex);

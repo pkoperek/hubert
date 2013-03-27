@@ -7,7 +7,6 @@ import prototype.evolution.engine.common.AllChromosomesMutator;
 import prototype.evolution.engine.common.RandomSelector;
 import prototype.evolution.engine.common.StaticMutatedGenesFactory;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -17,7 +16,7 @@ import java.util.concurrent.Executors;
  */
 public class DeterministicCrowdingEvolutionIterationBuilder {
 
-    private ExecutorService executorService;
+    private int threadsNum = DeterministicCrowdingEvolutionIteration.DEFAULT_THREADS_NUMBER;
     private GPConfiguration configuration;
     private Mutator mutator;
     private Selector<Integer> selector;
@@ -32,11 +31,10 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
         this.selector = new RandomSelector<Integer>(configuration.getRandomGenerator());
         this.tournament = new DeterministicCrowdingTournament(new HammingDistance());
         this.crossover = new AllChromosomesCrossover(configuration);
-        this.executorService = Executors.newSingleThreadExecutor();
     }
 
     public DeterministicCrowdingEvolutionIterationBuilder withThreads(int threadsNum) {
-        this.executorService = Executors.newFixedThreadPool(threadsNum);
+        this.threadsNum = threadsNum;
         return this;
     }
 
@@ -65,7 +63,7 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
 
         deterministicCrowdingEvolutionIteration.setConfiguration(configuration);
         deterministicCrowdingEvolutionIteration.setCrossover(crossover);
-        deterministicCrowdingEvolutionIteration.setExecutorService(executorService);
+        deterministicCrowdingEvolutionIteration.setExecutorService(Executors.newFixedThreadPool(threadsNum));
         deterministicCrowdingEvolutionIteration.setMutator(mutator);
         deterministicCrowdingEvolutionIteration.setSelector(selector);
         deterministicCrowdingEvolutionIteration.setTournament(tournament);

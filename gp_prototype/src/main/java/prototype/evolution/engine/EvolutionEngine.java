@@ -68,6 +68,10 @@ public class EvolutionEngine {
         }
     }
 
+    public void shutdown() {
+        evolutionIteration.shutdown();
+    }
+
     public static class Builder implements CommonStep, RegularStep, DeterministicCrowdingStep {
 
         private int maxIterations = EvolutionEngine.DEFAULT_MAX_ITERATIONS;

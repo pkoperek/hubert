@@ -59,6 +59,7 @@ public class ConfiguredExecution {
 
         // evolve!!!
         evolutionEngine.genotypeEvolve(genotype);
+        evolutionEngine.shutdown();
     }
 
     private static ConstrettoConfiguration initializeConfiguration(String configurationFilePath) {
