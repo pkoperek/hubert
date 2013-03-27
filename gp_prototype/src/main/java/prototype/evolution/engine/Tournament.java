@@ -8,5 +8,5 @@ import org.jgap.gp.IGPProgram;
  * Time: 19:14
  */
 public interface Tournament {
-    IGPProgram[] getWinners(IGPProgram parentA, IGPProgram parentB, IGPProgram childA, IGPProgram childB);
+    IGPProgram[] getWinners(IGPProgram[] parentsPairs, IGPProgram[] childrenPairs);
 }

@@ -87,27 +87,22 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
     private GPPopulation crossAndMutatePopulation(GPPopulation oldPopulation) {
         IGPProgram[] parents = makeRandomParentPairs(oldPopulation);
         IGPProgram[] children = crossParentPairs(parents);
-        IGPProgram[] newIndividuals = generationsTournament(parents, children);
+        IGPProgram[] mutatedChildren = mutateChildren(children);
+        IGPProgram[] newIndividuals = generationsTournament(parents, mutatedChildren);
 
         return createPopulationWithNewIndividuals(oldPopulation, newIndividuals);
     }
 
-    private IGPProgram[] generationsTournament(IGPProgram[] parents, IGPProgram[] children) {
-        IGPProgram[] newIndividuals = new IGPProgram[configuration.getPopulationSize()];
-
-        for (int i = 0; i < parents.length; i += 2) {
-            IGPProgram[] winners = tournament(
-                    parents[i],
-                    parents[i + 1],
-                    mutate(children[i]),
-                    mutate(children[i + 1])
-            );
-
-            newIndividuals[i] = winners[0];
-            newIndividuals[i + 1] = winners[1];
+    private IGPProgram[] mutateChildren(IGPProgram[] children) {
+        for (int i = 0; i < children.length; i++) {
+            children[i] = mutate(children[i]);
         }
 
-        return newIndividuals;
+        return children;
+    }
+
+    private IGPProgram[] generationsTournament(IGPProgram[] parents, IGPProgram[] children) {
+        return tournament.getWinners(parents, children);
     }
 
     private IGPProgram[] crossParentPairs(IGPProgram[] parents) {
@@ -133,10 +128,6 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
         }
 
         return parents;
-    }
-
-    private IGPProgram[] tournament(IGPProgram parentA, IGPProgram parentB, IGPProgram childA, IGPProgram childB) {
-        return tournament.getWinners(parentA, parentB, childA, childB);
     }
 
     private GPPopulation createPopulationWithNewIndividuals(GPPopulation oldPopulation, IGPProgram[] newIndividuals) {
