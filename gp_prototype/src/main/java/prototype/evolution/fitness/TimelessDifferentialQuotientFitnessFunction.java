@@ -104,7 +104,7 @@ class TimelessDifferentialQuotientFitnessFunction extends GPFitnessFunction {
                 double dfdx_val = dfdx.evaluate();
                 double dfdy_val = dfdy.evaluate();
 
-                double quotient = numericalDifferentiationCalculator.getDirectionalDerivative(x, y, dataRow);
+                double quotient = numericalDifferentiationCalculator.getPartialDerivative(x, y, dataRow);
 
                 try {
                     // if any of denominators is 0 - discard data sample

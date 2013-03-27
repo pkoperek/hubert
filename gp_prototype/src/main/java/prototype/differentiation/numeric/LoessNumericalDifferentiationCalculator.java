@@ -28,7 +28,7 @@ class LoessNumericalDifferentiationCalculator extends AbstractNumericalDifferent
     }
 
     @Override
-    public double getDirectionalDerivative(String differentiated, String direction, int row) {
+    public double getPartialDerivative(String differentiated, String direction, int row) {
         String key = getKey(differentiated, direction);
 
         if (!loessInterpolations.containsKey(key)) {

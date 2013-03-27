@@ -105,8 +105,8 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
                 double dfdx_val = dfdx.evaluate();
                 double dfdy_val = dfdy.evaluate();
 
-                double deltaX = numericalDifferentiationCalculator.getDirectionalDerivative(x, timeVariableName, dataRow);
-                double deltaY = numericalDifferentiationCalculator.getDirectionalDerivative(y, timeVariableName, dataRow);
+                double deltaX = numericalDifferentiationCalculator.getPartialDerivative(x, timeVariableName, dataRow);
+                double deltaY = numericalDifferentiationCalculator.getPartialDerivative(y, timeVariableName, dataRow);
 
                 try {
                     // if any of denominators is 0 - discard data sample

@@ -23,7 +23,7 @@ class BackwardNumericalDifferentiationCalculator extends AbstractNumericalDiffer
     }
 
     @Override
-    public double getDirectionalDerivative(String differentiated, String direction, int row) {
+    public double getPartialDerivative(String differentiated, String direction, int row) {
         if (row == 0) {
             throw new IllegalArgumentException("Can't compute difference of " + row + " and " + (row - 1));
         }

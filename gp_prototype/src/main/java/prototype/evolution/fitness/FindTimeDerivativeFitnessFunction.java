@@ -75,7 +75,7 @@ class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
 
                 double f_x = function.evaluate();
 
-                double deltaX = numericalDifferentiationCalculator.getDirectionalDerivative(x, timeVariableName, dataRow);
+                double deltaX = numericalDifferentiationCalculator.getPartialDerivative(x, timeVariableName, dataRow);
 
                 try {
                     // if any of denominators is 0 - discard data sample
