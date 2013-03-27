@@ -10,48 +10,53 @@ import org.jgap.gp.impl.GPGenotype;
 import org.jgap.gp.impl.GPGenotypeHacker;
 import org.jgap.gp.impl.GPPopulation;
 import prototype.evolution.engine.*;
-import prototype.evolution.engine.common.AllChromosomesCrossover;
-import prototype.evolution.engine.common.AllChromosomesMutator;
-import prototype.evolution.engine.common.RandomSelector;
-import prototype.evolution.engine.common.StaticMutatedGenesFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class DeterministicCrowdingEvolutionIteration implements EvolutionIteration {
 
     private static final Logger logger = Logger.getLogger(DeterministicCrowdingEvolutionIteration.class);
     private static final GPGenotypeHacker GP_GENOTYPE_HACKER = new GPGenotypeHacker();
 
-    private final GPConfiguration configuration;
-    private final RandomGenerator randomGenerator;
-    private final double crossProbability;
-    private final double mutationProbability;
-    private final Mutator mutator;
-    private final Selector<Integer> selector;
-    private final Tournament tournament;
-    private final Crossover crossover;
+    private ExecutorService executorService;
+    private GPConfiguration configuration;
+    private RandomGenerator randomGenerator;
+    private double crossProbability;
+    private double mutationProbability;
+    private Mutator mutator;
+    private Selector<Integer> selector;
+    private Tournament tournament;
+    private Crossover crossover;
 
-    public DeterministicCrowdingEvolutionIteration(GPConfiguration configuration) {
-        this(
-                configuration,
-                new AllChromosomesMutator(
-                        new StaticMutatedGenesFactory(configuration.getRandomGenerator()),
-                        configuration.getRandomGenerator()),
-                new RandomSelector<Integer>(configuration.getRandomGenerator()),
-                new DeterministicCrowdingTournament(new HammingDistance()),
-                new AllChromosomesCrossover(configuration)
-        );
+    DeterministicCrowdingEvolutionIteration() {
     }
 
-    public DeterministicCrowdingEvolutionIteration(GPConfiguration configuration, Mutator mutator, Selector<Integer> selector, Tournament tournament, Crossover crossover) {
+    void setConfiguration(GPConfiguration configuration) {
         this.configuration = configuration;
         this.randomGenerator = configuration.getRandomGenerator();
         this.crossProbability = configuration.getCrossoverProb();
         this.mutationProbability = configuration.getMutationProb();
+    }
+
+    void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
+    void setSelector(Selector<Integer> selector) {
         this.selector = selector;
-        this.tournament = tournament;
+    }
+
+    void setMutator(Mutator mutator) {
         this.mutator = mutator;
+    }
+
+    void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
+    void setCrossover(Crossover crossover) {
         this.crossover = crossover;
     }
 

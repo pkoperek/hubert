@@ -12,6 +12,7 @@ public class EvolutionEngineFactory {
     private boolean paretoFrontReporter = ParetoFrontFileReporter.DEFAULT_ENABLED;
     private int paretoFrontReporterFileInterval = ParetoFrontFileReporter.DEFAULT_INTERVAL;
     private IterationType iterationType;
+    private int threadsNum = EvolutionIteration.DEFAULT_THREADS_NUMBER;
 
     public enum IterationType {
         DET_CROWDING,
@@ -52,6 +53,16 @@ public class EvolutionEngineFactory {
         return EvolutionEngine.Builder.builder()
                 .withMaxIterations(maxIterations)
                 .withTargetError(targetError);
+    }
+
+    @Configure
+    public void setThreadsNum(
+            @Configuration(
+                    value = "engine.threads.number",
+                    defaultValue = "1"
+            )
+            int threadsNum) {
+        this.threadsNum = threadsNum;
     }
 
     @Configure
