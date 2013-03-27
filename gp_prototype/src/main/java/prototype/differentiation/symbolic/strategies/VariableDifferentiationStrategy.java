@@ -1,6 +1,6 @@
 package prototype.differentiation.symbolic.strategies;
 
-import prototype.data.VariablesValues;
+import prototype.data.VariablesValuesContainer;
 import prototype.differentiation.symbolic.Function;
 import prototype.differentiation.symbolic.TreeNode;
 import prototype.differentiation.symbolic.functions.*;
@@ -16,7 +16,7 @@ public class VariableDifferentiationStrategy extends DifferentiationStrategy {
     @Override
     protected Function differentiateSpecific(TreeNode treeNode, String differentiatingVariableName) {
         VariableTreeNode variableTreeNode = (VariableTreeNode) treeNode;
-        VariablesValues valuesContainer = variableTreeNode.getValuesContainer();
+        VariablesValuesContainer valuesContainer = variableTreeNode.getValuesContainer();
         String variableName = variableTreeNode.getVariableName();
         String interdependentVariableName = variableTreeNode.getInterdependentVariableName();
 

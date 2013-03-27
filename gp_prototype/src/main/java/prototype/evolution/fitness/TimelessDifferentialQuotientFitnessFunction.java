@@ -4,9 +4,10 @@ import org.apache.log4j.Logger;
 import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
+import prototype.data.MapVariablesValuesContainer;
 import prototype.data.Pair;
 import prototype.data.PairGenerator;
-import prototype.data.VariablesValues;
+import prototype.data.VariablesValuesContainer;
 import prototype.data.container.DataContainer;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.differentiation.symbolic.Function;
@@ -30,7 +31,7 @@ class TimelessDifferentialQuotientFitnessFunction extends GPFitnessFunction {
     private final List<String> variables;
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
-    private VariablesValues variablesValues = new VariablesValues();
+    private VariablesValuesContainer variablesValuesContainer = new MapVariablesValuesContainer();
 
     public TimelessDifferentialQuotientFitnessFunction(DataContainer dataContainer, NumericalDifferentiationCalculator numericalDifferentiationCalculator) {
         this.pairs = new PairGenerator<String>().generatePairs(Arrays.asList(dataContainer.getVariableNames()));
@@ -81,7 +82,7 @@ class TimelessDifferentialQuotientFitnessFunction extends GPFitnessFunction {
 
     private double evaluatePairing(ProgramChromosome chromosome, Pair<String> pairing) {
         // we need to assume variables are dependent - if all are independent there are no relations in data!
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues, pairing);
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValuesContainer, pairing);
         return computeErrorForVariables(treeNodeFactory.createTreeNode(chromosome), pairing.getOne(), pairing.getTwo());
     }
 
@@ -91,14 +92,14 @@ class TimelessDifferentialQuotientFitnessFunction extends GPFitnessFunction {
 
         double pairingError = 0.0f;
 
-        variablesValues.clear();
+        variablesValuesContainer.clear();
 
         int validDataRows = 0;
         for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)
                     && numericalDifferentiationCalculator.hasDifferential(y, dataRow)) {
 
-                populateVariableValues(dataRow, variablesValues);
+                populateVariableValues(dataRow, variablesValuesContainer);
 
                 double dfdx_val = dfdx.evaluate();
                 double dfdy_val = dfdy.evaluate();
@@ -147,11 +148,11 @@ class TimelessDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         return Double.isNaN(dfdx_val) || Double.isInfinite(dfdx_val);
     }
 
-    private void populateVariableValues(int dataRow, VariablesValues variablesValues) {
+    private void populateVariableValues(int dataRow, VariablesValuesContainer variablesValuesContainer) {
         for (String variableName : variables) {
-            variablesValues.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow + 1));
+            variablesValuesContainer.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow + 1));
             String previousValueVariableName = variableName + PreviousValueVariable.PREVIOUS_VALUE_VARIABLE_SUFFIX;
-            variablesValues.setVariableValue(previousValueVariableName, dataContainer.getValue(variableName, dataRow - 1));
+            variablesValuesContainer.setVariableValue(previousValueVariableName, dataContainer.getValue(variableName, dataRow - 1));
         }
     }
 }

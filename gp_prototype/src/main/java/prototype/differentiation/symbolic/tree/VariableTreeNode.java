@@ -1,6 +1,6 @@
 package prototype.differentiation.symbolic.tree;
 
-import prototype.data.VariablesValues;
+import prototype.data.VariablesValuesContainer;
 import prototype.differentiation.symbolic.FunctionType;
 import prototype.differentiation.symbolic.TreeNode;
 
@@ -14,13 +14,13 @@ public class VariableTreeNode extends TreeNode {
     public static final String EMPTY_NAME = "";
     private String variableName;
     private final String interdependentVariableName;
-    private VariablesValues valuesContainer;
+    private VariablesValuesContainer valuesContainer;
 
-    public VariableTreeNode(VariablesValues valuesContainer, String variableName) {
+    public VariableTreeNode(VariablesValuesContainer valuesContainer, String variableName) {
         this(valuesContainer, variableName, EMPTY_NAME);
     }
 
-    public VariableTreeNode(VariablesValues valuesContainer, String variableName, String interdependentVariableName) {
+    public VariableTreeNode(VariablesValuesContainer valuesContainer, String variableName, String interdependentVariableName) {
         this.valuesContainer = valuesContainer;
         this.variableName = variableName;
         this.interdependentVariableName = interdependentVariableName;
@@ -45,7 +45,7 @@ public class VariableTreeNode extends TreeNode {
         return "VAR: " + variableName;
     }
 
-    public VariablesValues getValuesContainer() {
+    public VariablesValuesContainer getValuesContainer() {
         return valuesContainer;
     }
 

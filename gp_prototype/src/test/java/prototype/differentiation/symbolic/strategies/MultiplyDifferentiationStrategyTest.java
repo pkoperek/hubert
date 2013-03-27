@@ -2,7 +2,8 @@ package prototype.differentiation.symbolic.strategies;
 
 import org.junit.Before;
 import org.junit.Test;
-import prototype.data.VariablesValues;
+import prototype.data.MapVariablesValuesContainer;
+import prototype.data.VariablesValuesContainer;
 import prototype.differentiation.symbolic.Function;
 import prototype.differentiation.symbolic.FunctionType;
 import prototype.differentiation.symbolic.TreeNode;
@@ -34,7 +35,7 @@ public class MultiplyDifferentiationStrategyTest {
     public void shouldDifferentiateVariableConstantMultiplication() throws Exception {
 
         // Given
-        VariablesValues values = new VariablesValues();
+        VariablesValuesContainer values = new MapVariablesValuesContainer();
         values.setVariableValue("x", 4);
         TreeNode treeNode = new SimpleTreeNode(
                 FunctionType.MULTIPLY,

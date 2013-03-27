@@ -1,6 +1,6 @@
 package prototype.differentiation.symbolic.functions;
 
-import prototype.data.VariablesValues;
+import prototype.data.VariablesValuesContainer;
 import prototype.differentiation.symbolic.Function;
 
 /**
@@ -10,10 +10,10 @@ import prototype.differentiation.symbolic.Function;
  */
 public class Variable extends Function {
 
-    private final VariablesValues valuesContainer;
+    private final VariablesValuesContainer valuesContainer;
     private String variableName;
 
-    public Variable(VariablesValues valuesContainer, String variableName) {
+    public Variable(VariablesValuesContainer valuesContainer, String variableName) {
         this.valuesContainer = valuesContainer;
         this.variableName = variableName;
     }

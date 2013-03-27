@@ -1,6 +1,6 @@
 package prototype.differentiation.symbolic.functions;
 
-import prototype.data.VariablesValues;
+import prototype.data.VariablesValuesContainer;
 
 /**
  * User: koperek
@@ -10,7 +10,7 @@ import prototype.data.VariablesValues;
 public class PreviousValueVariable extends Variable {
     public static final String PREVIOUS_VALUE_VARIABLE_SUFFIX = "_previous";
 
-    public PreviousValueVariable(VariablesValues valuesContainer, String variableName) {
+    public PreviousValueVariable(VariablesValuesContainer valuesContainer, String variableName) {
         super(valuesContainer, variableName + PREVIOUS_VALUE_VARIABLE_SUFFIX);
     }
 }

@@ -6,7 +6,7 @@ import org.jgap.gp.impl.ProgramChromosome;
 import org.jgap.gp.terminal.Terminal;
 import org.jgap.gp.terminal.Variable;
 import prototype.data.Pair;
-import prototype.data.VariablesValues;
+import prototype.data.VariablesValuesContainer;
 import prototype.differentiation.symbolic.tree.ConstantTreeNode;
 import prototype.differentiation.symbolic.tree.JGAPTreeNode;
 import prototype.differentiation.symbolic.tree.VariableTreeNode;
@@ -18,16 +18,16 @@ import prototype.differentiation.symbolic.tree.VariableTreeNode;
  */
 public class TreeNodeFactory {
 
-    private final VariablesValues variablesValues;
+    private final VariablesValuesContainer variablesValuesContainer;
     private final Pair<String> dependantVariables;
     private static final Pair<String> DEFAULT_DEPENDANT_VARIABLES = new Pair<String>(VariableTreeNode.EMPTY_NAME, VariableTreeNode.EMPTY_NAME);
 
-    public TreeNodeFactory(VariablesValues variablesValues) {
-        this(variablesValues, DEFAULT_DEPENDANT_VARIABLES);
+    public TreeNodeFactory(VariablesValuesContainer variablesValuesContainer) {
+        this(variablesValuesContainer, DEFAULT_DEPENDANT_VARIABLES);
     }
 
-    public TreeNodeFactory(VariablesValues variablesValues, Pair<String> dependantVariables) {
-        this.variablesValues = variablesValues;
+    public TreeNodeFactory(VariablesValuesContainer variablesValuesContainer, Pair<String> dependantVariables) {
+        this.variablesValuesContainer = variablesValuesContainer;
         this.dependantVariables = dependantVariables;
     }
 
@@ -71,7 +71,7 @@ public class TreeNodeFactory {
             interdependentVariableName = dependantVariables.getOther(variableName);
         }
 
-        return new VariableTreeNode(variablesValues, variableName, interdependentVariableName);
+        return new VariableTreeNode(variablesValuesContainer, variableName, interdependentVariableName);
     }
 
 }

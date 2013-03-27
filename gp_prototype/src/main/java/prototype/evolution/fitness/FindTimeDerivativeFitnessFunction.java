@@ -4,7 +4,8 @@ import org.apache.log4j.Logger;
 import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
-import prototype.data.VariablesValues;
+import prototype.data.MapVariablesValuesContainer;
+import prototype.data.VariablesValuesContainer;
 import prototype.data.container.DataContainer;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.differentiation.symbolic.Function;
@@ -26,7 +27,7 @@ class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
     private final List<String> variables;
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
-    private final VariablesValues variablesValues = new VariablesValues();
+    private final VariablesValuesContainer variablesValuesContainer = new MapVariablesValuesContainer();
     private final String variableName;
     private final String timeVariableName;
 
@@ -60,16 +61,16 @@ class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
     }
 
     private double computeChromosomeError(ProgramChromosome chromosome) {
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValues);
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValuesContainer);
         String x = variableName;
         Function function = new TreeNodeToFunctionTranslator().translate(treeNodeFactory.createTreeNode(chromosome));
-        variablesValues.clear();
+        variablesValuesContainer.clear();
         double errorForVariable = 0.0f;
 
         int validDataRows = 0;
         for (int dataRow = 0; dataRow < dataContainer.getRowsCount(); dataRow++) {
             if (numericalDifferentiationCalculator.hasDifferential(x, dataRow)) {
-                populateVariableValues(dataRow, variablesValues);
+                populateVariableValues(dataRow, variablesValuesContainer);
 
                 double f_x = function.evaluate();
 
@@ -114,11 +115,11 @@ class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
         return Double.isNaN(dfdx_val) || Double.isInfinite(dfdx_val);
     }
 
-    private void populateVariableValues(int dataRow, VariablesValues variablesValues) {
+    private void populateVariableValues(int dataRow, VariablesValuesContainer variablesValuesContainer) {
         for (String variableName : variables) {
-            variablesValues.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow));
+            variablesValuesContainer.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow));
             String previousValueVariableName = variableName + PreviousValueVariable.PREVIOUS_VALUE_VARIABLE_SUFFIX;
-            variablesValues.setVariableValue(previousValueVariableName, dataContainer.getValue(variableName, dataRow - 1));
+            variablesValuesContainer.setVariableValue(previousValueVariableName, dataContainer.getValue(variableName, dataRow - 1));
         }
     }
 }

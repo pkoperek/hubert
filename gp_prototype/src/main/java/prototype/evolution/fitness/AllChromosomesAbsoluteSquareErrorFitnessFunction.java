@@ -3,7 +3,8 @@ package prototype.evolution.fitness;
 import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
-import prototype.data.VariablesValues;
+import prototype.data.MapVariablesValuesContainer;
+import prototype.data.VariablesValuesContainer;
 import prototype.data.container.DataContainer;
 import prototype.differentiation.symbolic.Function;
 import prototype.differentiation.symbolic.TreeNode;
@@ -41,13 +42,13 @@ class AllChromosomesAbsoluteSquareErrorFitnessFunction extends GPFitnessFunction
     }
 
     private double evaluateChromosome(ProgramChromosome chromosome, String chromosomeVariableName) {
-        VariablesValues variablesValues = new VariablesValues();
+        VariablesValuesContainer variablesValuesContainer = new MapVariablesValuesContainer();
         double chromosomeError = 0.0;
-        TreeNode chromosomeAsTree = new TreeNodeFactory(variablesValues).createTreeNode(chromosome);
+        TreeNode chromosomeAsTree = new TreeNodeFactory(variablesValuesContainer).createTreeNode(chromosome);
         Function chromosomeAsFunction = new TreeNodeToFunctionTranslator().translate(chromosomeAsTree);
 
         for (int i = 0; i < dataContainer.getRowsCount(); i++) {
-            populateVariableValues(i, variablesValues);
+            populateVariableValues(i, variablesValuesContainer);
 
             double chromosomeValueAtPointI = chromosomeAsFunction.evaluate();
             double dataPoint = dataContainer.getValue(chromosomeVariableName, i);
@@ -58,9 +59,9 @@ class AllChromosomesAbsoluteSquareErrorFitnessFunction extends GPFitnessFunction
         return chromosomeError;
     }
 
-    private void populateVariableValues(int dataRow, VariablesValues variablesValues) {
+    private void populateVariableValues(int dataRow, VariablesValuesContainer variablesValuesContainer) {
         for (String variableName : variablesNames) {
-            variablesValues.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow));
+            variablesValuesContainer.setVariableValue(variableName, dataContainer.getValue(variableName, dataRow));
         }
     }
 
