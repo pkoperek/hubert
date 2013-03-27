@@ -18,7 +18,7 @@ public class DeterministicCrowdingTournament implements Tournament {
     }
 
     private IGPProgram pickWithBestFitness(IGPProgram left, IGPProgram right) {
-        return left.getFitnessValue() > right.getFitnessValue() ? right : left;
+        return left.getFitnessValue() < right.getFitnessValue() ? left : right;
     }
 
     @Override
