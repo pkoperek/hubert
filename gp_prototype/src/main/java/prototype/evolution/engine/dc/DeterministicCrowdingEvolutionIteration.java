@@ -88,7 +88,7 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
         IGPProgram[] parents = makeRandomParentPairs(oldPopulation);
         IGPProgram[] children = crossParentPairs(parents);
         IGPProgram[] mutatedChildren = mutateChildren(children);
-        IGPProgram[] newIndividuals = generationsTournament(parents, children);
+        IGPProgram[] newIndividuals = generationsTournament(parents, mutatedChildren);
 
         return createPopulationWithNewIndividuals(oldPopulation, newIndividuals);
     }
