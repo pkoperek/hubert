@@ -2,8 +2,8 @@ package prototype.evolution.engine;
 
 import org.apache.log4j.Logger;
 import org.jgap.gp.IGPProgram;
-import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
+import prototype.evolution.engine.dc.DeterministicCrowdingConfiguration;
 import prototype.evolution.engine.dc.DeterministicCrowdingEvolutionIterationBuilder;
 import prototype.evolution.engine.jgap.GPGenotypeDelegatingEvolutionIteration;
 import prototype.evolution.reporting.AllTimeBestIndividualReporter;
@@ -101,7 +101,7 @@ public class EvolutionEngine {
         }
 
         @Override
-        public DeterministicCrowdingStep withDeterministicCrowdingIterations(GPConfiguration configuration) {
+        public DeterministicCrowdingStep withDeterministicCrowdingIterations(DeterministicCrowdingConfiguration configuration) {
             evolutionIteration = DeterministicCrowdingEvolutionIterationBuilder
                     .from(configuration)
                     .build();
@@ -138,7 +138,7 @@ public class EvolutionEngine {
 
         Builder withTargetError(double targetError);
 
-        DeterministicCrowdingStep withDeterministicCrowdingIterations(GPConfiguration configuration);
+        DeterministicCrowdingStep withDeterministicCrowdingIterations(DeterministicCrowdingConfiguration configuration);
 
         RegularStep withRegularIterations();
     }

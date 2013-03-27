@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import prototype.data.container.DataContainer;
+import prototype.data.container.DataContainerConfiguration;
 import prototype.data.container.DataContainerFactory;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
 
@@ -34,16 +35,16 @@ public class TimeDifferentialQuotientFitnessFunctionTest {
 
     @Before
     public void setUp() throws Exception {
-        DataContainerFactory dataContainerFactory = new DataContainerFactory();
-        dataContainerFactory.setInputFileName("src/test/resources/monitoring_data.csv");
-        dataContainerFactory.setImplicitTime(true);
-        dataContainerFactory.setTimedData(true);
-        dataContainer = dataContainerFactory.getDataContainer();
+        DataContainerConfiguration dataContainerConfiguration = new DataContainerConfiguration();
+        dataContainerConfiguration.setInputFileName("src/test/resources/monitoring_data.csv");
+        dataContainerConfiguration.setImplicitTime(true);
+        dataContainerConfiguration.setTimedData(true);
+        dataContainer = new DataContainerFactory().getDataContainer(dataContainerConfiguration);
 
-        FitnessFunctionFactory fitnessFunctionFactory = new FitnessFunctionFactory();
-        fitnessFunctionFactory.setFunctionType(FitnessFunctionFactory.FitnessFunctionType.DIFFQ);
-        fitnessFunctionFactory.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.LOESS);
-        fitnessFunction = fitnessFunctionFactory.createFitnessFunction(dataContainer);
+        FitnessFunctionConfiguration fitnessFunctionConfiguration = new FitnessFunctionConfiguration();
+        fitnessFunctionConfiguration.setFunctionType(FitnessFunctionConfiguration.FitnessFunctionType.DIFFQ);
+        fitnessFunctionConfiguration.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.LOESS);
+        fitnessFunction = new FitnessFunctionFactory().createFitnessFunction(fitnessFunctionConfiguration, dataContainer);
     }
 
     @Ignore

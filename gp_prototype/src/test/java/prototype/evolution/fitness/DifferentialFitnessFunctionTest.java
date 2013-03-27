@@ -13,6 +13,7 @@ import org.jgap.gp.terminal.Variable;
 import org.junit.Before;
 import org.junit.Test;
 import prototype.data.container.DataContainer;
+import prototype.data.container.DataContainerConfiguration;
 import prototype.data.container.DataContainerFactory;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculator;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
@@ -33,11 +34,11 @@ public class DifferentialFitnessFunctionTest {
 
     @Before
     public void setUp() throws Exception {
-        DataContainerFactory dataContainerFactory = new DataContainerFactory();
-        dataContainerFactory.setInputFileName("src/test/resources/sin_implicit_time.csv");
-        dataContainerFactory.setImplicitTime(true);
-        dataContainerFactory.setTimedData(true);
-        dataContainer = dataContainerFactory.getDataContainer();
+        DataContainerConfiguration dataContainerConfiguration = new DataContainerConfiguration();
+        dataContainerConfiguration.setInputFileName("src/test/resources/sin_implicit_time.csv");
+        dataContainerConfiguration.setImplicitTime(true);
+        dataContainerConfiguration.setTimedData(true);
+        dataContainer = new DataContainerFactory().getDataContainer(dataContainerConfiguration);
         NumericalDifferentiationCalculator numericalDifferentiationCalculator =
                 new NumericalDifferentiationCalculatorFactory()
                         .createCalculator(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL, dataContainer);

@@ -35,8 +35,8 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
-    public DeterministicCrowdingEvolutionIterationBuilder withExecutorService(ExecutorService executorService) {
-        this.executorService = executorService;
+    public DeterministicCrowdingEvolutionIterationBuilder withThreads(int threadsNum) {
+        this.executorService = Executors.newFixedThreadPool(threadsNum);
         return this;
     }
 
@@ -60,10 +60,6 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
         return this;
     }
 
-    public static DeterministicCrowdingEvolutionIterationBuilder from(GPConfiguration configuration) {
-        return new DeterministicCrowdingEvolutionIterationBuilder(configuration);
-    }
-
     public EvolutionIteration build() {
         DeterministicCrowdingEvolutionIteration deterministicCrowdingEvolutionIteration = new DeterministicCrowdingEvolutionIteration();
 
@@ -75,5 +71,14 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
         deterministicCrowdingEvolutionIteration.setTournament(tournament);
 
         return deterministicCrowdingEvolutionIteration;
+    }
+
+    public static DeterministicCrowdingEvolutionIterationBuilder from(DeterministicCrowdingConfiguration configuration) {
+        DeterministicCrowdingEvolutionIterationBuilder deterministicCrowdingEvolutionIterationBuilder =
+                new DeterministicCrowdingEvolutionIterationBuilder(configuration.getGpConfiguration());
+
+        deterministicCrowdingEvolutionIterationBuilder.withThreads(configuration.getThreadsNum());
+
+        return deterministicCrowdingEvolutionIterationBuilder;
     }
 }

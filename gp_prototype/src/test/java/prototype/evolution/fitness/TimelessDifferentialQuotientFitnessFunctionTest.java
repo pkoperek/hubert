@@ -15,6 +15,7 @@ import org.jgap.gp.terminal.Variable;
 import org.junit.Before;
 import org.junit.Test;
 import prototype.data.container.DataContainer;
+import prototype.data.container.DataContainerConfiguration;
 import prototype.data.container.DataContainerFactory;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
 
@@ -33,16 +34,16 @@ public class TimelessDifferentialQuotientFitnessFunctionTest {
 
     @Before
     public void setUp() throws Exception {
-        DataContainerFactory dataContainerFactory = new DataContainerFactory();
-        dataContainerFactory.setInputFileName("src/test/resources/circle.csv");
-        dataContainerFactory.setImplicitTime(true);
-        dataContainerFactory.setTimedData(true);
-        dataContainer = dataContainerFactory.getDataContainer();
+        DataContainerConfiguration dataContainerConfiguration = new DataContainerConfiguration();
+        dataContainerConfiguration.setInputFileName("src/test/resources/circle.csv");
+        dataContainerConfiguration.setImplicitTime(true);
+        dataContainerConfiguration.setTimedData(true);
+        dataContainer = new DataContainerFactory().getDataContainer(dataContainerConfiguration);
 
-        FitnessFunctionFactory fitnessFunctionFactory = new FitnessFunctionFactory();
-        fitnessFunctionFactory.setFunctionType(FitnessFunctionFactory.FitnessFunctionType.TLESS_DIFFQ);
-        fitnessFunctionFactory.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL);
-        fitnessFunction = fitnessFunctionFactory.createFitnessFunction(dataContainer);
+        FitnessFunctionConfiguration fitnessFunctionConfiguration = new FitnessFunctionConfiguration();
+        fitnessFunctionConfiguration.setFunctionType(FitnessFunctionConfiguration.FitnessFunctionType.TLESS_DIFFQ);
+        fitnessFunctionConfiguration.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL);
+        fitnessFunction = new FitnessFunctionFactory().createFitnessFunction(fitnessFunctionConfiguration, dataContainer);
     }
 
     @Test

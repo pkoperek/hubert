@@ -1,117 +1,34 @@
 package prototype.evolution.engine;
 
-import org.constretto.annotation.Configuration;
-import org.constretto.annotation.Configure;
-import org.jgap.gp.impl.GPConfiguration;
 import prototype.evolution.reporting.ParetoFrontFileReporter;
 
 public class EvolutionEngineFactory {
 
-    private int maxIterations = EvolutionEngine.DEFAULT_MAX_ITERATIONS;
-    private double targetError = EvolutionEngine.DEFAULT_TARGET_ERROR;
-    private boolean paretoFrontReporter = ParetoFrontFileReporter.DEFAULT_ENABLED;
-    private int paretoFrontReporterFileInterval = ParetoFrontFileReporter.DEFAULT_INTERVAL;
-    private IterationType iterationType;
-    private int threadsNum = EvolutionIteration.DEFAULT_THREADS_NUMBER;
+    public EvolutionEngine createEvolutionEngine(EvolutionEngineConfiguration configuration) {
+        EvolutionEngine.Builder builder = preConfiguredBuilder(configuration);
 
-    public enum IterationType {
-        DET_CROWDING,
-        REGULAR
-    }
-
-    public EvolutionEngine createEvolutionEngine(GPConfiguration configuration) {
-        switch (iterationType) {
+        switch (configuration.getIterationType()) {
             case DET_CROWDING:
-                return createDeterministicCrowdingEvolutionEngine(configuration);
+                return builder
+                        .withDeterministicCrowdingIterations(configuration.getGpConfiguration())
+                        .build();
             case REGULAR:
-                return createRegularEvolutionEngine();
+                return builder
+                        .withRegularIterations()
+                        .build();
         }
 
-        throw new IllegalArgumentException("Unsupported iteration type " + iterationType);
+        throw new IllegalArgumentException("Unsupported iteration type " + configuration.getIterationType());
     }
 
-    public EvolutionEngine createDeterministicCrowdingEvolutionEngine(GPConfiguration configuration) {
-        return withParetoFrontReporter(preConfiguredBuilder())
-                .withDeterministicCrowdingIterations(configuration)
-                .build();
-    }
-
-    public EvolutionEngine createRegularEvolutionEngine() {
-        return withParetoFrontReporter(preConfiguredBuilder())
-                .withRegularIterations()
-                .build();
-    }
-
-    private EvolutionEngine.Builder withParetoFrontReporter(EvolutionEngine.Builder builder) {
-        if (paretoFrontReporter) {
-            return builder.withEvolutionEngineEventHandler(new ParetoFrontFileReporter(paretoFrontReporterFileInterval));
+    private EvolutionEngine.Builder preConfiguredBuilder(EvolutionEngineConfiguration evolutionEngineConfiguration) {
+        EvolutionEngine.Builder builder = EvolutionEngine.Builder.builder();
+        if (evolutionEngineConfiguration.isParetoFrontReporter()) {
+            builder.withEvolutionEngineEventHandler(new ParetoFrontFileReporter(
+                    evolutionEngineConfiguration.getParetoFrontReporterFileInterval()));
         }
-        return builder;
-    }
-
-    private EvolutionEngine.Builder preConfiguredBuilder() {
-        return EvolutionEngine.Builder.builder()
-                .withMaxIterations(maxIterations)
-                .withTargetError(targetError);
-    }
-
-    @Configure
-    public void setThreadsNum(
-            @Configuration(
-                    value = "engine.threads.number",
-                    defaultValue = "1"
-            )
-            int threadsNum) {
-        this.threadsNum = threadsNum;
-    }
-
-    @Configure
-    public void setMaxIterations(
-            @Configuration(
-                    value = "engine.max.iterations",
-                    defaultValue = "" + EvolutionEngine.DEFAULT_MAX_ITERATIONS)
-            int maxIterations) {
-        this.maxIterations = maxIterations;
-    }
-
-    @Configure
-    public void setTargetError(
-            @Configuration(
-                    value = "engine.target.error",
-                    defaultValue = "" + EvolutionEngine.DEFAULT_TARGET_ERROR)
-            double targetError) {
-        this.targetError = targetError;
-    }
-
-    @Configure
-    public void setParetoFrontReporter(
-            @Configuration(
-                    value = "engine.reporter.pareto.enabled",
-                    defaultValue = "" + ParetoFrontFileReporter.DEFAULT_ENABLED)
-            boolean paretoFrontReporter) {
-        this.paretoFrontReporter = paretoFrontReporter;
-    }
-
-    @Configure
-    public void setParetoFrontReporterFileInterval(
-            @Configuration(
-                    value = "engine.reporter.pareto.interval",
-                    defaultValue = "" + ParetoFrontFileReporter.DEFAULT_INTERVAL)
-            int paretoFrontReporterFileInterval) {
-        this.paretoFrontReporterFileInterval = paretoFrontReporterFileInterval;
-    }
-
-
-    public void setIterationType(IterationType iterationType) {
-        this.iterationType = iterationType;
-    }
-
-    @Configure
-    public void setIterationType(
-            @Configuration(
-                    value = "engine.iteration.type",
-                    defaultValue = "DET_CROWDING")
-            String iterationType) {
-        this.iterationType = IterationType.valueOf(iterationType.toUpperCase());
+        return builder
+                .withMaxIterations(evolutionEngineConfiguration.getMaxIterations())
+                .withTargetError(evolutionEngineConfiguration.getTargetError());
     }
 }

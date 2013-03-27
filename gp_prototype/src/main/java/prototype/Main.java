@@ -6,12 +6,15 @@ import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.container.DataContainer;
+import prototype.data.container.DataContainerConfiguration;
 import prototype.data.container.DataContainerFactory;
 import prototype.differentiation.numeric.NumericalDifferentiationCalculatorFactory;
 import prototype.evolution.configuration.GPConfigurationFactory;
 import prototype.evolution.engine.EvolutionEngine;
+import prototype.evolution.fitness.FitnessFunctionConfiguration;
 import prototype.evolution.fitness.FitnessFunctionFactory;
 import prototype.evolution.genotype.ChromosomeBuildingStrategyFactory;
+import prototype.evolution.genotype.GenotypeConfiguration;
 import prototype.evolution.genotype.GenotypeFactory;
 import prototype.evolution.reporting.ParetoFrontFileReporter;
 
@@ -37,35 +40,37 @@ public class Main {
         }
 
         // data
-        DataContainerFactory dataContainerFactory = new DataContainerFactory();
-        dataContainerFactory.setInputFileName(args[0]);
-        dataContainerFactory.setImplicitTime(true);
-        dataContainerFactory.setTimedData(true);
-        DataContainer dataContainer = dataContainerFactory.getDataContainer();
+        DataContainerConfiguration dataContainerConfiguration = new DataContainerConfiguration();
+        dataContainerConfiguration.setInputFileName(args[0]);
+        dataContainerConfiguration.setImplicitTime(true);
+        dataContainerConfiguration.setTimedData(true);
+        DataContainer dataContainer = new DataContainerFactory().getDataContainer(dataContainerConfiguration);
 
         // fitness function
-        FitnessFunctionFactory fitnessFunctionFactory = new FitnessFunctionFactory();
-        fitnessFunctionFactory.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL);
-        fitnessFunctionFactory.setFunctionType(FitnessFunctionFactory.FitnessFunctionType.TIME_DERIV);
-        fitnessFunctionFactory.setVariableName("sin");
-        GPFitnessFunction fitnessFunction = fitnessFunctionFactory.createFitnessFunction(dataContainer);
+        FitnessFunctionConfiguration fitnessFunctionConfiguration = new FitnessFunctionConfiguration();
+        fitnessFunctionConfiguration.setCalculatorType(NumericalDifferentiationCalculatorFactory.CalculatorType.CENTRAL);
+        fitnessFunctionConfiguration.setFunctionType(FitnessFunctionConfiguration.FitnessFunctionType.TIME_DERIV);
+        fitnessFunctionConfiguration.setVariableName("sin");
+        GPFitnessFunction fitnessFunction = new FitnessFunctionFactory().createFitnessFunction(fitnessFunctionConfiguration, dataContainer);
 
-        // configuration
+        // gpConfiguration
         GPConfigurationFactory configurationFactory = new GPConfigurationFactory();
         configurationFactory.setPopulationSize(64);
-        GPConfiguration configuration = configurationFactory.createConfiguration(fitnessFunction);
+        GPConfiguration gpConfiguration = configurationFactory.createConfiguration(fitnessFunction);
 
         // genotype
-        GenotypeFactory genotypeFactory = new GenotypeFactory();
-        genotypeFactory.setChromosomes(ChromosomeBuildingStrategyFactory.StrategyType.SINGLE);
-        genotypeFactory.setMaxNodes(128);
-        GPGenotype genotype = genotypeFactory.createGPGenotype(configuration, dataContainer);
+        GenotypeConfiguration genotypeConfiguration = new GenotypeConfiguration();
+        genotypeConfiguration.setChromosomes(ChromosomeBuildingStrategyFactory.StrategyType.SINGLE);
+        genotypeConfiguration.setMaxNodes(128);
+        genotypeConfiguration.setAllVariableNames(dataContainer.getVariableNames());
+        genotypeConfiguration.setGpConfiguration(gpConfiguration);
+        GPGenotype genotype = new GenotypeFactory().createGPGenotype(genotypeConfiguration);
 
         // evolution
         EvolutionEngine evolutionEngine = EvolutionEngine.Builder.builder()
                 .withEvolutionEngineEventHandler(new ParetoFrontFileReporter(50))
                 .withMaxIterations(iterations)
-                .withDeterministicCrowdingIterations(configuration)
+                .withDeterministicCrowdingIterations(gpConfiguration)
                 .build();
 
         evolutionEngine.genotypeEvolve(genotype);

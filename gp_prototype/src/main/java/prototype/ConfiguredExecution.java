@@ -9,11 +9,15 @@ import org.jgap.gp.GPFitnessFunction;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import prototype.data.container.DataContainer;
+import prototype.data.container.DataContainerConfiguration;
 import prototype.data.container.DataContainerFactory;
 import prototype.evolution.configuration.GPConfigurationFactory;
 import prototype.evolution.engine.EvolutionEngine;
+import prototype.evolution.engine.EvolutionEngineConfiguration;
 import prototype.evolution.engine.EvolutionEngineFactory;
+import prototype.evolution.fitness.FitnessFunctionConfiguration;
 import prototype.evolution.fitness.FitnessFunctionFactory;
+import prototype.evolution.genotype.GenotypeConfiguration;
 import prototype.evolution.genotype.GenotypeFactory;
 
 import java.io.IOException;
@@ -31,24 +35,27 @@ public class ConfiguredExecution {
         ConstrettoConfiguration constrettoConfiguration = initializeConfiguration(args[0]);
 
         // data
-        DataContainerFactory dataContainerFactory = constrettoConfiguration.as(DataContainerFactory.class);
-        DataContainer dataContainer = dataContainerFactory.getDataContainer();
+        DataContainerConfiguration dataContainerConfiguration = constrettoConfiguration.as(DataContainerConfiguration.class);
+        DataContainer dataContainer = new DataContainerFactory().getDataContainer(dataContainerConfiguration);
 
         // fitness function
-        FitnessFunctionFactory fitnessFunctionFactory = constrettoConfiguration.as(FitnessFunctionFactory.class);
-        GPFitnessFunction fitnessFunction = fitnessFunctionFactory.createFitnessFunction(dataContainer);
+        FitnessFunctionConfiguration fitnessFunctionConfiguration = constrettoConfiguration.as(FitnessFunctionConfiguration.class);
+        GPFitnessFunction fitnessFunction = new FitnessFunctionFactory().createFitnessFunction(fitnessFunctionConfiguration, dataContainer);
 
-        // configuration
+        // gpConfiguration
         GPConfigurationFactory configurationFactory = constrettoConfiguration.as(GPConfigurationFactory.class);
-        GPConfiguration configuration = configurationFactory.createConfiguration(fitnessFunction);
+        GPConfiguration gpConfiguration = configurationFactory.createConfiguration(fitnessFunction);
 
         // genotype
-        GenotypeFactory genotypeFactory = constrettoConfiguration.as(GenotypeFactory.class);
-        GPGenotype genotype = genotypeFactory.createGPGenotype(configuration, dataContainer);
+        GenotypeConfiguration genotypeConfiguration = constrettoConfiguration.as(GenotypeConfiguration.class);
+        genotypeConfiguration.setAllVariableNames(dataContainer.getVariableNames());
+        genotypeConfiguration.setGpConfiguration(gpConfiguration);
+        GPGenotype genotype = new GenotypeFactory().createGPGenotype(genotypeConfiguration);
 
         // evolution
-        EvolutionEngineFactory evolutionEngineFactory = constrettoConfiguration.as(EvolutionEngineFactory.class);
-        EvolutionEngine evolutionEngine = evolutionEngineFactory.createDeterministicCrowdingEvolutionEngine(configuration);
+        EvolutionEngineConfiguration evolutionEngineConfiguration = constrettoConfiguration.as(EvolutionEngineConfiguration.class);
+        evolutionEngineConfiguration.setGpConfiguration(gpConfiguration);
+        EvolutionEngine evolutionEngine = new EvolutionEngineFactory().createEvolutionEngine(evolutionEngineConfiguration);
 
         // evolve!!!
         evolutionEngine.genotypeEvolve(genotype);
@@ -57,5 +64,4 @@ public class ConfiguredExecution {
     private static ConstrettoConfiguration initializeConfiguration(String configurationFilePath) {
         return new ConstrettoBuilder().createPropertiesStore().addResource(Resource.create("file:" + configurationFilePath)).done().getConfiguration();
     }
-
 }

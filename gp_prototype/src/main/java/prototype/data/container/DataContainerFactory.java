@@ -1,8 +1,6 @@
 package prototype.data.container;
 
 import org.apache.log4j.Logger;
-import org.constretto.annotation.Configuration;
-import org.constretto.annotation.Configure;
 import prototype.data.CSVReader;
 
 import java.io.BufferedReader;
@@ -13,25 +11,16 @@ public class DataContainerFactory {
 
     private static final Logger logger = Logger.getLogger(DataContainerFactory.class);
 
-    private String inputFileName;
-    private String timeVariable;
-    private boolean implicitTime;
-    private boolean timedData;
-
-    public DataContainer getDataContainer() throws IOException {
-        return getDataContainer(inputFileName);
-    }
-
-    private DataContainer getDataContainer(String filename) throws IOException {
-        DataContainer dataContainer = createDataContainer();
-        fillContainerWithData(filename, dataContainer);
+    public DataContainer getDataContainer(DataContainerConfiguration configuration) throws IOException {
+        DataContainer dataContainer = createDataContainer(configuration);
+        fillContainerWithData(configuration.getInputFileName(), dataContainer);
         return dataContainer;
     }
 
-    private DataContainer createDataContainer() {
-        DataContainer dataContainer = new DefaultDataContainer(timeVariable);
+    private DataContainer createDataContainer(DataContainerConfiguration configuration) {
+        DataContainer dataContainer = new DefaultDataContainer(configuration.getTimeVariable());
 
-        if (timedData && implicitTime) {
+        if (configuration.isTimedData() && configuration.isImplicitTime()) {
             dataContainer = decorateWithImplicitTime(dataContainer);
         }
 
@@ -56,23 +45,4 @@ public class DataContainerFactory {
         }
     }
 
-    @Configure
-    public void setInputFileName(@Configuration(value = "data.file") String inputFileName) {
-        this.inputFileName = inputFileName;
-    }
-
-    @Configure
-    public void setTimeVariable(@Configuration(value = "data.time.variable", required = false) String timeVariable) {
-        this.timeVariable = timeVariable;
-    }
-
-    @Configure
-    public void setImplicitTime(@Configuration(value = "data.time.implicit", defaultValue = "false") boolean implicitTime) {
-        this.implicitTime = implicitTime;
-    }
-
-    @Configure
-    public void setTimedData(@Configuration(value = "data.time", defaultValue = "true") boolean timedData) {
-        this.timedData = timedData;
-    }
 }
