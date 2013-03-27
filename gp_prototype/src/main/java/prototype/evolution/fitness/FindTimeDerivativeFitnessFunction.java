@@ -27,7 +27,6 @@ class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
     private final List<String> variables;
     private final DataContainer dataContainer;
     private final NumericalDifferentiationCalculator numericalDifferentiationCalculator;
-    private final VariablesValuesContainer variablesValuesContainer = new MapVariablesValuesContainer();
     private final String variableName;
     private final String timeVariableName;
 
@@ -61,6 +60,7 @@ class FindTimeDerivativeFitnessFunction extends GPFitnessFunction {
     }
 
     private double computeChromosomeError(ProgramChromosome chromosome) {
+        VariablesValuesContainer variablesValuesContainer = new MapVariablesValuesContainer();
         TreeNodeFactory treeNodeFactory = new TreeNodeFactory(variablesValuesContainer);
         String x = variableName;
         Function function = new TreeNodeToFunctionTranslator().translate(treeNodeFactory.createTreeNode(chromosome));

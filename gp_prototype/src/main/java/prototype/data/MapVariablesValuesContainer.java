@@ -17,7 +17,6 @@ public class MapVariablesValuesContainer implements VariablesValuesContainer {
         variablesValues.put(variable, value);
     }
 
-    // TODO: optimize
     @Override
     public double getVariableValue(String variable) {
         return variablesValues.get(variable);

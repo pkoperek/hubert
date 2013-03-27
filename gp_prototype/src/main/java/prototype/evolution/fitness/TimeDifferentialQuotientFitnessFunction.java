@@ -55,12 +55,6 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
             error += evaluatePairings(chromosome);
         }
 
-        // mean log error - but not negative; the DeltaGPFitnessEvaluator
-        // treats smaller values as better
-        if (error != Double.MAX_VALUE) {
-            error /= dataContainer.getRowsCount();
-        }
-
         long stop = System.nanoTime();
         LOGGER.debug("Fitness Function Time: " + (stop - start) + " ns Error: " + error);
 
@@ -125,6 +119,8 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
 
         if (validDataRows == 0) {
             pairingError = Double.MAX_VALUE;
+        } else {
+            pairingError /= (double) validDataRows;
         }
 
         return pairingError;
