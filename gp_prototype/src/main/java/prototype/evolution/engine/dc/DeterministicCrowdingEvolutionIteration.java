@@ -85,38 +85,69 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
     }
 
     private GPPopulation crossAndMutatePopulation(GPPopulation oldPopulation) {
-        GPPopulation newPopulation = createNewGPPopulation(oldPopulation);
-        List<Integer> freeIndexes = prepareFreeIndexes(configuration.getPopulationSize());
+        IGPProgram[] parents = makeRandomParentPairs(oldPopulation);
+        IGPProgram[] children = crossParentPairs(parents);
+        IGPProgram[] newIndividuals = generationsTournament(parents, children);
 
-        int individualIdx = 0;
-        while (!freeIndexes.isEmpty()) {
-            configuration.clearStack();
+        return createPopulationWithNewIndividuals(oldPopulation, newIndividuals);
+    }
 
-            IGPProgram parentA = select(oldPopulation, freeIndexes);
-            IGPProgram parentB = select(oldPopulation, freeIndexes);
+    private IGPProgram[] generationsTournament(IGPProgram[] parents, IGPProgram[] children) {
+        IGPProgram[] newIndividuals = new IGPProgram[configuration.getPopulationSize()];
 
-            IGPProgram[] children = cross(parentA, parentB);
-            IGPProgram[] newIndividuals = tournament(
-                    parentA,
-                    parentB,
-                    mutate(children[0]),
-                    mutate(children[1])
+        for (int i = 0; i < parents.length; i += 2) {
+            IGPProgram[] winners = tournament(
+                    parents[i],
+                    parents[i + 1],
+                    mutate(children[i]),
+                    mutate(children[i + 1])
             );
 
-            newPopulation.setGPProgram(individualIdx++, newIndividuals[0]);
-            newPopulation.setGPProgram(individualIdx++, newIndividuals[1]);
+            newIndividuals[i] = winners[0];
+            newIndividuals[i + 1] = winners[1];
         }
 
-        return newPopulation;
+        return newIndividuals;
+    }
+
+    private IGPProgram[] crossParentPairs(IGPProgram[] parents) {
+        IGPProgram[] children = new IGPProgram[configuration.getPopulationSize()];
+
+        for (int individualIdx = 0; individualIdx < parents.length; individualIdx += 2) {
+            IGPProgram[] crossed = cross(parents[individualIdx], parents[individualIdx + 1]);
+            children[individualIdx] = crossed[0];
+            children[individualIdx + 1] = crossed[1];
+        }
+
+        return children;
+    }
+
+    private IGPProgram[] makeRandomParentPairs(GPPopulation oldPopulation) {
+        IGPProgram[] parents = new IGPProgram[configuration.getPopulationSize()];
+        List<Integer> freeIndexes = prepareFreeIndexes(configuration.getPopulationSize());
+
+        int parentIdx = 0;
+        while (!freeIndexes.isEmpty()) {
+            configuration.clearStack();
+            parents[parentIdx++] = select(oldPopulation, freeIndexes);
+        }
+
+        return parents;
     }
 
     private IGPProgram[] tournament(IGPProgram parentA, IGPProgram parentB, IGPProgram childA, IGPProgram childB) {
         return tournament.getWinners(parentA, parentB, childA, childB);
     }
 
-    private GPPopulation createNewGPPopulation(GPPopulation oldPopulation) {
+    private GPPopulation createPopulationWithNewIndividuals(GPPopulation oldPopulation, IGPProgram[] newIndividuals) {
         try {
-            return new GPPopulation(oldPopulation, false);
+            GPPopulation gpPopulation = new GPPopulation(oldPopulation, false);
+
+            for (int i = 0; i < newIndividuals.length; i++) {
+                gpPopulation.setGPProgram(i, newIndividuals[i]);
+            }
+
+            return gpPopulation;
         } catch (InvalidConfigurationException e) {
             logger.error("Can't create new population!", e);
             // TODO: do something smarter
