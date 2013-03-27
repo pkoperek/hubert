@@ -12,10 +12,10 @@ import java.util.Arrays;
 public class GenotypeFactory {
 
     private int maxNodes = GPGenotypeBuilder.DEFAULT_MAX_NODES;
-    private ChromosomeBuildingStrategyFactory.StrategyType chromosomes;
+    private ChromosomeBuildingStrategyFactory.StrategyType solutionChromosomes;
 
     public GPGenotype createGPGenotype(GPConfiguration configuration, DataContainer dataContainer) throws InvalidConfigurationException {
-        ChromosomeBuildingStrategyFactory buildingStrategyFactory = new ChromosomeBuildingStrategyFactory(chromosomes);
+        ChromosomeBuildingStrategyFactory buildingStrategyFactory = new ChromosomeBuildingStrategyFactory(solutionChromosomes);
         ChromosomeBuildingStrategy buildingStrategy = buildingStrategyFactory.createStrategy(Arrays.asList(dataContainer.getVariableNames()));
 
         return GPGenotypeBuilder
@@ -35,16 +35,16 @@ public class GenotypeFactory {
     }
 
     @Configure
-    public void setChromosomes(
+    public void setSolutionChromosomes(
             @Configuration(
-                    value = "genotype.chromosomes",
+                    value = "genotype.solutionChromosomes",
                     defaultValue = "SINGLE"
             )
-            String chromosomes) {
-        this.chromosomes = ChromosomeBuildingStrategyFactory.StrategyType.valueOf(chromosomes);
+            String solutionChromosomes) {
+        this.solutionChromosomes = ChromosomeBuildingStrategyFactory.StrategyType.valueOf(solutionChromosomes);
     }
 
     public void setChromosomes(ChromosomeBuildingStrategyFactory.StrategyType chromosomes) {
-        this.chromosomes = chromosomes;
+        this.solutionChromosomes = chromosomes;
     }
 }
