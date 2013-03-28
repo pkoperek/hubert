@@ -77,7 +77,8 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
 
     private double computeErrorForVariables(ProgramChromosome chromosome, Pair<String> pairing) {
         VariablesValuesContainer valuesContainer = new MapVariablesValuesContainer();
-        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(valuesContainer, pairing);
+        // TODO: pairing trzeba uwzglednic jesli ilosc zmiennych > 2
+        TreeNodeFactory treeNodeFactory = new TreeNodeFactory(valuesContainer);
         TreeNode f = treeNodeFactory.createTreeNode(chromosome);
 
         String x = pairing.getOne();
@@ -102,12 +103,16 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
                 double deltaX = numericalDifferentiationCalculator.getPartialDerivative(x, timeVariableName, dataRow);
                 double deltaY = numericalDifferentiationCalculator.getPartialDerivative(y, timeVariableName, dataRow);
 
+                if (LOGGER.isTraceEnabled()) {
+                    LOGGER.trace(dfdx_val + " " + dfdy_val + " " + deltaX + " " + deltaY);
+                }
+
                 try {
                     // if any of denominators is 0 - discard data sample
                     if (isNotValidDataSample(dfdx_val, dfdy_val, deltaX, deltaY)) {
                         logInvalidDataSample(x, y, dataRow, dfdx_val, deltaY, deltaX, deltaY);
                     } else {
-                        double result = (deltaX / deltaY) - (dfdy_val / dfdx_val);
+                        double result = Math.abs(deltaX / deltaY) - Math.abs(dfdy_val / dfdx_val);
                         pairingError += Math.log(1 + Math.abs(result));
                         validDataRows++;
                     }
@@ -115,6 +120,10 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
                     LOGGER.error("Problems with computing result from: " + dfdx + " | " + dfdy, ex);
                 }
             }
+        }
+
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(pairingError + " " + validDataRows + " " + pairingError / (double) validDataRows);
         }
 
         if (validDataRows == 0) {
@@ -127,7 +136,7 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
     }
 
     private void logInvalidDataSample(String x, String y, int dataRow, double dfdx_val, double dfdy_val, double deltaX, double deltaY) {
-        if (LOGGER.isDebugEnabled()) {
+        if (LOGGER.isDebugEnabled() || LOGGER.isTraceEnabled()) {
             LOGGER.debug("Discarding data sample: " +
                     " x: " + x +
                     " y: " + y +
