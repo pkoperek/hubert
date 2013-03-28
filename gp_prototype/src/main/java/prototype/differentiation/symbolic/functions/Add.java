@@ -25,6 +25,6 @@ public class Add extends DoubleOperandFunction {
 
     @Override
     public String toString() {
-        return getLeftOperand() + " + " + getRightOperand();
+        return "(" + getLeftOperand() + " + " + getRightOperand() + ")";
     }
 }

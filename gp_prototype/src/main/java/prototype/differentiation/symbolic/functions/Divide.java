@@ -25,7 +25,7 @@ public class Divide extends DoubleOperandFunction {
 
     @Override
     public String toString() {
-        return getLeftOperand() + " / " + getRightOperand();
+        return "(" + getLeftOperand() + " / " + getRightOperand() + ")";
     }
 
 }
