@@ -13,10 +13,11 @@ import prototype.evolution.engine.EvolutionEngineEventType;
  * Date: 27.03.13
  * Time: 21:51
  */
+// TODO: REFACTOR PARETO FRONT REPORTING/TRACKING
 public class ParetoFrontLoggingReporter implements EvolutionEngineEventHandler {
 
     private static final Logger logger = Logger.getLogger(ParetoFrontLoggingReporter.class);
-    private ParetoFrontGenerator paretoFrontGenerator = new ParetoFrontGenerator(128);
+    private ParetoFrontTracker paretoFrontTracker = new ParetoFrontTracker(128);
 
     @Override
     public void handleEvolutionEngineEvent(EvolutionEngineEvent event) {
@@ -27,11 +28,13 @@ public class ParetoFrontLoggingReporter implements EvolutionEngineEventHandler {
 
     private void handleGenotype(GPGenotype genotype) {
         GPPopulation gpPopulation = genotype.getGPPopulation();
-        IGPProgram[] programs = paretoFrontGenerator.generateParetoFrontPrograms(gpPopulation);
+        paretoFrontTracker.trackPopulation(gpPopulation);
+        IGPProgram[] programs = paretoFrontTracker.getFittestPrograms();
+        double[] fitnesses = paretoFrontTracker.getFitnesses();
 
         for (int i = 0; i < programs.length; i++) {
             if (programs[i] != null) {
-                logger.info("Size: " + i + " Program: " + programs[i].toStringNorm(0));
+                logger.info("Size: " + i + " Fitness: " + fitnesses[i] + " Program: " + programs[i].toStringNorm(0));
             }
         }
     }

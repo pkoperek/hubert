@@ -5,24 +5,24 @@ import org.jgap.gp.impl.GPPopulation;
 
 import java.util.Arrays;
 
-// TODO: REFACTOR PARETO FRONT REPORTING/TRACKING
-public class ParetoFrontGenerator {
+/**
+ * User: koperek
+ * Date: 28.03.13
+ * Time: 12:00
+ */
+public class ParetoFrontTracker {
     private final double[] fitnesses;
     private final IGPProgram[] fittestPrograms;
 
-    public ParetoFrontGenerator(int size) {
+
+    public ParetoFrontTracker(int size) {
         fittestPrograms = new IGPProgram[size];
         fitnesses = new double[size];
-    }
-
-    public double[] generateParetoFrontFitness(GPPopulation gpPopulation) {
-        computeParetoFront(gpPopulation);
-        return fitnesses;
-    }
-
-    private void computeParetoFront(GPPopulation gpPopulation) {
         Arrays.fill(fitnesses, Double.MAX_VALUE);
-        for (IGPProgram program : gpPopulation.getGPPrograms()) {
+    }
+
+    public void trackPopulation(GPPopulation population) {
+        for (IGPProgram program : population.getGPPrograms()) {
             double fitness = program.getFitnessValue();
             int size = program.getChromosome(0).size();
 
@@ -44,8 +44,11 @@ public class ParetoFrontGenerator {
         }
     }
 
-    public IGPProgram[] generateParetoFrontPrograms(GPPopulation gpPopulation) {
-        computeParetoFront(gpPopulation);
+    public double[] getFitnesses() {
+        return fitnesses;
+    }
+
+    public IGPProgram[] getFittestPrograms() {
         return fittestPrograms;
     }
 }

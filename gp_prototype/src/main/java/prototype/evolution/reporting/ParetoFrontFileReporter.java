@@ -10,6 +10,7 @@ import java.io.IOException;
  * Date: 16.03.13
  * Time: 18:01
  */
+// TODO: REFACTOR PARETO FRONT REPORTING/TRACKING
 public class ParetoFrontFileReporter extends FilePopulationReporter {
     public static final boolean DEFAULT_ENABLED = true;
     public static final int DEFAULT_INTERVAL = 50;
