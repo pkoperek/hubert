@@ -1,6 +1,7 @@
 package prototype.data.container;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -9,9 +10,9 @@ import java.util.List;
  * Time: 11:49
  */
 public class VariableSeries {
-    private String name;
 
-    private List<Double> values = new ArrayList<Double>();
+    private final String name;
+    private final List<Double> values = new ArrayList<>();
 
     public VariableSeries(String name) {
         this.name = name;
@@ -19,6 +20,10 @@ public class VariableSeries {
 
     public void add(double value) {
         values.add(value);
+    }
+
+    public void addAll(Collection<Double> values) {
+        this.values.addAll(values);
     }
 
     public int getDataRowsCount() {
@@ -41,5 +46,11 @@ public class VariableSeries {
         }
 
         return serie;
+    }
+
+    public VariableSeries getFragment(int offset, int size) {
+        VariableSeries fragmentVariableSeries = new VariableSeries(this.name);
+        fragmentVariableSeries.addAll(values.subList(offset, offset + size));
+        return fragmentVariableSeries;
     }
 }

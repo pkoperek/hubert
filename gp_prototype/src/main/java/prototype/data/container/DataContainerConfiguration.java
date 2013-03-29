@@ -8,6 +8,24 @@ public class DataContainerConfiguration {
     private String timeVariable;
     private boolean implicitTime;
     private boolean timedData;
+    private boolean movingWindow;
+    private int movingWindowSize;
+    private int movingWindowInterval;
+
+    @Configure
+    public void setMovingWindowInterval(@Configuration(value = "data.moving.window.interval", defaultValue = "60000") int movingWindowInterval) {
+        this.movingWindowInterval = movingWindowInterval;
+    }
+
+    @Configure
+    public void setMovingWindowSize(@Configuration(value = "data.moving.window.size", defaultValue = "30") int movingWindowSize) {
+        this.movingWindowSize = movingWindowSize;
+    }
+
+    @Configure
+    public void setMovingWindow(@Configuration(value = "data.moving.window.enabled", defaultValue = "false") boolean movingWindow) {
+        this.movingWindow = movingWindow;
+    }
 
     @Configure
     public void setInputFileName(@Configuration(value = "data.file") String inputFileName) {
@@ -43,5 +61,17 @@ public class DataContainerConfiguration {
 
     public boolean isTimedData() {
         return timedData;
+    }
+
+    public boolean isMovingWindow() {
+        return movingWindow;
+    }
+
+    public int getMovingWindowSize() {
+        return movingWindowSize;
+    }
+
+    public int getMovingWindowInterval() {
+        return movingWindowInterval;
     }
 }

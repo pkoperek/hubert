@@ -24,7 +24,21 @@ public class DataContainerFactory {
             dataContainer = decorateWithImplicitTime(dataContainer);
         }
 
+        if (configuration.isMovingWindow()) {
+            dataContainer = decorateWithMovingWindow(dataContainer, configuration);
+        }
+
         return dataContainer;
+    }
+
+    private OffsetDataContainer decorateWithMovingWindow(DataContainer dataContainer, DataContainerConfiguration configuration) {
+        OffsetDataContainer offsetDataContainer =
+                new OffsetDataContainer(dataContainer, configuration.getMovingWindowSize());
+        OffsetIncrementingThread offsetIncrementingThread =
+                new OffsetIncrementingThread(offsetDataContainer, configuration.getMovingWindowInterval());
+
+        offsetIncrementingThread.start();
+        return offsetDataContainer;
     }
 
     private DataContainer decorateWithImplicitTime(DataContainer dataContainer) {
