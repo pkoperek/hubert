@@ -21,6 +21,7 @@ public class EvolutionEngineConfiguration {
     private int threadsNum;
     private IterationType iterationType;
     private boolean paretoLoggerReporter = false;
+    private long computationTime;
 
     public int getMaxIterations() {
         return maxIterations;
@@ -123,6 +124,20 @@ public class EvolutionEngineConfiguration {
             )
             boolean paretoLoggerReporter) {
         this.paretoLoggerReporter = paretoLoggerReporter;
+    }
+
+    public long getComputationTime() {
+        return computationTime;
+    }
+
+    @Configure
+    public void setComputationTime(
+            @Configuration(
+                    value = "engine.computation.time.limit",
+                    defaultValue = "-1"
+            )
+            long computationTime) {
+        this.computationTime = computationTime;
     }
 
     public boolean isParetoFrontLoggerReporter() {

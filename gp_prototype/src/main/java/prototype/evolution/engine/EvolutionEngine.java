@@ -15,16 +15,18 @@ import java.util.List;
 public class EvolutionEngine {
 
     public static final double DEFAULT_TARGET_ERROR = 0.0000001f;
-    public static final int DEFAULT_MAX_ITERATIONS = 10000;
+    public static final int DEFAULT_MAX_ITERATIONS = 1000000;
 
     private static Logger logger = Logger.getLogger(EvolutionEngine.class);
 
+    private final long finishTimeStamp;
     private final int iterations;
     private final double targetError;
     private final List<EvolutionEngineEventHandler> eventHandlers;
     private final EvolutionIteration evolutionIteration;
 
-    EvolutionEngine(int iterations, double targetError, EvolutionIteration evolutionIteration, List<EvolutionEngineEventHandler> eventHandlers) {
+    EvolutionEngine(long finishTimeStamp, int iterations, double targetError, EvolutionIteration evolutionIteration, List<EvolutionEngineEventHandler> eventHandlers) {
+        this.finishTimeStamp = finishTimeStamp;
         this.iterations = iterations;
         this.targetError = targetError;
         this.evolutionIteration = evolutionIteration;
@@ -41,13 +43,27 @@ public class EvolutionEngine {
 
             notifyAfterEvolution(genotype);
 
-            IGPProgram fittestProgram = genotype.getFittestProgram();
-            if (fittestProgram.getFitnessValue() < targetError) {
+            if (timeTargetMet()) {
+                logger.info("Time out - finishing");
+                break;
+            }
+
+            if (fitnessTargetMet(genotype.getFittestProgram())) {
                 logger.info("Found a good solution!");
                 notifyFinishedEvolution(genotype);
                 break;
             }
         }
+    }
+
+    private boolean timeTargetMet() {
+        long currentTimestamp = System.currentTimeMillis();
+        logger.info("Current: " + currentTimestamp + " finish: " + finishTimeStamp);
+        return finishTimeStamp < 0 ? false : currentTimestamp >= finishTimeStamp;
+    }
+
+    private boolean fitnessTargetMet(IGPProgram fittestProgram) {
+        return fittestProgram.getFitnessValue() < targetError;
     }
 
     private void notifyFinishedEvolution(GPGenotype genotype) {
@@ -78,12 +94,19 @@ public class EvolutionEngine {
         private double targetError = EvolutionEngine.DEFAULT_TARGET_ERROR;
         private List<EvolutionEngineEventHandler> evolutionEngineEventHandlers = new ArrayList<>();
         private EvolutionIteration evolutionIteration;
+        private long computationTimeInMs;
 
         private Builder() {
         }
 
         public static Builder builder() {
             return new Builder();
+        }
+
+        @Override
+        public Builder withComputationTime(long computationTimeInMs) {
+            this.computationTimeInMs = computationTimeInMs;
+            return this;
         }
 
         @Override
@@ -122,10 +145,27 @@ public class EvolutionEngine {
         public EvolutionEngine build() {
             fillDefaultReporters();
 
+            long finishComputationTimestamp = computeTargetTimestamp();
+
             EvolutionEngine evolutionEngine = new EvolutionEngine(
-                    maxIterations, targetError, evolutionIteration, evolutionEngineEventHandlers);
+                    finishComputationTimestamp,
+                    maxIterations,
+                    targetError,
+                    evolutionIteration,
+                    evolutionEngineEventHandlers);
 
             return evolutionEngine;
+        }
+
+        private long computeTargetTimestamp() {
+            if (computationTimeInMs < 0) {
+                return computationTimeInMs;
+            }
+
+            long currentTimestamp = System.currentTimeMillis();
+            long targetTimestamp = currentTimestamp + computationTimeInMs;
+            logger.info("Target timestamp: " + currentTimestamp + " target: " + targetTimestamp);
+            return targetTimestamp;
         }
 
         private void fillDefaultReporters() {
@@ -136,6 +176,8 @@ public class EvolutionEngine {
     }
 
     public interface CommonStep {
+        public Builder withComputationTime(long computationTimeInMs);
+
         Builder withEvolutionEngineEventHandler(EvolutionEngineEventHandler evolutionEngineEventHandler);
 
         Builder withMaxIterations(int maxIterations);

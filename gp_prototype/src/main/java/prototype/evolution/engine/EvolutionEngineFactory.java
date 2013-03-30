@@ -33,6 +33,7 @@ public class EvolutionEngineFactory {
         }
 
         return builder
+                .withComputationTime(evolutionEngineConfiguration.getComputationTime())
                 .withMaxIterations(evolutionEngineConfiguration.getMaxIterations())
                 .withTargetError(evolutionEngineConfiguration.getTargetError());
     }
