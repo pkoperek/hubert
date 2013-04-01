@@ -7,7 +7,7 @@
         </layout>
     </appender>
 
-    <logger name="prototype.evolution.reporting.FitnessLengthFileFilePopulationReporter">
+    <logger name="prototype.evolution.reporting.FitnessLengthFileFileReporter">
         <level value="trace"/>
     </logger>
 

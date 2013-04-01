@@ -10,10 +10,12 @@ import org.jgap.gp.impl.GPGenotype;
 public class EvolutionEngineEvent {
     private final EvolutionEngineEventType type;
     private final GPGenotype genotype;
+    private final EvolutionEngine source;
 
-    public EvolutionEngineEvent(EvolutionEngineEventType type, GPGenotype genotype) {
+    public EvolutionEngineEvent(EvolutionEngineEventType type, GPGenotype genotype, EvolutionEngine source) {
         this.type = type;
         this.genotype = genotype;
+        this.source = source;
     }
 
     public GPGenotype getGenotype() {
@@ -22,6 +24,10 @@ public class EvolutionEngineEvent {
 
     public EvolutionEngineEventType getType() {
         return type;
+    }
+
+    public EvolutionEngine getSource() {
+        return source;
     }
 
     @Override

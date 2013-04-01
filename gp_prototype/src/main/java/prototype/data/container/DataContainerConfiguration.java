@@ -11,6 +11,7 @@ public class DataContainerConfiguration {
     private boolean movingWindow;
     private int movingWindowSize;
     private int movingWindowInterval;
+    private String verificationDataInput;
 
     @Configure
     public void setMovingWindowInterval(@Configuration(value = "data.moving.window.interval", defaultValue = "60000") int movingWindowInterval) {
@@ -45,6 +46,15 @@ public class DataContainerConfiguration {
     @Configure
     public void setTimedData(@Configuration(value = "data.time", defaultValue = "true") boolean timedData) {
         this.timedData = timedData;
+    }
+
+    @Configure
+    public void setVerificationDataInput(@Configuration(value = "data.verification.file") String verificationDataInput) {
+        this.verificationDataInput = verificationDataInput;
+    }
+
+    public String getVerificationDataInput() {
+        return verificationDataInput;
     }
 
     public String getInputFileName() {

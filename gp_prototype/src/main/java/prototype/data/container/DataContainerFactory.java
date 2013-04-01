@@ -59,4 +59,28 @@ public class DataContainerFactory {
         }
     }
 
+    public DataContainer getVerificationDataContainer(DataContainerConfiguration dataContainerConfiguration) throws IOException {
+        DataContainerConfiguration overriddenDataContainerConfiguration = clone(dataContainerConfiguration);
+        overriddenDataContainerConfiguration.setMovingWindow(false);
+        overriddenDataContainerConfiguration.setMovingWindowInterval(-1);
+        overriddenDataContainerConfiguration.setMovingWindowSize(-1);
+        DataContainer dataContainer = createDataContainer(overriddenDataContainerConfiguration);
+        fillContainerWithData(dataContainerConfiguration.getVerificationDataInput(), dataContainer);
+        return dataContainer;
+    }
+
+    private DataContainerConfiguration clone(DataContainerConfiguration dataContainerConfiguration) {
+        DataContainerConfiguration containerConfiguration = new DataContainerConfiguration();
+
+        containerConfiguration.setImplicitTime(dataContainerConfiguration.isImplicitTime());
+        containerConfiguration.setInputFileName(dataContainerConfiguration.getInputFileName());
+        containerConfiguration.setMovingWindow(dataContainerConfiguration.isMovingWindow());
+        containerConfiguration.setMovingWindowInterval(dataContainerConfiguration.getMovingWindowInterval());
+        containerConfiguration.setMovingWindowSize(dataContainerConfiguration.getMovingWindowSize());
+        containerConfiguration.setTimedData(dataContainerConfiguration.isTimedData());
+        containerConfiguration.setTimeVariable(dataContainerConfiguration.getTimeVariable());
+        containerConfiguration.setVerificationDataInput(dataContainerConfiguration.getVerificationDataInput());
+
+        return containerConfiguration;
+    }
 }

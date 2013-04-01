@@ -24,24 +24,26 @@ public class EvolutionEngine {
     private final double targetError;
     private final List<EvolutionEngineEventHandler> eventHandlers;
     private final EvolutionIteration evolutionIteration;
+    private final boolean trackParetoFront;
+    private ParetoFrontTracker paretoFrontTracker;
 
-    EvolutionEngine(long finishTimeStamp, int iterations, double targetError, EvolutionIteration evolutionIteration, List<EvolutionEngineEventHandler> eventHandlers) {
+    EvolutionEngine(long finishTimeStamp, int iterations, double targetError, EvolutionIteration evolutionIteration, List<EvolutionEngineEventHandler> eventHandlers, boolean trackParetoFront) {
         this.finishTimeStamp = finishTimeStamp;
         this.iterations = iterations;
         this.targetError = targetError;
         this.evolutionIteration = evolutionIteration;
         this.eventHandlers = eventHandlers;
+        this.trackParetoFront = trackParetoFront;
     }
 
     public void genotypeEvolve(GPGenotype genotype) {
         logger.info("Starting computations");
+        initializeParetoFrontTracker(genotype);
+
         for (int i = 0; i < iterations; i++) {
-            notifyBeforeEvolution(genotype);
-
             logger.info("Iteration: " + i + " - evolving...");
-            evolutionIteration.evolve(genotype);
-
-            notifyAfterEvolution(genotype);
+            singleEvolutionIteration(genotype);
+            trackParetoFront(genotype);
 
             if (timeTargetMet()) {
                 logger.info("Time out - finishing");
@@ -56,6 +58,25 @@ public class EvolutionEngine {
         }
     }
 
+    private void initializeParetoFrontTracker(GPGenotype genotype) {
+        if (trackParetoFront) {
+            paretoFrontTracker = new ParetoFrontTracker(genotype.getGPPopulation().size());
+        }
+    }
+
+    private void trackParetoFront(GPGenotype genotype) {
+        if (trackParetoFront) {
+            paretoFrontTracker.trackPopulation(
+                    genotype.getGPPopulation());
+        }
+    }
+
+    private void singleEvolutionIteration(GPGenotype genotype) {
+        notifyBeforeEvolution(genotype);
+        evolutionIteration.evolve(genotype);
+        notifyAfterEvolution(genotype);
+    }
+
     private boolean timeTargetMet() {
         long currentTimestamp = System.currentTimeMillis();
         logger.info("Current: " + currentTimestamp + " finish: " + finishTimeStamp);
@@ -67,15 +88,15 @@ public class EvolutionEngine {
     }
 
     private void notifyFinishedEvolution(GPGenotype genotype) {
-        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.FINISHED_EVOLUTION, genotype));
+        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.FINISHED_EVOLUTION, genotype, this));
     }
 
     private void notifyAfterEvolution(GPGenotype genotype) {
-        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.AFTER_EVOLUTION, genotype));
+        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.AFTER_EVOLUTION, genotype, this));
     }
 
     private void notifyBeforeEvolution(GPGenotype genotype) {
-        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.BEFORE_EVOLUTION, genotype));
+        notifyEvolutionEngineEventHandlers(new EvolutionEngineEvent(EvolutionEngineEventType.BEFORE_EVOLUTION, genotype, this));
     }
 
     private void notifyEvolutionEngineEventHandlers(EvolutionEngineEvent event) {
@@ -88,6 +109,10 @@ public class EvolutionEngine {
         evolutionIteration.shutdown();
     }
 
+    public ParetoFrontTracker getParetoFrontTracker() {
+        return paretoFrontTracker;
+    }
+
     public static class Builder implements CommonStep, RegularStep, DeterministicCrowdingStep {
 
         private int maxIterations = EvolutionEngine.DEFAULT_MAX_ITERATIONS;
@@ -95,6 +120,7 @@ public class EvolutionEngine {
         private List<EvolutionEngineEventHandler> evolutionEngineEventHandlers = new ArrayList<>();
         private EvolutionIteration evolutionIteration;
         private long computationTimeInMs;
+        private boolean trackParetoFront;
 
         private Builder() {
         }
@@ -136,6 +162,12 @@ public class EvolutionEngine {
         }
 
         @Override
+        public Builder withTrackParetoFront() {
+            this.trackParetoFront = true;
+            return this;
+        }
+
+        @Override
         public RegularStep withRegularIterations() {
             evolutionIteration = new GPGenotypeDelegatingEvolutionIteration();
             return this;
@@ -152,7 +184,9 @@ public class EvolutionEngine {
                     maxIterations,
                     targetError,
                     evolutionIteration,
-                    evolutionEngineEventHandlers);
+                    evolutionEngineEventHandlers,
+                    trackParetoFront
+            );
 
             return evolutionEngine;
         }
@@ -176,7 +210,9 @@ public class EvolutionEngine {
     }
 
     public interface CommonStep {
-        public Builder withComputationTime(long computationTimeInMs);
+        Builder withTrackParetoFront();
+
+        Builder withComputationTime(long computationTimeInMs);
 
         Builder withEvolutionEngineEventHandler(EvolutionEngineEventHandler evolutionEngineEventHandler);
 

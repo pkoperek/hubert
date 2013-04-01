@@ -1,6 +1,6 @@
 package prototype.evolution.reporting;
 
-import org.jgap.gp.impl.GPPopulation;
+import prototype.evolution.engine.EvolutionEngineEvent;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,10 +11,9 @@ import java.io.IOException;
  * Time: 18:01
  */
 // TODO: REFACTOR PARETO FRONT REPORTING/TRACKING
-public class ParetoFrontFileReporter extends FilePopulationReporter {
+public class ParetoFrontFileReporter extends FileReporter {
     public static final boolean DEFAULT_ENABLED = true;
     public static final int DEFAULT_INTERVAL = 50;
-    private final ParetoFrontGenerator paretoFrontGenerator = new ParetoFrontGenerator(128);
 
     public ParetoFrontFileReporter() {
         this(1);
@@ -24,8 +23,9 @@ public class ParetoFrontFileReporter extends FilePopulationReporter {
         super("pareto", modulo);
     }
 
-    protected void writePopulationData(GPPopulation gpPopulation, BufferedWriter writer) throws IOException {
-        double[] fitnesses = paretoFrontGenerator.generateParetoFrontFitness(gpPopulation);
+    @Override
+    protected void writeEvent(EvolutionEngineEvent event, BufferedWriter writer) throws IOException {
+        double[] fitnesses = event.getSource().getParetoFrontTracker().getFitnesses();
 
         for (int i = 0; i < fitnesses.length; i++) {
             if (fitnesses[i] != Double.MAX_VALUE) {

@@ -24,12 +24,17 @@ public class EvolutionEngineFactory {
 
     private EvolutionEngine.Builder preConfiguredBuilder(EvolutionEngineConfiguration evolutionEngineConfiguration) {
         EvolutionEngine.Builder builder = EvolutionEngine.Builder.builder();
-        if (evolutionEngineConfiguration.isParetoFrontFileReporter()) {
-            builder.withEvolutionEngineEventHandler(new ParetoFrontFileReporter(
-                    evolutionEngineConfiguration.getParetoFrontReporterFileInterval()));
-        }
-        if (evolutionEngineConfiguration.isParetoFrontLoggerReporter()) {
-            builder.withEvolutionEngineEventHandler(new ParetoFrontLoggingReporter());
+
+        if (evolutionEngineConfiguration.isParetoFrontTracking()) {
+            builder = builder.withTrackParetoFront();
+
+            if (evolutionEngineConfiguration.isParetoFrontFileReporter()) {
+                builder.withEvolutionEngineEventHandler(new ParetoFrontFileReporter(
+                        evolutionEngineConfiguration.getParetoFrontReporterFileInterval()));
+            }
+            if (evolutionEngineConfiguration.isParetoFrontLoggerReporter()) {
+                builder.withEvolutionEngineEventHandler(new ParetoFrontLoggingReporter());
+            }
         }
 
         return builder

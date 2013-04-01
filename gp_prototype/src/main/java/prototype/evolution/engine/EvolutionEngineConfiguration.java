@@ -22,6 +22,7 @@ public class EvolutionEngineConfiguration {
     private IterationType iterationType;
     private boolean paretoLoggerReporter = false;
     private long computationTime;
+    private boolean paretoFrontTracking;
 
     public int getMaxIterations() {
         return maxIterations;
@@ -86,9 +87,9 @@ public class EvolutionEngineConfiguration {
     }
 
     @Configure
-    public void setParetoFrontReporter(
+    public void setParetoFrontFileReporter(
             @Configuration(
-                    value = "engine.reporter.pareto.enabled",
+                    value = "engine.reporter.pareto.file",
                     defaultValue = "" + ParetoFrontFileReporter.DEFAULT_ENABLED)
             boolean paretoFrontReporter) {
         this.paretoFrontReporter = paretoFrontReporter;
@@ -97,7 +98,7 @@ public class EvolutionEngineConfiguration {
     @Configure
     public void setParetoFrontReporterFileInterval(
             @Configuration(
-                    value = "engine.reporter.pareto.interval",
+                    value = "engine.reporter.pareto.file.interval",
                     defaultValue = "" + ParetoFrontFileReporter.DEFAULT_INTERVAL)
             int paretoFrontReporterFileInterval) {
         this.paretoFrontReporterFileInterval = paretoFrontReporterFileInterval;
@@ -142,6 +143,20 @@ public class EvolutionEngineConfiguration {
 
     public boolean isParetoFrontLoggerReporter() {
         return paretoLoggerReporter;
+    }
+
+    public boolean isParetoFrontTracking() {
+        return paretoFrontTracking;
+    }
+
+    @Configure
+    public void setParetoFrontTracking(
+            @Configuration(
+                    value = "engine.pareto.tracking",
+                    defaultValue = "false"
+            )
+            boolean paretoFrontTracking) {
+        this.paretoFrontTracking = paretoFrontTracking;
     }
 
     public DeterministicCrowdingConfiguration getDeterministicCrowdingConfiguration() {
