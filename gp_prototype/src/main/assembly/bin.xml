@@ -6,12 +6,6 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <files>
         <file>
-            <source>src/main/scripts/run.sh</source>
-            <outputDirectory>.</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>755</fileMode>
-        </file>
-        <file>
             <source>src/main/resources/log4j.xml</source>
             <outputDirectory>.</outputDirectory>
             <filtered>true</filtered>
@@ -20,6 +14,13 @@
     </files>
 
     <fileSets>
+        <fileSet>
+            <directory>src/main/scripts</directory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <outputDirectory>.</outputDirectory>
+        </fileSet>
         <fileSet>
             <directory>src/main/resources/schmidt_lipson</directory>
             <includes>
