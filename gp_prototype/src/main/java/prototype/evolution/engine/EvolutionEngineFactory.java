@@ -37,9 +37,12 @@ public class EvolutionEngineFactory {
             }
         }
 
+        if (evolutionEngineConfiguration.isStopWhenTargetErrorMet()) {
+            builder = builder.withTargetError(evolutionEngineConfiguration.getTargetError());
+        }
+
         return builder
                 .withComputationTime(evolutionEngineConfiguration.getComputationTime())
-                .withMaxIterations(evolutionEngineConfiguration.getMaxIterations())
-                .withTargetError(evolutionEngineConfiguration.getTargetError());
+                .withMaxIterations(evolutionEngineConfiguration.getMaxIterations());
     }
 }

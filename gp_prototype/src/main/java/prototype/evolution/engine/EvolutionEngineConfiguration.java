@@ -23,6 +23,7 @@ public class EvolutionEngineConfiguration {
     private boolean paretoLoggerReporter = false;
     private long computationTime;
     private boolean paretoFrontTracking;
+    private boolean stopWhenTargetErrorMet;
 
     public int getMaxIterations() {
         return maxIterations;
@@ -157,6 +158,20 @@ public class EvolutionEngineConfiguration {
             )
             boolean paretoFrontTracking) {
         this.paretoFrontTracking = paretoFrontTracking;
+    }
+
+    public boolean isStopWhenTargetErrorMet() {
+        return stopWhenTargetErrorMet;
+    }
+
+    @Configure
+    public void setStopWhenTargetErrorMet(
+            @Configuration(
+                    value = "engine.target.error.stop",
+                    defaultValue = "true"
+            )
+            boolean stopWhenTargetErrorMet) {
+        this.stopWhenTargetErrorMet = stopWhenTargetErrorMet;
     }
 
     public DeterministicCrowdingConfiguration getDeterministicCrowdingConfiguration() {

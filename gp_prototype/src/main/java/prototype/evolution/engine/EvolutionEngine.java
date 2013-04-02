@@ -79,7 +79,7 @@ public class EvolutionEngine {
     }
 
     private boolean fitnessTargetMet(IGPProgram fittestProgram) {
-        return fittestProgram.getFitnessValue() < targetError;
+        return targetError > 0 ? fittestProgram.getFitnessValue() < targetError : false;
     }
 
     private void notifyFinishedEvolution(GPGenotype genotype) {
@@ -111,7 +111,7 @@ public class EvolutionEngine {
     public static class Builder implements CommonStep, RegularStep, DeterministicCrowdingStep {
 
         private int maxIterations = EvolutionEngine.DEFAULT_MAX_ITERATIONS;
-        private double targetError = EvolutionEngine.DEFAULT_TARGET_ERROR;
+        private double targetError = -1.0;
         private List<EvolutionEngineEventHandler> evolutionEngineEventHandlers = new ArrayList<>();
         private EvolutionIteration evolutionIteration;
         private long computationTimeInMs;
