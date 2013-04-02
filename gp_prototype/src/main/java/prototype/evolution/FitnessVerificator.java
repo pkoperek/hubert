@@ -12,7 +12,7 @@ import org.jgap.gp.IGPProgram;
 public class FitnessVerificator {
 
     private static final Logger logger = Logger.getLogger(FitnessVerificator.class);
-    private static final String MESSAGE = "FITNESS VERIFICATION: [%d] %.10f : %s";
+    private static final String MESSAGE = "FITNESS VERIFICATION: [%3d] %.20f : %s";
     private final GPFitnessFunction fitnessFunction;
 
     public FitnessVerificator(GPFitnessFunction fitnessFunction) {

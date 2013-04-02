@@ -42,8 +42,10 @@ public class EvolutionEngine {
 
         for (int i = 0; i < iterations; i++) {
             logger.info("Iteration: " + i + " - evolving...");
-            singleEvolutionIteration(genotype);
+            notifyBeforeEvolution(genotype);
+            evolutionIteration.evolve(genotype);
             trackParetoFront(genotype);
+            notifyAfterEvolution(genotype);
 
             if (timeTargetMet()) {
                 logger.info("Time out - finishing");
@@ -71,15 +73,8 @@ public class EvolutionEngine {
         }
     }
 
-    private void singleEvolutionIteration(GPGenotype genotype) {
-        notifyBeforeEvolution(genotype);
-        evolutionIteration.evolve(genotype);
-        notifyAfterEvolution(genotype);
-    }
-
     private boolean timeTargetMet() {
         long currentTimestamp = System.currentTimeMillis();
-        logger.info("Current: " + currentTimestamp + " finish: " + finishTimeStamp);
         return finishTimeStamp < 0 ? false : currentTimestamp >= finishTimeStamp;
     }
 
