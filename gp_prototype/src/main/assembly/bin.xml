@@ -20,6 +20,7 @@
                 <include>*.sh</include>
             </includes>
             <outputDirectory>.</outputDirectory>
+            <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
             <directory>src/main/resources/schmidt_lipson</directory>
