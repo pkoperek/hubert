@@ -1,9 +1,11 @@
 package prototype.evolution.engine.common;
 
+import org.jgap.FitnessFunction;
 import org.jgap.RandomGenerator;
 import org.jgap.gp.CommandGene;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
+import org.jgap.util.ICloneable;
 import prototype.evolution.engine.MutatedGenesFactory;
 import prototype.evolution.engine.Mutator;
 
@@ -19,10 +21,14 @@ public class AllChromosomesMutator implements Mutator {
 
     @Override
     public IGPProgram mutate(IGPProgram toMutate) {
-        for (int i = 0; i < toMutate.size(); i++) {
-            mutateChromosome(toMutate.getChromosome(i));
+        // removing cast to ICloneable somehow makes this code unable to compile
+        IGPProgram mutated = (IGPProgram) ((ICloneable) toMutate).clone();
+        // clean fitness
+        mutated.setFitnessValue(FitnessFunction.NO_FITNESS_VALUE);
+        for (int i = 0; i < mutated.size(); i++) {
+            mutateChromosome(mutated.getChromosome(i));
         }
-        return toMutate;
+        return mutated;
     }
 
     private void mutateChromosome(ProgramChromosome chromosomeToMutate) {
