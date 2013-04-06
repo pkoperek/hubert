@@ -62,7 +62,7 @@ public class EvolutionEngine {
 
     private void initializeParetoFrontTracker(GPGenotype genotype) {
         if (trackParetoFront) {
-            paretoFrontTracker = new ParetoFrontTracker(genotype.getGPPopulation().size());
+            paretoFrontTracker = new ParetoFrontTracker(genotype.getGPPopulation().getGPPrograms()[0].getMaxNodes());
         }
     }
 
