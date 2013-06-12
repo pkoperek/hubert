@@ -11,9 +11,7 @@ import org.jgap.gp.impl.GPPopulation;
 import prototype.evolution.engine.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 public class DeterministicCrowdingEvolutionIteration implements EvolutionIteration {
@@ -98,8 +96,21 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
         IGPProgram[] children = crossParentPairs(parents);
         IGPProgram[] mutatedChildren = mutateChildren(children);
         IGPProgram[] newIndividuals = generationsTournament(parents, mutatedChildren);
-
+        incrementChromosomeAge(newIndividuals);
         return createPopulationWithNewIndividuals(oldPopulation, newIndividuals);
+    }
+
+    private void incrementChromosomeAge(IGPProgram[] newIndividuals) {
+        for (IGPProgram program : newIndividuals) {
+            incrementChromosomeAge(program);
+        }
+    }
+
+    private void incrementChromosomeAge(IGPProgram program) {
+        for (int i = 0; i < program.size(); i++) {
+            AgeTrackedProgramChromosome chromosome = (AgeTrackedProgramChromosome) program.getChromosome(i);
+            chromosome.incrementAge();
+        }
     }
 
     private IGPProgram[] mutateChildren(IGPProgram[] children) {
@@ -111,41 +122,7 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
     }
 
     private IGPProgram[] generationsTournament(final IGPProgram[] parents, final IGPProgram[] children) {
-        final IGPProgram[] newIndividuals = new IGPProgram[configuration.getPopulationSize()];
-
-        executeTasks(prepareComputationTasks(parents, children, newIndividuals));
-
-        return newIndividuals;
-    }
-
-    private List<Callable<Void>> prepareComputationTasks(final IGPProgram[] parents, final IGPProgram[] children, final IGPProgram[] newIndividuals) {
-        List<Callable<Void>> tasks = new LinkedList<>();
-
-        for (int i = 0; i < parents.length; i += 2) {
-            final int idx = i;
-            tasks.add(new LoggedCallable() {
-                @Override
-                public void callLogged() {
-                    IGPProgram[] winners = tournament(
-                            parents[idx],
-                            parents[idx + 1],
-                            children[idx],
-                            children[idx + 1]
-                    );
-                    newIndividuals[idx] = winners[0];
-                    newIndividuals[idx + 1] = winners[1];
-                }
-            });
-        }
-        return tasks;
-    }
-
-    private void executeTasks(List<Callable<Void>> tasks) {
-        try {
-            executorService.invokeAll(tasks);
-        } catch (InterruptedException e) {
-            logger.error("Parallel execution of tournaments failed!", e);
-        }
+        return tournament.getWinners(parents, children);
     }
 
     private IGPProgram[] crossParentPairs(IGPProgram[] parents) {
@@ -171,10 +148,6 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
         }
 
         return parents;
-    }
-
-    private IGPProgram[] tournament(IGPProgram parentA, IGPProgram parentB, IGPProgram childA, IGPProgram childB) {
-        return tournament.getWinners(parentA, parentB, childA, childB);
     }
 
     private GPPopulation createPopulationWithNewIndividuals(GPPopulation oldPopulation, IGPProgram[] newIndividuals) {

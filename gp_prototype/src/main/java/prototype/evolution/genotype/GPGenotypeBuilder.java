@@ -5,7 +5,7 @@ import org.jgap.gp.CommandGene;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
-import prototype.evolution.engine.agetracked.AgeTrackedProgramChromosome;
+import prototype.evolution.engine.AgeTrackedProgramChromosome;
 
 public class GPGenotypeBuilder {
 

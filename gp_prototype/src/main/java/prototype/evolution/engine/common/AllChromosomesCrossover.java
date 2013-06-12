@@ -9,6 +9,7 @@ import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
+import prototype.evolution.engine.AgeTrackedProgramChromosome;
 import prototype.evolution.engine.Crossover;
 
 import java.util.ArrayList;
@@ -34,8 +35,8 @@ public class AllChromosomesCrossover implements Crossover {
 
         for (int i = 0; i < left.size(); i++) {
             ProgramChromosome[] crossedChromosomes = crossChromosome(
-                    left.getChromosome(i),
-                    right.getChromosome(i)
+                    (AgeTrackedProgramChromosome) left.getChromosome(i),
+                    (AgeTrackedProgramChromosome) right.getChromosome(i)
             );
 
             crossedChildren[0].setChromosome(i, crossedChromosomes[0]);
@@ -56,7 +57,7 @@ public class AllChromosomesCrossover implements Crossover {
         }
     }
 
-    private ProgramChromosome[] crossChromosome(ProgramChromosome leftChromosome, ProgramChromosome rightChromosome) {
+    private ProgramChromosome[] crossChromosome(AgeTrackedProgramChromosome leftChromosome, AgeTrackedProgramChromosome rightChromosome) {
         ProgramChromosome[] crossedChromosomes = new ProgramChromosome[2];
         int leftCrossingPoint = randomGenerator.nextInt(leftChromosome.size());
         CommandGene crossingPointGeneLeft = leftChromosome.getNode(leftCrossingPoint);
@@ -74,13 +75,13 @@ public class AllChromosomesCrossover implements Crossover {
         return crossedChromosomes;
     }
 
-    private ProgramChromosome createChromosomeWithMixedGenes(ProgramChromosome parent, ProgramChromosome mixingParent, int parentCrossingPoint, int mixingCrossingPoint) {
+    private ProgramChromosome createChromosomeWithMixedGenes(AgeTrackedProgramChromosome parent, AgeTrackedProgramChromosome mixingParent, int parentCrossingPoint, int mixingCrossingPoint) {
         int depthParentMovedSubtree = parent.getDepth(parentCrossingPoint);
         int depthMixingMovedSubtree = mixingParent.getDepth(mixingCrossingPoint);
         int parentChromosomeMovedGenes = parent.getSize(parentCrossingPoint);
         int mixingChromosomeMoveGenes = mixingParent.getSize(mixingCrossingPoint);
 
-        ProgramChromosome crossedChromosome;
+        AgeTrackedProgramChromosome crossedChromosome;
         if (properDepth(depthParentMovedSubtree, depthMixingMovedSubtree)
                 || hasEnoughSpace(parent, parentChromosomeMovedGenes, mixingChromosomeMoveGenes)) {
 
@@ -97,14 +98,15 @@ public class AllChromosomesCrossover implements Crossover {
                     parentCrossingPoint + mixingChromosomeMoveGenes, parent.getSize(0) - parentCrossingPoint - parentChromosomeMovedGenes);
 
             crossedChromosome.redepth();
+            crossedChromosome.setAge(Math.max(parent.getAge(), mixingParent.getAge()));
         }
 
         return crossedChromosome;
     }
 
-    private ProgramChromosome createSimilarChromosome(ProgramChromosome leftChromosome) {
+    private AgeTrackedProgramChromosome createSimilarChromosome(ProgramChromosome leftChromosome) {
         try {
-            return new ProgramChromosome(configuration,
+            return new AgeTrackedProgramChromosome(configuration,
                     leftChromosome.getFunctions().length,
                     leftChromosome.getFunctionSet(),
                     leftChromosome.getArgTypes(),

@@ -7,6 +7,7 @@ import prototype.evolution.engine.common.AllChromosomesMutator;
 import prototype.evolution.engine.common.RandomSelector;
 import prototype.evolution.engine.common.StaticMutatedGenesFactory;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -29,7 +30,6 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
                 new StaticMutatedGenesFactory(configuration.getRandomGenerator()),
                 configuration.getRandomGenerator());
         this.selector = new RandomSelector<Integer>(configuration.getRandomGenerator());
-        this.tournament = new DeterministicCrowdingTournament(new HammingDistance());
         this.crossover = new AllChromosomesCrossover(configuration);
     }
 
@@ -63,9 +63,11 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
 
         deterministicCrowdingEvolutionIteration.setConfiguration(configuration);
         deterministicCrowdingEvolutionIteration.setCrossover(crossover);
-        deterministicCrowdingEvolutionIteration.setExecutorService(Executors.newFixedThreadPool(threadsNum));
+        ExecutorService executorService = Executors.newFixedThreadPool(threadsNum);
+        deterministicCrowdingEvolutionIteration.setExecutorService(executorService);
         deterministicCrowdingEvolutionIteration.setMutator(mutator);
         deterministicCrowdingEvolutionIteration.setSelector(selector);
+        this.tournament = new AgeFitnessParetoTournament(configuration.getRandomGenerator());
         deterministicCrowdingEvolutionIteration.setTournament(tournament);
 
         return deterministicCrowdingEvolutionIteration;

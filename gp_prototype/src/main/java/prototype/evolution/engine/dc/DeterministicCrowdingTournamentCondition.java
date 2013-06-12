@@ -2,18 +2,17 @@ package prototype.evolution.engine.dc;
 
 import org.jgap.gp.IGPProgram;
 import prototype.evolution.engine.IndividualDistance;
-import prototype.evolution.engine.Tournament;
 
 /**
  * User: koperek
  * Date: 21.03.13
  * Time: 18:50
  */
-public class DeterministicCrowdingTournament implements Tournament {
+public class DeterministicCrowdingTournamentCondition {
 
     private final IndividualDistance individualDistance;
 
-    public DeterministicCrowdingTournament(IndividualDistance individualDistance) {
+    public DeterministicCrowdingTournamentCondition(IndividualDistance individualDistance) {
         this.individualDistance = individualDistance;
     }
 
@@ -21,7 +20,6 @@ public class DeterministicCrowdingTournament implements Tournament {
         return left.getFitnessValue() < right.getFitnessValue() ? left : right;
     }
 
-    @Override
     public IGPProgram[] getWinners(IGPProgram parentA, IGPProgram parentB, IGPProgram childA, IGPProgram childB) {
         IGPProgram[] winners = new IGPProgram[2];
         if (individualDistance.distance(parentA, childA) + individualDistance.distance(parentB, childB) <
