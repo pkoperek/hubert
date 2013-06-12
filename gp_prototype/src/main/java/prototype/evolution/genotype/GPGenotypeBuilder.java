@@ -2,8 +2,10 @@ package prototype.evolution.genotype;
 
 import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.CommandGene;
+import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
+import prototype.evolution.engine.agetracked.AgeTrackedProgramChromosome;
 
 public class GPGenotypeBuilder {
 
@@ -28,7 +30,27 @@ public class GPGenotypeBuilder {
     }
 
     public GPGenotype build() throws InvalidConfigurationException {
-        return createGenotype(configuration);
+        GPGenotype genotype = createGenotype(configuration);
+        changeRegularProgramChromosomesToAgeTracked(genotype);
+        return genotype;
+    }
+
+    private void changeRegularProgramChromosomesToAgeTracked(GPGenotype genotype) {
+        IGPProgram[] gpPrograms = genotype.getGPPopulation().getGPPrograms();
+        for (int i = 0; i < gpPrograms.length; i++) {
+            gpPrograms[i] = replaceProgramChromosomes(gpPrograms[i]);
+        }
+    }
+
+    private IGPProgram replaceProgramChromosomes(IGPProgram gpProgram) {
+        for (int i = 0; i < gpProgram.size(); i++) {
+            try {
+                gpProgram.setChromosome(i, new AgeTrackedProgramChromosome(gpProgram.getChromosome(i)));
+            } catch (InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
+        return gpProgram;
     }
 
     private GPGenotype createGenotype(GPConfiguration configuration) throws InvalidConfigurationException {
@@ -38,5 +60,4 @@ public class GPGenotypeBuilder {
 
         return GPGenotype.randomInitialGenotype(configuration, returnTypes, argTypes, nodeSets, maxNodes, true);
     }
-
 }
