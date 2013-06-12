@@ -103,6 +103,11 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
                 double deltaX = numericalDifferentiationCalculator.getPartialDerivative(x, timeVariableName, dataRow);
                 double deltaY = numericalDifferentiationCalculator.getPartialDerivative(y, timeVariableName, dataRow);
 
+                deltaX = zero(deltaX);
+                deltaY = zero(deltaY);
+                dfdx_val = zero(dfdx_val);
+                dfdy_val = zero(dfdy_val);
+
                 if (LOGGER.isTraceEnabled()) {
                     LOGGER.trace(dfdx_val + " " + dfdy_val + " " + deltaX + " " + deltaY);
                 }
@@ -133,6 +138,10 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         }
 
         return pairingError;
+    }
+
+    private double zero(double value) {
+        return value < 0.00000001d ? 0.0d : value;
     }
 
     private void logInvalidDataSample(String x, String y, int dataRow, double dfdx_val, double dfdy_val, double deltaX, double deltaY) {
