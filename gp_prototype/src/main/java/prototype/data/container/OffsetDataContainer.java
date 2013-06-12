@@ -1,5 +1,7 @@
 package prototype.data.container;
 
+import org.apache.log4j.Logger;
+
 /**
  * User: koperek
  * Date: 29.03.13
@@ -7,6 +9,7 @@ package prototype.data.container;
  */
 public class OffsetDataContainer implements DataContainer {
 
+    private final static Logger logger = Logger.getLogger(OffsetDataContainer.class);
     private final DataContainer dataContainer;
     private final int windowSize;
     private int offset;
@@ -71,6 +74,8 @@ public class OffsetDataContainer implements DataContainer {
         if (offset + 1 + windowSize < dataContainer.getRowsCount()) {
             this.offset++;
         }
+
+        logger.info("Now serving data from: " + offset + " to " + (offset + windowSize));
     }
 
     private synchronized int getOffset() {
