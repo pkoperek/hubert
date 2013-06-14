@@ -23,13 +23,6 @@
             <fileMode>755</fileMode>
         </fileSet>
         <fileSet>
-            <directory>src/main/resources/schmidt_lipson</directory>
-            <includes>
-                <include>*.csv</include>
-            </includes>
-            <outputDirectory>data/schmidt_lipson</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>src/main/resources</directory>
             <includes>
                 <include>*.csv</include>
