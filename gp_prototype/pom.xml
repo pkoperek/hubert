@@ -82,7 +82,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>hubert.ConfiguredExecution</mainClass>
+                            <mainClass>pl.edu.agh.hubert.ConfiguredExecution</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

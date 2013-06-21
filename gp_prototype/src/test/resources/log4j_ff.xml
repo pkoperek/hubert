@@ -7,11 +7,11 @@
         </layout>
     </appender>
 
-    <logger name="hubert.evolution.reporting.FitnessLengthFileFileReporter">
+    <logger name="pl.edu.agh.hubert.evolution.reporting.FitnessLengthFileFileReporter">
         <level value="trace"/>
     </logger>
 
-    <logger name="hubert.evolution.fitness.TimeDifferentialQuotientFitnessFunction">
+    <logger name="pl.edu.agh.hubert.evolution.fitness.TimeDifferentialQuotientFitnessFunction">
         <level value="trace"/>
     </logger>
 

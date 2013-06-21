@@ -7,15 +7,15 @@
         </layout>
     </appender>
 
-    <!--<logger name="hubert.symdifferentiationion.strategies.elementary.LnDifferentiationStrategy">-->
+    <!--<logger name="pl.edu.agh.hubert.symdifferentiationion.strategies.elementary.LnDifferentiationStrategy">-->
     <!--<level value="info"/>-->
     <!--</logger>-->
 
-    <!--<logger name="hubert.Main">-->
+    <!--<logger name="pl.edu.agh.hubert.Main">-->
     <!--<level value="debug"/>-->
     <!--</logger>-->
 
-    <logger name="hubert.evolution.fitness.TimeDifferentialQuotientFitnessFunction">
+    <logger name="pl.edu.agh.hubert.evolution.fitness.TimeDifferentialQuotientFitnessFunction">
         <level value="info"/>
     </logger>
 
