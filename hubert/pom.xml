@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>gp_prototype</groupId>
-    <artifactId>gp_prototype</artifactId>
+    <groupId>pl.edu.agh</groupId>
+    <artifactId>hubert</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
