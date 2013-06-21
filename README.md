@@ -4,6 +4,7 @@ hubert
 Open Source implementation of algoritms described in:
 [Distilling Free-Form Natural Laws from Experimental Data]
 
+It is a part of research carried out on [AGH University of Science and Technology, Faculty of Computer Science, Electronics and Telecommunications, Department of Computer Science]
 
 Building & running
 ==================
@@ -29,3 +30,4 @@ License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [Distilling Free-Form Natural Laws from Experimental Data]: http://www.sciencemag.org/content/324/5923/81.abstract
+[AGH University of Science and Technology, Faculty of Computer Science, Electronics and Telecommunications, Department of Computer Science]: http://www.ki.agh.edu.pl/en
