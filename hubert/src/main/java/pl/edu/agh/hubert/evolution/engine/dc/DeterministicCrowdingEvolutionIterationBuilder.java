@@ -2,10 +2,6 @@ package pl.edu.agh.hubert.evolution.engine.dc;
 
 import org.jgap.gp.impl.GPConfiguration;
 import pl.edu.agh.hubert.evolution.engine.*;
-import pl.edu.agh.hubert.evolution.engine.common.AllChromosomesCrossover;
-import pl.edu.agh.hubert.evolution.engine.common.AllChromosomesMutator;
-import pl.edu.agh.hubert.evolution.engine.common.RandomSelector;
-import pl.edu.agh.hubert.evolution.engine.common.StaticMutatedGenesFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +25,7 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
         this.mutator = new AllChromosomesMutator(
                 new StaticMutatedGenesFactory(configuration.getRandomGenerator()),
                 configuration.getRandomGenerator());
-        this.selector = new RandomSelector<Integer>(configuration.getRandomGenerator());
+        this.selector = new RandomSelector<>(configuration.getRandomGenerator());
         this.crossover = new AllChromosomesCrossover(configuration);
     }
 

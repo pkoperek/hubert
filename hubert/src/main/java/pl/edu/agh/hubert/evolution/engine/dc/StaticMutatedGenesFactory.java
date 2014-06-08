@@ -1,4 +1,4 @@
-package pl.edu.agh.hubert.evolution.engine.common;
+package pl.edu.agh.hubert.evolution.engine.dc;
 
 import org.apache.log4j.Logger;
 import org.jgap.InvalidConfigurationException;
