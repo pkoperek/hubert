@@ -8,18 +8,12 @@ import pl.edu.agh.hubert.evolution.reporting.ParetoFrontFileReporter;
 
 public class EvolutionEngineConfiguration {
 
-    public enum IterationType {
-        DET_CROWDING,
-        REGULAR;
-    }
-
     private int maxIterations;
     private GPConfiguration gpConfiguration;
     private double targetError;
     private boolean paretoFrontReporter = ParetoFrontFileReporter.DEFAULT_ENABLED;
     private int paretoFrontReporterFileInterval = ParetoFrontFileReporter.DEFAULT_INTERVAL;
     private int threadsNum;
-    private IterationType iterationType;
     private boolean paretoLoggerReporter = false;
     private long computationTime;
     private boolean paretoFrontTracking;
@@ -47,10 +41,6 @@ public class EvolutionEngineConfiguration {
 
     public int getParetoFrontReporterFileInterval() {
         return paretoFrontReporterFileInterval;
-    }
-
-    public IterationType getIterationType() {
-        return iterationType;
     }
 
     public EvolutionEngineConfiguration() {
@@ -103,19 +93,6 @@ public class EvolutionEngineConfiguration {
                     defaultValue = "" + ParetoFrontFileReporter.DEFAULT_INTERVAL)
             int paretoFrontReporterFileInterval) {
         this.paretoFrontReporterFileInterval = paretoFrontReporterFileInterval;
-    }
-
-    public void setIterationType(IterationType iterationType) {
-        this.iterationType = iterationType;
-    }
-
-    @Configure
-    public void setIterationType(
-            @Configuration(
-                    value = "engine.iteration.type",
-                    defaultValue = "DET_CROWDING")
-            String iterationType) {
-        this.iterationType = IterationType.valueOf(iterationType.toUpperCase());
     }
 
     @Configure

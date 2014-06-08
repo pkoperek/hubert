@@ -8,18 +8,9 @@ public class EvolutionEngineFactory {
     public EvolutionEngine createEvolutionEngine(EvolutionEngineConfiguration configuration) {
         EvolutionEngine.Builder builder = preConfiguredBuilder(configuration);
 
-        switch (configuration.getIterationType()) {
-            case DET_CROWDING:
-                return builder
-                        .withDeterministicCrowdingIterations(configuration.getDeterministicCrowdingConfiguration())
-                        .build();
-            case REGULAR:
-                return builder
-                        .withRegularIterations()
-                        .build();
-        }
-
-        throw new IllegalArgumentException("Unsupported iteration type " + configuration.getIterationType());
+        return builder
+                .withDeterministicCrowdingIterations(configuration.getDeterministicCrowdingConfiguration())
+                .build();
     }
 
     private EvolutionEngine.Builder preConfiguredBuilder(EvolutionEngineConfiguration evolutionEngineConfiguration) {

@@ -5,7 +5,6 @@ import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.GPGenotype;
 import pl.edu.agh.hubert.evolution.engine.dc.DeterministicCrowdingConfiguration;
 import pl.edu.agh.hubert.evolution.engine.dc.DeterministicCrowdingEvolutionIterationBuilder;
-import pl.edu.agh.hubert.evolution.engine.jgap.GPGenotypeDelegatingEvolutionIteration;
 import pl.edu.agh.hubert.evolution.reporting.AllTimeBestIndividualReporter;
 import pl.edu.agh.hubert.evolution.reporting.FittestIndividualReporter;
 
@@ -108,7 +107,7 @@ public class EvolutionEngine {
         return paretoFrontTracker;
     }
 
-    public static class Builder implements CommonStep, RegularStep, DeterministicCrowdingStep {
+    public static class Builder {
 
         private int maxIterations = EvolutionEngine.DEFAULT_MAX_ITERATIONS;
         private double targetError = -1.0;
@@ -124,51 +123,38 @@ public class EvolutionEngine {
             return new Builder();
         }
 
-        @Override
         public Builder withComputationTime(long computationTimeInMs) {
             this.computationTimeInMs = computationTimeInMs;
             return this;
         }
 
-        @Override
         public Builder withEvolutionEngineEventHandler(EvolutionEngineEventHandler evolutionEngineEventHandler) {
             this.evolutionEngineEventHandlers.add(evolutionEngineEventHandler);
             return this;
         }
 
-        @Override
         public Builder withMaxIterations(int maxIterations) {
             this.maxIterations = maxIterations;
             return this;
         }
 
-        @Override
         public Builder withTargetError(double targetError) {
             this.targetError = targetError;
             return this;
         }
 
-        @Override
-        public DeterministicCrowdingStep withDeterministicCrowdingIterations(DeterministicCrowdingConfiguration configuration) {
+        public Builder withDeterministicCrowdingIterations(DeterministicCrowdingConfiguration configuration) {
             evolutionIteration = DeterministicCrowdingEvolutionIterationBuilder
                     .from(configuration)
                     .build();
             return this;
         }
 
-        @Override
         public Builder withTrackParetoFront() {
             this.trackParetoFront = true;
             return this;
         }
 
-        @Override
-        public RegularStep withRegularIterations() {
-            evolutionIteration = new GPGenotypeDelegatingEvolutionIteration();
-            return this;
-        }
-
-        @Override
         public EvolutionEngine build() {
             fillDefaultReporters();
 
@@ -202,30 +188,6 @@ public class EvolutionEngine {
             evolutionEngineEventHandlers.add(new FittestIndividualReporter());
         }
 
-    }
-
-    public interface CommonStep {
-        Builder withTrackParetoFront();
-
-        Builder withComputationTime(long computationTimeInMs);
-
-        Builder withEvolutionEngineEventHandler(EvolutionEngineEventHandler evolutionEngineEventHandler);
-
-        Builder withMaxIterations(int maxIterations);
-
-        Builder withTargetError(double targetError);
-
-        DeterministicCrowdingStep withDeterministicCrowdingIterations(DeterministicCrowdingConfiguration configuration);
-
-        RegularStep withRegularIterations();
-    }
-
-    public interface DeterministicCrowdingStep {
-        EvolutionEngine build();
-    }
-
-    public interface RegularStep {
-        EvolutionEngine build();
     }
 
 }
