@@ -73,8 +73,7 @@ public class AgeFitnessParetoTournament implements Tournament {
             program = new GPProgram(a_conf, a_types, a_argTypes, a_nodeSets,
                     a_minDepths, a_maxDepths, a_maxNodes);
             // TODO: ??? MAGIC NUMBERS
-            program.growOrFull(2, true, a_maxNodes, new boolean[]{true},
-                    0);
+            program.growOrFull(2, true, a_maxNodes, new boolean[]{true}, 0);
 
             for (int i = 0; i < program.size(); i++) {
                 try {
