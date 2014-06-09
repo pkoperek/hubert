@@ -1,11 +1,10 @@
 package pl.edu.agh.hubert.evolution.engine.dc;
 
 import org.jgap.RandomGenerator;
-import pl.edu.agh.hubert.evolution.engine.Selector;
 
 import java.util.List;
 
-public class RandomSelector<T> implements Selector<T> {
+public class RandomSelector<T> {
 
     private final RandomGenerator randomGenerator;
 
@@ -13,7 +12,6 @@ public class RandomSelector<T> implements Selector<T> {
         this.randomGenerator = randomGenerator;
     }
 
-    @Override
     public T select(List<T> freeItems) {
         return freeItems.get(randomGenerator.nextInt(freeItems.size()));
     }

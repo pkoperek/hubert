@@ -16,7 +16,7 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
     private int threadsNum = DeterministicCrowdingEvolutionIteration.DEFAULT_THREADS_NUMBER;
     private GPConfiguration configuration;
     private AllChromosomesMutator mutator;
-    private Selector<Integer> selector;
+    private RandomSelector<Integer> selector;
     private Tournament tournament;
     private Crossover crossover;
 
@@ -31,11 +31,6 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
 
     public DeterministicCrowdingEvolutionIterationBuilder withThreads(int threadsNum) {
         this.threadsNum = threadsNum;
-        return this;
-    }
-
-    public DeterministicCrowdingEvolutionIterationBuilder withSelector(Selector<Integer> selector) {
-        this.selector = selector;
         return this;
     }
 
