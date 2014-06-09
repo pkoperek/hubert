@@ -24,7 +24,7 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
     private RandomGenerator randomGenerator;
     private double crossProbability;
     private double mutationProbability;
-    private Mutator mutator;
+    private AllChromosomesMutator mutator;
     private Selector<Integer> selector;
     private Tournament tournament;
     private Crossover crossover;
@@ -47,7 +47,7 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
         this.selector = selector;
     }
 
-    void setMutator(Mutator mutator) {
+    void setMutator(AllChromosomesMutator mutator) {
         this.mutator = mutator;
     }
 

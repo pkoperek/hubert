@@ -7,9 +7,8 @@ import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
 import org.jgap.util.ICloneable;
 import pl.edu.agh.hubert.evolution.engine.MutatedGenesFactory;
-import pl.edu.agh.hubert.evolution.engine.Mutator;
 
-public class AllChromosomesMutator implements Mutator {
+public class AllChromosomesMutator {
 
     private final MutatedGenesFactory geneMutationFactory;
     private final RandomGenerator randomGenerator;
@@ -19,7 +18,6 @@ public class AllChromosomesMutator implements Mutator {
         this.randomGenerator = randomGenerator;
     }
 
-    @Override
     public IGPProgram mutate(IGPProgram toMutate) {
         // removing cast to ICloneable somehow makes this code unable to compile
         IGPProgram mutated = (IGPProgram) ((ICloneable) toMutate).clone();
