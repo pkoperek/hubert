@@ -1,7 +1,6 @@
 package pl.edu.agh.hubert.evolution.engine.dc;
 
 import org.jgap.gp.IGPProgram;
-import pl.edu.agh.hubert.evolution.engine.IndividualDistance;
 
 /**
  * User: koperek
@@ -10,9 +9,9 @@ import pl.edu.agh.hubert.evolution.engine.IndividualDistance;
  */
 public class DeterministicCrowdingTournamentCondition {
 
-    private final IndividualDistance individualDistance;
+    private final HammingDistance individualDistance;
 
-    public DeterministicCrowdingTournamentCondition(IndividualDistance individualDistance) {
+    public DeterministicCrowdingTournamentCondition(HammingDistance individualDistance) {
         this.individualDistance = individualDistance;
     }
 

@@ -3,11 +3,10 @@ package pl.edu.agh.hubert.evolution.engine.dc;
 import org.jgap.gp.CommandGene;
 import org.jgap.gp.IGPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
-import pl.edu.agh.hubert.evolution.engine.IndividualDistance;
 
 // hamming distance
 // http://ti.arc.nasa.gov/m/pub-archive/1451/1451%20(Mengshoel).pdf p.3
-public class HammingDistance implements IndividualDistance {
+public class HammingDistance {
 
     public double distance(IGPProgram a_leftIndividual, IGPProgram a_rightIndividual) {
         // assuming individuals have the same size
