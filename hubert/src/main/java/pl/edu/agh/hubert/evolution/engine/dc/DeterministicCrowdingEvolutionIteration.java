@@ -8,7 +8,9 @@ import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import org.jgap.gp.impl.GPGenotypeHacker;
 import org.jgap.gp.impl.GPPopulation;
-import pl.edu.agh.hubert.evolution.engine.*;
+import pl.edu.agh.hubert.evolution.engine.AgeTrackedProgramChromosome;
+import pl.edu.agh.hubert.evolution.engine.EvolutionIteration;
+import pl.edu.agh.hubert.evolution.engine.Tournament;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
     private AllChromosomesMutator mutator;
     private RandomSelector<Integer> selector;
     private Tournament tournament;
-    private Crossover crossover;
+    private AllChromosomesCrossover crossover;
 
     DeterministicCrowdingEvolutionIteration() {
     }
@@ -55,7 +57,7 @@ public class DeterministicCrowdingEvolutionIteration implements EvolutionIterati
         this.tournament = tournament;
     }
 
-    void setCrossover(Crossover crossover) {
+    void setCrossover(AllChromosomesCrossover crossover) {
         this.crossover = crossover;
     }
 

@@ -18,7 +18,7 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
     private AllChromosomesMutator mutator;
     private RandomSelector<Integer> selector;
     private Tournament tournament;
-    private Crossover crossover;
+    private AllChromosomesCrossover crossover;
 
     private DeterministicCrowdingEvolutionIterationBuilder(GPConfiguration configuration) {
         this.configuration = configuration;
@@ -36,11 +36,6 @@ public class DeterministicCrowdingEvolutionIterationBuilder {
 
     public DeterministicCrowdingEvolutionIterationBuilder withTournament(Tournament tournament) {
         this.tournament = tournament;
-        return this;
-    }
-
-    public DeterministicCrowdingEvolutionIterationBuilder withCrossover(Crossover crossover) {
-        this.crossover = crossover;
         return this;
     }
 

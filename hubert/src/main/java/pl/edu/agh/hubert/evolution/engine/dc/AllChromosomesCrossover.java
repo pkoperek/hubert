@@ -10,12 +10,11 @@ import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPProgram;
 import org.jgap.gp.impl.ProgramChromosome;
 import pl.edu.agh.hubert.evolution.engine.AgeTrackedProgramChromosome;
-import pl.edu.agh.hubert.evolution.engine.Crossover;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllChromosomesCrossover implements Crossover {
+public class AllChromosomesCrossover {
 
     private static final Logger logger = Logger.getLogger(AllChromosomesCrossover.class);
     private final RandomGenerator randomGenerator;
@@ -28,7 +27,6 @@ public class AllChromosomesCrossover implements Crossover {
         this.maxCrossOverDepth = configuration.getMaxCrossoverDepth();
     }
 
-    @Override
     public IGPProgram[] cross(IGPProgram left, IGPProgram right) {
         assumeTheSameChromosomeNumber(left, right);
         IGPProgram[] crossedChildren = {createIndividual(left), createIndividual(right)};
