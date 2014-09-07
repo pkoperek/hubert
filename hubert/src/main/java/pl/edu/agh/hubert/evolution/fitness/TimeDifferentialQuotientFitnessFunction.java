@@ -50,6 +50,8 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         double error = 0.0f;
         long start = System.nanoTime();
 
+        LOGGER.debug("Evaluation start...");
+
         for (int chromosomeIdx = 0; chromosomeIdx < ind.size(); chromosomeIdx++) {
             ProgramChromosome chromosome = ind.getChromosome(chromosomeIdx);
             error += evaluatePairings(chromosome);
@@ -65,6 +67,7 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         double chromosomeError = 0.0f;
 
         for (Pair<String> pairing : pairs) {
+            LOGGER.info("Processing pair: " + pairing.getOne() + " " + pairing.getTwo());
             double pairingError = computeErrorForVariables(chromosome, pairing);
 
             if (pairingError > chromosomeError) {
