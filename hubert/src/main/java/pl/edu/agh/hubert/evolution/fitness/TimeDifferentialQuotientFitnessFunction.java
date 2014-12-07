@@ -11,9 +11,13 @@ import pl.edu.agh.hubert.data.VariablesValuesContainer;
 import pl.edu.agh.hubert.data.container.DataContainer;
 import pl.edu.agh.hubert.differentiation.numeric.NumericalDifferentiationCalculator;
 import pl.edu.agh.hubert.differentiation.symbolic.Function;
+import pl.edu.agh.hubert.differentiation.symbolic.FunctionType;
 import pl.edu.agh.hubert.differentiation.symbolic.TreeNode;
 import pl.edu.agh.hubert.differentiation.symbolic.TreeNodeFactory;
 import pl.edu.agh.hubert.differentiation.symbolic.functions.PreviousValueVariable;
+import pl.edu.agh.hubert.differentiation.symbolic.tree.ConstantTreeNode;
+import pl.edu.agh.hubert.differentiation.symbolic.tree.SimpleTreeNode;
+import pl.edu.agh.hubert.differentiation.symbolic.tree.VariableTreeNode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +54,7 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         double error = 0.0f;
         long start = System.nanoTime();
 
-        LOGGER.debug("Evaluation start...");
+        LOGGER.info("Evaluation start...");
 
         for (int chromosomeIdx = 0; chromosomeIdx < ind.size(); chromosomeIdx++) {
             ProgramChromosome chromosome = ind.getChromosome(chromosomeIdx);
@@ -58,7 +62,7 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         }
 
         long stop = System.nanoTime();
-        LOGGER.debug("Fitness Function Time: " + (stop - start) + " ns Error: " + error);
+        LOGGER.info("Fitness Function Time: " + (stop - start) + " ns Error: " + error);
 
         return error;
     }
@@ -82,7 +86,91 @@ class TimeDifferentialQuotientFitnessFunction extends GPFitnessFunction {
         VariablesValuesContainer valuesContainer = new MapVariablesValuesContainer();
         // TODO: pairing trzeba uwzglednic jesli ilosc zmiennych > 2
         TreeNodeFactory treeNodeFactory = new TreeNodeFactory(valuesContainer);
-        TreeNode f = treeNodeFactory.createTreeNode(chromosome);
+//        TreeNode f = treeNodeFactory.createTreeNode(chromosome);
+
+//        TreeNode f = new SimpleTreeNode(FunctionType.SIN,
+//                new TreeNode[]{
+//                        new SimpleTreeNode(FunctionType.ADD,
+//                                new TreeNode[]{
+//                                        new VariableTreeNode(valuesContainer, pairing.getOne()),
+//                                        new VariableTreeNode(valuesContainer, pairing.getTwo())
+//                                }
+//                        )
+//                });
+//
+//        DIVIDE {
+//            SUBTRACT {
+//                ADD {
+//                    SUBTRACT {
+//                        VAR: c
+//                        VAR: t
+//                    }
+//                    COS {VAR: a }
+//                }
+//                SUBTRACT {
+//                    SUBTRACT {
+//                        CONSTANT: 4.905627250671387
+//                        CONSTANT: 4.905627250671387
+//                    }
+//                    SUBTRACT {
+//                        VAR: t
+//                        VAR: b
+//                    }
+//                }
+//            }
+//            ADD {
+//                ADD {
+//                    COS {CONSTANT: 4.905627250671387 }
+//                    COS {VAR: t }
+//                }
+//                MULTIPLY {
+//                    SIN {
+//                        VAR: t
+//                    }
+//                    DIVIDE {
+//                        VAR: c
+//                        VAR: a
+//                    }
+//                }
+//            }
+//        }
+
+        TreeNode f = new SimpleTreeNode(FunctionType.DIVIDE, new TreeNode[]{
+                new SimpleTreeNode(FunctionType.SUBTRACT, new TreeNode[]{
+                        new SimpleTreeNode(FunctionType.ADD, new TreeNode[]{
+                                new SimpleTreeNode(FunctionType.SUBTRACT, new TreeNode[]{
+                                        new VariableTreeNode(valuesContainer, pairing.getOne()),
+                                        new VariableTreeNode(valuesContainer, pairing.getTwo()),
+                                }),
+                                new SimpleTreeNode(FunctionType.COS, new TreeNode[]{new VariableTreeNode(valuesContainer, pairing.getOne())})
+                        }),
+                        new SimpleTreeNode(FunctionType.SUBTRACT, new TreeNode[]{
+                                new SimpleTreeNode(FunctionType.SUBTRACT, new TreeNode[]{
+                                        new ConstantTreeNode(4.905627250671387),
+                                        new ConstantTreeNode(5.8),
+                                }),
+                                new SimpleTreeNode(FunctionType.SUBTRACT, new TreeNode[]{
+                                        new VariableTreeNode(valuesContainer, pairing.getOne()),
+                                        new VariableTreeNode(valuesContainer, pairing.getTwo()),
+                                })
+                        })
+
+                }),
+                new SimpleTreeNode(FunctionType.ADD, new TreeNode[]{
+                        new SimpleTreeNode(FunctionType.ADD, new TreeNode[]{
+                                new SimpleTreeNode(FunctionType.COS, new TreeNode[]{new ConstantTreeNode(4.56575)}),
+                                new SimpleTreeNode(FunctionType.COS, new TreeNode[]{new VariableTreeNode(valuesContainer, pairing.getOne())})
+                        }),
+                        new SimpleTreeNode(FunctionType.MULTIPLY, new TreeNode[]{
+                                new SimpleTreeNode(FunctionType.SIN, new TreeNode[]{new VariableTreeNode(valuesContainer, pairing.getOne())}),
+                                new SimpleTreeNode(FunctionType.DIVIDE, new TreeNode[]{
+                                        new VariableTreeNode(valuesContainer, pairing.getOne()),
+                                        new VariableTreeNode(valuesContainer, pairing.getTwo())
+                                })
+                        })
+                })
+        });
+        LOGGER.info("Processing: " + f.toString());
 
         String x = pairing.getOne();
         String y = pairing.getTwo();
