@@ -9,7 +9,9 @@ It is a part of research carried out on [AGH University of Science and Technolog
 Building and running
 ====================
 
-  * describe scala build
+    * `sbt clean package`
+
+    * Result can be found in `target/`
 
 License
 =======
