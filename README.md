@@ -6,8 +6,14 @@ Open Source implementation of algoritms described in:
 
 It is a part of research carried out on [AGH University of Science and Technology, Faculty of Computer Science, Electronics and Telecommunications, Department of Computer Science]
 
-Building and running
-====================
+Developing
+==========
+
+    * `$ sbt`
+    $ `> ~container:start` - `~` turns on the autoreload
+
+Building
+========
 
     * `sbt clean package`
 
