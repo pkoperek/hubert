@@ -31,3 +31,8 @@ License
 
 [Distilling Free-Form Natural Laws from Experimental Data]: http://www.sciencemag.org/content/324/5923/81.abstract
 [AGH University of Science and Technology, Faculty of Computer Science, Electronics and Telecommunications, Department of Computer Science]: http://www.ki.agh.edu.pl/en
+
+Disclaimer
+==========
+
+I am providing code in this repository to you under an open source license. Because this is my personal repository the license to my code is from me and not from my employer (Facebook).
