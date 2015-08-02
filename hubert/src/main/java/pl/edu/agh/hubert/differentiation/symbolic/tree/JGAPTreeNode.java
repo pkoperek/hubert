@@ -21,11 +21,6 @@ public class JGAPTreeNode extends TreeNode {
     private final ProgramChromosome programChromosome;
     private final FunctionType functionType;
 
-    public JGAPTreeNode(TreeNodeFactory treeNodeFactory, ProgramChromosome programChromosome) {
-        this(treeNodeFactory, programChromosome, 0);
-
-    }
-
     public JGAPTreeNode(TreeNodeFactory treeNodeFactory, ProgramChromosome programChromosome, int geneIdx) {
         this.treeNodeFactory = treeNodeFactory;
         this.programChromosome = programChromosome;
