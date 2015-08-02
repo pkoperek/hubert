@@ -6,12 +6,10 @@ Open Source implementation of algoritms described in:
 
 It is a part of research carried out on [AGH University of Science and Technology, Faculty of Computer Science, Electronics and Telecommunications, Department of Computer Science]
 
-Building & running
-==================
+Building and running
+====================
 
-    mvn clean package assembly:assembly
-    tar zxvf hubert-1.0-SNAPSHOT-bin.tar.gz
-    ./run.sh config/some_config
+  * describe scala build
 
 License
 =======
@@ -28,6 +26,15 @@ License
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Old version building & running
+==================
+
+    cd old/
+    mvn clean package assembly:assembly
+    tar zxvf hubert-1.0-SNAPSHOT-bin.tar.gz
+    ./run.sh config/some_config
+
 
 [Distilling Free-Form Natural Laws from Experimental Data]: http://www.sciencemag.org/content/324/5923/81.abstract
 [AGH University of Science and Technology, Faculty of Computer Science, Electronics and Telecommunications, Department of Computer Science]: http://www.ki.agh.edu.pl/en
