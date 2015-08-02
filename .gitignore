@@ -1,2 +1,5 @@
-/hubert/hubert.iml
-/hubert/.idea
+/old/hubert.iml
+/old/.idea
+.idea
+*.iml
+target/
