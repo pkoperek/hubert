@@ -4,3 +4,4 @@
 *.iml
 target/
 project/target/
+**/bower_components/
