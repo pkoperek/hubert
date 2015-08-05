@@ -9,8 +9,10 @@ It is a part of research carried out on [AGH University of Science and Technolog
 Developing
 ==========
 
+    * `cd src/main/webapp && bower install`
+    * `cd ../../../`
     * `$ sbt`
-    $ `> ~container:start` - `~` turns on the autoreload
+    *  ` $ > ~container:start` - `~` turns on the autoreload
 
 Building
 ========
