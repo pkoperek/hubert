@@ -8,7 +8,8 @@ class HubertServlet extends ScalatraServlet with ScalateSupport {
   get("/") {
     contentType="text/html"
     
-    layoutTemplate("/WEB-INF/templates/index.ssp")
+    layoutTemplate("/WEB-INF/views/index.ssp")
   }
-
+  
+  // use polymer + http://handsontable.com/
 }
