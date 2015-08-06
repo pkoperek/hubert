@@ -11,5 +11,4 @@ class HubertServlet extends ScalatraServlet with ScalateSupport {
     layoutTemplate("/WEB-INF/views/index.ssp")
   }
   
-  // use polymer + http://handsontable.com/
 }
