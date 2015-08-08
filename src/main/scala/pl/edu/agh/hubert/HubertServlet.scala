@@ -6,9 +6,7 @@ import scalate.ScalateSupport
 class HubertServlet extends ScalatraServlet with ScalateSupport {
 
   get("/") {
-    contentType="text/html"
-    
-    layoutTemplate("/WEB-INF/views/index.ssp")
+    // TODO
   }
   
 }

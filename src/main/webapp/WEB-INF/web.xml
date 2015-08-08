@@ -11,7 +11,7 @@
 
     <servlet-mapping>
         <servlet-name>hubertservlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/somesrv</url-pattern>
     </servlet-mapping>
 
     <!-- Static Asset Serving Example -->

@@ -1,0 +1,1 @@
+var hubertApp = angular.module('hubertApp', ['ui.bootstrap']);
