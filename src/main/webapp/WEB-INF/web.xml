@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <servlet>
-        <servlet-name>hubertservlet</servlet-name>
-        <servlet-class>
-            pl.edu.agh.hubert.HubertServlet
-        </servlet-class>
-    </servlet>
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    <listener>
+        <listener-class>org.scalatra.servlet.ScalatraListener</listener-class>
+    </listener>
 
-    <servlet-mapping>
-        <servlet-name>hubertservlet</servlet-name>
-        <url-pattern>/somesrv</url-pattern>
-    </servlet-mapping>
-
-    <!-- Static Asset Serving Example -->
-    <!--
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/img/*</url-pattern>
         <url-pattern>/css/*</url-pattern>
         <url-pattern>/js/*</url-pattern>
+        <url-pattern>/assets/*</url-pattern>
+        <url-pattern>/bower_components/*</url-pattern>
     </servlet-mapping>
-    -->
 </web-app>

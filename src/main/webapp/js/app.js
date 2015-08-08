@@ -1,6 +1,6 @@
 var hubertApp = angular.module('hubertApp', ['ui.bootstrap']);
 
-hubertApp.controller('NavbarButtonController', function($scope, $modal, $log) {
+hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $http) {
 
     var openModal = function(modalToOpen, successCallback, failureCallback) {
         var new_experiment = $modal.open({
@@ -18,6 +18,9 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log) {
             'newExperiment',
             function(result) {
                 $log.info("New experiment modal success: " + result);
+                $http.post("add", "{experiment}").success(function(data) {
+                    $log.info("Got data from service: " + data)
+                })
             },
             function(reason) {
                 $log.info("New experiment modal cancelled: " + reason);
@@ -30,10 +33,10 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log) {
         openModal(
             'uploadExperiment',
             function(result) {
-                $log.info("New experiment modal success: " + result);
+                $log.info("Upload experiment modal success: " + result);
             },
             function(reason) {
-                $log.info("New experiment modal cancelled: " + reason);
+                $log.info("Upload experiment modal cancelled: " + reason);
             }
         );
         $log.info("uploading experiment");
