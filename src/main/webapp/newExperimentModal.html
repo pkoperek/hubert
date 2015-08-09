@@ -2,7 +2,45 @@
     <h3 class="modal-title">Define new experiment</h3>
 </div>
 <div class="modal-body">
+    <form class="form-horizontal" role="form">
+
+        <div class="form-group">
+            <label for="expName" class="col-sm-2 control-label">Name</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="expName" placeholder="Experiment name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description" class="col-sm-2 control-label">Description</label>
+
+            <div class="col-sm-10">
+                <textarea class="form-control" id="description" rows="3" placeholder="Description"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="language" class="col-sm-2 control-label">Language</label>
+
+            <div class="col-sm-10">
+            </div>
+        </div>
+        <div class="form-group">
+            <!-- TODO: use http://timschlechter.github.io/bootstrap-tagsinput/examples/ -->
+            <label for="languageWords" class="col-sm-2 control-label">Words</label>
+
+            <div class="col-sm-10">
+            </div>
+        </div>
+        <div class="form-group">
+            <!-- dropdown with typeahead -->
+            <label for="dataset" class="col-sm-2 control-label">Data set</label>
+
+            <div class="col-sm-10">
+            </div>
+        </div>
+    </form>
 </div>
+
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">save</button>
     <button class="btn btn-default" ng-click="cancel()">cancel</button>
