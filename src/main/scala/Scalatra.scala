@@ -1,5 +1,6 @@
-import org.scalatra.LifeCycle
 import javax.servlet.ServletContext
+
+import org.scalatra.LifeCycle
 import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert._
 
