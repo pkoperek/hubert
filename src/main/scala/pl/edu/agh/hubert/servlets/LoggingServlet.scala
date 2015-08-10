@@ -1,4 +1,4 @@
-package pl.edu.agh.hubert
+package pl.edu.agh.hubert.servlets
 
 import org.scalatra.ScalatraServlet
 import org.slf4j.LoggerFactory

@@ -1,6 +1,4 @@
-package pl.edu.agh.hubert
-
-import org.slf4j.LoggerFactory
+package pl.edu.agh.hubert.servlets
 
 class UploadExperimentServlet extends LoggingServlet {
 

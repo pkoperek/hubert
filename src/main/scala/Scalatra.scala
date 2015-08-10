@@ -2,7 +2,7 @@ import javax.servlet.ServletContext
 
 import org.scalatra.LifeCycle
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert._
+import pl.edu.agh.hubert.servlets.{ListExperimentsServlet, NewExperimentServlet, SystemConfigServlet, UploadExperimentServlet}
 
 class ScalatraBootstrap extends LifeCycle {
 

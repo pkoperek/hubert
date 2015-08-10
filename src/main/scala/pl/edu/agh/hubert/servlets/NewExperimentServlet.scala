@@ -1,4 +1,4 @@
-package pl.edu.agh.hubert
+package pl.edu.agh.hubert.servlets
 
 class NewExperimentServlet extends LoggingServlet {
 
