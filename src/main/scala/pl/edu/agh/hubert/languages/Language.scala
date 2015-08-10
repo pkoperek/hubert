@@ -11,13 +11,7 @@ class MathLanguage extends Language {
 
 }
 
-class NauronsLanguage extends Language {
+class NeuronsLanguage extends Language {
   val words = List[LanguageWord]()
-
-}
-
-object Languages {
-
-  val languages = List(new MathLanguage, new NauronsLanguage)
 
 }
