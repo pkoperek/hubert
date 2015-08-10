@@ -2,6 +2,11 @@ var hubertApp = angular.module('hubertApp', ['ui.bootstrap']);
 
 hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $http) {
 
+    // TODO: add proper loading page
+    $http.get("config").success(function(data) {
+        $log.info("Got config from service: " + data);
+    });
+
     var openModal = function(modalToOpen, successCallback, failureCallback) {
         var new_experiment = $modal.open({
             animation: true,
