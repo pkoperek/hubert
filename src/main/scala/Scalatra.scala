@@ -16,5 +16,6 @@ class ScalatraBootstrap extends LifeCycle {
     context mount (new NewExperimentServlet, "/add")
     context mount (new ListExperimentsServlet, "/list")
     context mount (new UploadExperimentServlet, "/upload")
+    context mount (new SystemConfigServlet, "/config")
   }
 }
