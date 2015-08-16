@@ -1,4 +1,4 @@
-var hubertApp = angular.module('hubertApp', ['ui.bootstrap']);
+var hubertApp = angular.module('hubertApp', ['ui.bootstrap', 'ngTagsInput']);
 
 hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $http) {
 
@@ -43,9 +43,24 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
     };
 });
 
-hubertApp.controller('newExperimentController', function($scope, $modalInstance, configuration) {
+hubertApp.controller('newExperimentController', function($scope, $modalInstance, $log, configuration) {
 
     $scope.configuration = configuration;
+    
+    $scope.loadWords = function() {
+        $log.info("Loading words: " + $scope.selectedLanguage.words);
+        
+        var words = [];
+        var selectedWords = $scope.selectedLanguage.words;
+
+        for(var key in selectedWords) {
+            words.push(selectedWords[key]);
+        }
+        
+        $log.info("After loop: " + words);
+        
+        return words;
+    };
 
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
