@@ -16,7 +16,10 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.3",
+    "angular": ">=1.4.3",
     "angular-bootstrap": "~0.13.2"
+  },
+  "resolutions": {
+    "angular": ">=1.4.3"
   }
 }
