@@ -1,16 +1,14 @@
 package pl.edu.agh.hubert.languages
 
-abstract class LanguageWord {
-
+abstract class InputRow {
+  def valueForId(id: String): Double
 }
 
-abstract class TerminalWord extends LanguageWord {
-  
-  
+abstract class LanguageWord() {
+  def evaluateInput(input: InputRow): Double
 }
 
-abstract class CompositeWord extends LanguageWord {
+abstract class TerminalWord extends LanguageWord {}
 
-  val heldWords: List[LanguageWord]
-
+abstract class CompositeWord(val internalWords: List[LanguageWord]) extends LanguageWord {
 }

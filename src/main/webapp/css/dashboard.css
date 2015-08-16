@@ -1,1 +1,9 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.modal.in {
+    display:block;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0px;
+}

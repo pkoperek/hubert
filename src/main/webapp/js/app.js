@@ -2,11 +2,6 @@ var hubertApp = angular.module('hubertApp', ['ui.bootstrap']);
 
 hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $http) {
 
-    // TODO: add proper loading page
-    $http.get("config").success(function(data) {
-        $log.info("Got config from service: " + data);
-    });
-
     var openModal = function(modalToOpen, successCallback, failureCallback) {
         var new_experiment = $modal.open({
             animation: true,
@@ -48,7 +43,9 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
     };
 });
 
-hubertApp.controller('newExperimentController', function($scope, $modalInstance) {
+hubertApp.controller('newExperimentController', function($scope, $modalInstance, configuration) {
+
+    $scope.configuration = configuration;
 
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
@@ -71,3 +68,29 @@ hubertApp.controller('uploadExperimentController', function($scope, $modalInstan
     };
 
 });
+
+function fetchData() {
+    var initInjector = angular.injector(["ng"]);
+    var $http = initInjector.get("$http");
+    var $log = initInjector.get("$log");
+
+    return $http.get("config").then(function(response) {
+        $log.info("Got config from service: " + response.data);
+        hubertApp.constant("configuration", response.data);
+    }, function(errorResponse) {
+        // TODO: Handle error case
+    });
+}
+
+function bootstrapApplication() {
+    angular.element(document).ready(function() {
+        angular.bootstrap(document, ["hubertApp"]);
+    });
+    
+    var loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.parentNode.removeChild(loadingOverlay);
+    var backdropOverlay = document.getElementById('backdrop-overlay');
+    backdropOverlay.parentNode.removeChild(backdropOverlay);
+}
+
+fetchData().then(bootstrapApplication);
