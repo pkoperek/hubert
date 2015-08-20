@@ -17,6 +17,11 @@ class RandomGenerator(val random: (Int) => Int) extends IndividualGenerator {
       return null
     //    random(language.words.length)
 
+//    if (maxHeight == 1)
+//      return language.terminalWords(random(language.terminalWords.length)).newInstance().asInstanceOf[LanguageWord]
+//  
+    // language.words(random(language.words.length)).newInstance().asInstanceOf[LanguageWord]
+    
     language.terminalWords(0).newInstance().asInstanceOf[LanguageWord]
   }
 
