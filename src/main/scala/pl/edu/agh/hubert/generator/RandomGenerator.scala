@@ -1,27 +1,27 @@
 package pl.edu.agh.hubert.generator
 
-import pl.edu.agh.hubert.languages.{InputRow, LanguageWord, Language}
+import pl.edu.agh.hubert.Individual
+import pl.edu.agh.hubert.languages.{CompositeLanguage, LanguageWord}
 
 trait IndividualGenerator {
-  
-  def generateIndividual(language: Language, maxHeight: Int): Individual
-  
+
+  def generateIndividual(language: CompositeLanguage, maxHeight: Int): Individual
+
 }
 
-class Individual(val tree: LanguageWord) {
-  
-  def evaluate(inputRow: InputRow): Double = {
-    tree.evaluateInput(inputRow)    
+class RandomGenerator(val random: (Int) => Int) extends IndividualGenerator {
+
+  private def generateTree(language: CompositeLanguage, maxHeight: Int): LanguageWord = {
+
+    if (maxHeight == 0)
+      return null
+    //    random(language.words.length)
+
+    language.terminalWords(0).newInstance().asInstanceOf[LanguageWord]
   }
-}
 
-class RandomGenerator extends IndividualGenerator {
-
-  def generateIndividual(language: Language, maxHeight: Int): Individual = {
-    
-    val tree = null
-
-    new Individual(tree)
+  def generateIndividual(language: CompositeLanguage, maxHeight: Int): Individual = {
+    new Individual(generateTree(language, maxHeight))
   }
-  
+
 }

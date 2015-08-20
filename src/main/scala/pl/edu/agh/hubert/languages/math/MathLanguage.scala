@@ -2,12 +2,16 @@ package pl.edu.agh.hubert.languages.math
 
 import pl.edu.agh.hubert.languages._
 
-class MathLanguage extends Language(List(
-  classOf[Constant],
-  classOf[Variable],
-  classOf[Sin],
-  classOf[Cos]
-)) {}
+class MathLanguage extends CompositeLanguage(
+  Array(
+    classOf[Sin],
+    classOf[Cos]
+  ),
+  Array(
+    classOf[Constant],
+    classOf[Variable]
+  )
+) {}
 
 class Constant(val value: Double) extends TerminalWord() {
   override def evaluateInput(input: InputRow): Double = {
