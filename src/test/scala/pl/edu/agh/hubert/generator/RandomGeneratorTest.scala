@@ -22,18 +22,30 @@ class RandomGeneratorTest extends FunSuite {
     assert(individual.tree.isInstanceOf[TerminalWord])
   }
 
-  private def generateIndividualOfHeight(maxHeight: Int = 0): Individual = {
-    new RandomGenerator(_ => 1).generateIndividual(new DummyLanguage, maxHeight)
+  test("should use random number generator to choose word") {
+    val individual = generateIndividualOfHeight(1, _ => 1)
+    assert(individual.tree != null)
+    assert(individual.tree.isInstanceOf[OtherDummyTerminalWord])
+  }
+
+  private def generateIndividualOfHeight(maxHeight: Int = 0, random: (Int) => Int = _ => 0): Individual = {
+    new RandomGenerator(random).generateIndividual(new DummyLanguage, maxHeight)
   }
 
 }
 
 class DummyLanguage extends CompositeLanguage(
   Array(classOf[DummyCompositeWord]),
-  Array(classOf[DummyTerminalWord])
+  Array(classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord])
 ) {}
 
 class DummyTerminalWord extends TerminalWord {
+  override def evaluateInput(input: InputRow): Double = {
+    1.0
+  }
+}
+
+class OtherDummyTerminalWord extends TerminalWord {
   override def evaluateInput(input: InputRow): Double = {
     1.0
   }
