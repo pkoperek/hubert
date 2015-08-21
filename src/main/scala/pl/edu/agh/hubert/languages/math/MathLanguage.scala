@@ -25,7 +25,7 @@ class Variable(val id: String) extends TerminalWord() {
   }
 }
 
-class Sin(override val internalWords: List[LanguageWord]) extends CompositeWord(internalWords, 1) {
+class Sin(override val internalWords: Array[LanguageWord]) extends CompositeWord(internalWords, 1) {
   override def evaluateInput(input: InputRow): Double = {
     val internalResult = internalWords.head.evaluateInput(input)
 
@@ -33,7 +33,7 @@ class Sin(override val internalWords: List[LanguageWord]) extends CompositeWord(
   }
 }
 
-class Cos(override val internalWords: List[LanguageWord]) extends CompositeWord(internalWords, 1) {
+class Cos(override val internalWords: Array[LanguageWord]) extends CompositeWord(internalWords, 1) {
   override def evaluateInput(input: InputRow): Double = {
     val internalResult = internalWords.head.evaluateInput(input)
 
@@ -41,7 +41,7 @@ class Cos(override val internalWords: List[LanguageWord]) extends CompositeWord(
   }
 }
 
-class Plus(override val internalWords: List[LanguageWord]) extends CompositeWord(internalWords, 2) {
+class Plus(override val internalWords: Array[LanguageWord]) extends CompositeWord(internalWords, 2) {
   override def evaluateInput(input: InputRow): Double = {
     val left = internalWords(1).evaluateInput(input)
     val right = internalWords(2).evaluateInput(input)
@@ -50,7 +50,7 @@ class Plus(override val internalWords: List[LanguageWord]) extends CompositeWord
   }
 }
 
-class Minus(override val internalWords: List[LanguageWord]) extends CompositeWord(internalWords, 2) {
+class Minus(override val internalWords: Array[LanguageWord]) extends CompositeWord(internalWords, 2) {
   override def evaluateInput(input: InputRow): Double = {
     val left = internalWords(1).evaluateInput(input)
     val right = internalWords(2).evaluateInput(input)

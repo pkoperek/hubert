@@ -9,7 +9,7 @@ abstract class LanguageWord() {
 abstract class TerminalWord extends LanguageWord {}
 
 abstract class CompositeWord(
-                              val internalWords: List[LanguageWord], 
+                              val internalWords: Array[_ <: LanguageWord],
                               val requiredInternalWordsNo: Int
                               ) extends LanguageWord {
 }

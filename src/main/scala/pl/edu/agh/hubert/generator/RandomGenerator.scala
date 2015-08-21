@@ -22,7 +22,7 @@ class RandomGenerator(val random: (Int) => Int) extends IndividualGenerator {
 //  
     // language.words(random(language.words.length)).newInstance().asInstanceOf[LanguageWord]
     
-    language.terminalWords(random(0)).newInstance().asInstanceOf[LanguageWord]
+    language.terminalWords(random(language.words.length)).newInstance().asInstanceOf[LanguageWord]
   }
 
   def generateIndividual(language: CompositeLanguage, maxHeight: Int): Individual = {

@@ -28,6 +28,22 @@ class RandomGeneratorTest extends FunSuite {
     assert(individual.tree.isInstanceOf[OtherDummyTerminalWord])
   }
 
+  test("should create two level tree") {
+    var execution = 0
+    val random: (Int) => Int = max => {
+      val retVal = execution
+      execution += 1
+      retVal % (max-1)
+    }
+    
+    val individual = generateIndividualOfHeight(1, random)
+    assert(individual.tree != null)
+    assert(individual.tree.isInstanceOf[DummyCompositeWord])
+    val root = individual.tree.asInstanceOf[CompositeWord]
+    assert(root.internalWords(0).isInstanceOf[DummyTerminalWord])
+    assert(root.internalWords(1).isInstanceOf[DummyTerminalWord])
+  }
+
   private def generateIndividualOfHeight(maxHeight: Int = 0, random: (Int) => Int = _ => 0): Individual = {
     new RandomGenerator(random).generateIndividual(new DummyLanguage, maxHeight)
   }
@@ -51,7 +67,7 @@ class OtherDummyTerminalWord extends TerminalWord {
   }
 }
 
-class DummyCompositeWord(override val internalWords: List[LanguageWord]) extends CompositeWord(internalWords, 2) {
+class DummyCompositeWord(override val internalWords: Array[LanguageWord]) extends CompositeWord(internalWords, 2) {
   override def evaluateInput(input: InputRow): Double = {
     internalWords.map(w => w.evaluateInput(input)).sum
   }
