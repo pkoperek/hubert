@@ -1,5 +1,6 @@
 package pl.edu.agh.hubert.languages
 
+import pl.edu.agh.hubert.InputRow
 
 
 abstract class LanguageWord() {

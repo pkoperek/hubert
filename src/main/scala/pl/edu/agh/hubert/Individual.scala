@@ -1,6 +1,6 @@
 package pl.edu.agh.hubert
 
-import pl.edu.agh.hubert.languages.{InputRow, LanguageWord}
+import pl.edu.agh.hubert.languages.LanguageWord
 
 class Individual(val tree: LanguageWord) {
 

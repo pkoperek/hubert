@@ -1,7 +1,7 @@
 package pl.edu.agh.hubert.generator
 
 import org.scalatest.FunSuite
-import pl.edu.agh.hubert.Individual
+import pl.edu.agh.hubert.{InputRow, Individual}
 import pl.edu.agh.hubert.languages._
 
 class RandomGeneratorTest extends FunSuite {
@@ -50,10 +50,32 @@ class RandomGeneratorTest extends FunSuite {
     assert(root.internalWords(1).isInstanceOf[OtherDummyTerminalWord])
   }
 
+  test("should create a tree with height 5") {
+    val individual = generateIndividualOfHeight(5, _ => 0)
+    assert(height(individual.tree) == 5)
+  }
+  
   private def generateIndividualOfHeight(maxHeight: Int = 0, random: (Int) => Int = _ => 0): Individual = {
     new RandomGenerator(random).generateIndividual(new DummyLanguage, maxHeight)
   }
+  
+  private def height( word: LanguageWord): Int = {
+    if(word.isInstanceOf[CompositeWord]) {
+        val compositeWord = word.asInstanceOf[CompositeWord]
+        
+        var max = 0
+        for(internalWord <- compositeWord.internalWords) {
+          val childHeight = height(internalWord)
+          if(childHeight > max) {
+            max = childHeight            
+          }
+        }
+      
+        return max + 1
+    }
 
+    1
+  }
 }
 
 class DummyLanguage extends CompositeLanguage(

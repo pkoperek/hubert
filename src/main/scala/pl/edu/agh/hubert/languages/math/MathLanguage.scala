@@ -1,5 +1,6 @@
 package pl.edu.agh.hubert.languages.math
 
+import pl.edu.agh.hubert.InputRow
 import pl.edu.agh.hubert.languages._
 
 class MathLanguage extends CompositeLanguage(
