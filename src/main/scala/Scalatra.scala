@@ -2,7 +2,8 @@ import javax.servlet.ServletContext
 
 import org.scalatra.LifeCycle
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.servlets.{ListExperimentsServlet, NewExperimentServlet, SystemConfigServlet, UploadExperimentServlet}
+import pl.edu.agh.hubert.engine.EvolutionExecutor
+import pl.edu.agh.hubert.servlets._
 
 class ScalatraBootstrap extends LifeCycle {
 
@@ -11,11 +12,11 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
 
     logger.info("Initializing Scalatra")
+    val evolutionExecutor = new EvolutionExecutor(10, 5000)
     
-    // mount servlets like this:
-    context mount (new NewExperimentServlet, "/add")
-    context mount (new ListExperimentsServlet, "/list")
-    context mount (new UploadExperimentServlet, "/upload")
+    logger.info("Servlets")
+    context mount (new ExperimentsServlet, "/experiments")
+    context mount (new DatasetsServlet, "/datasets")
     context mount (new SystemConfigServlet, "/config")
   }
 }
