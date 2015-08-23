@@ -6,19 +6,15 @@ class ExperimentsServlet extends LoggingServlet {
     logger.info("listing experiments")
   }
 
-  post("/add") {
+  post("/run") {
     contentType = "text"
 
-    logger.info("adding new experiment: " + request.body)
+    logger.info("running new experiment: " + request.body)
 
     "ok"
+
   }
 
-  post("/run") {
-    
-    
-  }
-  
   post("/upload") {
     logger.info("uploading new experiment: " + request.body)
   }

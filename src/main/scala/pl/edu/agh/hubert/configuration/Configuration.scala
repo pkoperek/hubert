@@ -1,62 +1,24 @@
 package pl.edu.agh.hubert.configuration
 
 import com.typesafe.config.ConfigFactory
-import pl.edu.agh.hubert.languages.Language
-import pl.edu.agh.hubert.languages.math.MathLanguage
-import pl.edu.agh.hubert.languages.neurons.NeuronsLanguage
-import spray.json
+import pl.edu.agh.hubert.languages.LanguageProtocol._
+import pl.edu.agh.hubert.languages.{Language, Languages}
 import spray.json._
 
 object Configuration {
 
   private val config = ConfigFactory.load()
 
-  val languages = List[Language](new MathLanguage, new NeuronsLanguage)
   val threads = config.getInt("executor.threads")
   val taskWaitTime = config.getInt("executor.taskWaitTime")
 
-  def export(): ExportableConfiguration = ExportableConfiguration(languages)
-
-  def languageByName(name: String): Option[Language] = {
-    for (language <- languages) {
-      if (language.getClass.getSimpleName.toLowerCase.equals(name.toLowerCase)) {
-        return Some(language)
-      }
-    }
-
-    None
-  }
+  def export(): WebAppConfiguration = WebAppConfiguration(Languages.baseLanguages)
 }
 
-private case class ExportableConfiguration(
-                                            languages: List[Language]
-                                            )
+case class WebAppConfiguration(languages: Array[Language])
 
-object ConfigurationProtocol extends DefaultJsonProtocol {
+object WebAppConfigurationProtocol extends DefaultJsonProtocol {
 
-  implicit object ConfigurationJsonFormat extends RootJsonFormat[ExportableConfiguration] {
-    def write(c: ExportableConfiguration) =
-      JsObject(
-        "languages" -> JsArray(
-          c.languages.map(
-            l => translateLanguage(l)
-          ).toVector
-        )
-      )
-
-    private def translateLanguage(language: Language): JsObject = {
-      language.words.map(c => c.getName)
-      JsObject(
-        "name" -> JsString(language.getClass.getSimpleName),
-        "words" -> JsArray(
-          language.words.map(wordClass => JsString(wordClass.getSimpleName)).toVector
-        )
-      )
-    }
-
-    def read(value: JsValue) = value match {
-      case _ => deserializationError("Configuration class is not deserializable!")
-    }
-  }
-
+  implicit val webAppConfigurationFormat = jsonFormat(WebAppConfiguration, "languages")
+  
 }

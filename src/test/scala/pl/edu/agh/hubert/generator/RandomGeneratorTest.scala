@@ -6,6 +6,8 @@ import pl.edu.agh.hubert.languages._
 
 class RandomGeneratorTest extends FunSuite {
 
+  val dummyLanguage = Language("dummy", Array(classOf[DummyCompositeWord], classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord]))
+  
   test("should create individual with tree of height 0") {
     val individual = generateIndividualOfHeight(0)
     assert(individual.tree == null)
@@ -54,34 +56,29 @@ class RandomGeneratorTest extends FunSuite {
     val individual = generateIndividualOfHeight(5, _ => 0)
     assert(height(individual.tree) == 5)
   }
-  
+
   private def generateIndividualOfHeight(maxHeight: Int = 0, random: (Int) => Int = _ => 0): Individual = {
-    new RandomGenerator(random).generateIndividual(new DummyLanguage, maxHeight)
+    new RandomGenerator(random, dummyLanguage).generateIndividual(maxHeight)
   }
-  
-  private def height( word: LanguageWord): Int = {
-    if(word.isInstanceOf[CompositeWord]) {
-        val compositeWord = word.asInstanceOf[CompositeWord]
-        
-        var max = 0
-        for(internalWord <- compositeWord.internalWords) {
-          val childHeight = height(internalWord)
-          if(childHeight > max) {
-            max = childHeight            
-          }
+
+  private def height(word: LanguageWord): Int = {
+    if (word.isInstanceOf[CompositeWord]) {
+      val compositeWord = word.asInstanceOf[CompositeWord]
+
+      var max = 0
+      for (internalWord <- compositeWord.internalWords) {
+        val childHeight = height(internalWord)
+        if (childHeight > max) {
+          max = childHeight
         }
-      
-        return max + 1
+      }
+
+      return max + 1
     }
 
     1
   }
 }
-
-class DummyLanguage extends CompositeLanguage(
-  Array(classOf[DummyCompositeWord]),
-  Array(classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord])
-) {}
 
 class DummyTerminalWord extends TerminalWord {
   override def evaluateInput(input: InputRow): Double = {

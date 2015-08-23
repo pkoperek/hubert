@@ -2,7 +2,7 @@ package pl.edu.agh.hubert.servlets
 
 import spray.json._
 import pl.edu.agh.hubert.configuration.Configuration
-import pl.edu.agh.hubert.configuration.ConfigurationProtocol._
+import pl.edu.agh.hubert.configuration.WebAppConfigurationProtocol._
 
 class SystemConfigServlet extends LoggingServlet {
 

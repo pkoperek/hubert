@@ -3,27 +3,30 @@ package pl.edu.agh.hubert.generator
 import java.lang.reflect.Constructor
 
 import pl.edu.agh.hubert.Individual
-import pl.edu.agh.hubert.languages.{CompositeWord, CompositeLanguage, LanguageWord}
+import pl.edu.agh.hubert.languages.{Language, CompositeWord, LanguageWord}
 
 import scala.collection.mutable.ArrayBuffer
 
 trait IndividualGenerator {
 
-  def generateIndividual(language: CompositeLanguage, maxHeight: Int): Individual
+  def generateIndividual(maxHeight: Int): Individual
 
 }
 
-class RandomGenerator(val random: (Int) => Int) extends IndividualGenerator {
+class RandomGenerator(val random: (Int) => Int, val language: Language) extends IndividualGenerator {
 
-  private def generateTree(language: CompositeLanguage, maxHeight: Int): LanguageWord = {
+  val terminalWords = language.words.filter( c => !classOf[CompositeWord].isAssignableFrom(c))
+  val allWords = language.words
+  
+  private def generateTree(maxHeight: Int): LanguageWord = {
 
     if (maxHeight == 0)
       return null
 
     if (maxHeight == 1)
-      return language.terminalWords(random(language.terminalWords.length)).newInstance().asInstanceOf[LanguageWord]
+      return terminalWords(random(terminalWords.length)).newInstance().asInstanceOf[LanguageWord]
 
-    val selectedWord: Class[_] = language.words(random(language.words.length))
+    val selectedWord: Class[_] = allWords(random(allWords.length))
     if (classOf[CompositeWord].isAssignableFrom(selectedWord)) {
       val selectedCompositeWord: Class[CompositeWord] = selectedWord.asInstanceOf[Class[CompositeWord]]
       val constructor: Constructor[_] = selectedCompositeWord.getConstructors()(0)
@@ -31,7 +34,7 @@ class RandomGenerator(val random: (Int) => Int) extends IndividualGenerator {
 
       val buffer = ArrayBuffer[LanguageWord]()
       for (parameterNo <- 1 to parametersCount) {
-        buffer += generateTree(language, maxHeight - 1)
+        buffer += generateTree(maxHeight - 1)
       }
       
       return constructor.newInstance(buffer:_*).asInstanceOf[LanguageWord]
@@ -40,8 +43,8 @@ class RandomGenerator(val random: (Int) => Int) extends IndividualGenerator {
     selectedWord.newInstance().asInstanceOf[LanguageWord]
   }
 
-  def generateIndividual(language: CompositeLanguage, maxHeight: Int): Individual = {
-    new Individual(generateTree(language, maxHeight))
+  def generateIndividual(maxHeight: Int): Individual = {
+    new Individual(generateTree( maxHeight))
   }
 
 }

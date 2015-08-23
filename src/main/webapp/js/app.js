@@ -18,7 +18,7 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
             'newExperiment',
             function(result) {
                 $log.info("New experiment modal success: " + result);
-                $http.post("experiments/add", "{experiment}").success(function(data) {
+                $http.post("experiments/run", "{experiment}").success(function(data) {
                     $log.info("Got data from service: " + data)
                 })
             },
