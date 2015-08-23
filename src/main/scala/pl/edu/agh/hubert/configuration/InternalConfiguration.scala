@@ -6,7 +6,7 @@ import pl.edu.agh.hubert.languages.neurons.NeuronsLanguage
 import spray.json
 import spray.json._
 
-class Configuration {
+class InternalConfiguration {
 
   val languages = List[Language](new MathLanguage, new NeuronsLanguage)
 
@@ -14,8 +14,8 @@ class Configuration {
 
 object ConfigurationProtocol extends DefaultJsonProtocol {
 
-  implicit object ConfigurationJsonFormat extends RootJsonFormat[Configuration] {
-    def write(c: Configuration) =
+  implicit object ConfigurationJsonFormat extends RootJsonFormat[InternalConfiguration] {
+    def write(c: InternalConfiguration) =
       JsObject(
         "languages" -> JsArray(
           c.languages.map(
