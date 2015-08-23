@@ -41,7 +41,7 @@ class EvolutionExecutor(
     private val logger = LoggerFactory.getLogger(getClass)
 
     override def run(): Unit = {
-      info("Starting")
+      debug("Starting")
 
       while (running.get()) {
         val task = queue.poll(waitTime, TimeUnit.MILLISECONDS)
@@ -49,7 +49,7 @@ class EvolutionExecutor(
           breakable {
             for (iteration <- 1 to task.iterations) {
               if (Thread.currentThread().isInterrupted) {
-                info("Breaking the loop")
+                debug("Breaking the loop")
                 break()
               }
 
@@ -58,13 +58,13 @@ class EvolutionExecutor(
           }
         }
 
-        info("Stopping")
+        debug("Stopping")
       }
 
     }
 
-    private def info(text: String): Unit = {
-      logger.info("Task: " + taskNo + " " + text)
+    private def debug(text: String): Unit = {
+      logger.debug("Task: " + taskNo + " " + text)
     }
   }
 
