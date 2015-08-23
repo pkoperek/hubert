@@ -34,7 +34,7 @@ object ConfigurationProtocol extends DefaultJsonProtocol {
         )
       )
 
-    def translateLanguage(language: Language): JsObject = {
+    private def translateLanguage(language: Language): JsObject = {
       language.words.map(c => c.getName)
       JsObject(
         "name" -> JsString(language.getClass.getSimpleName),
