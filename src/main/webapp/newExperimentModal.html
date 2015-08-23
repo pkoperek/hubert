@@ -22,7 +22,8 @@
             <label for="language" class="col-sm-2 control-label">Language</label>
 
             <div class="col-sm-10">
-                <select class="form-control"
+                <select id="language"
+                        class="form-control"
                         ng-model="selectedLanguage"
                         ng-options="language.name for language in configuration.languages">
                 </select>
@@ -33,7 +34,8 @@
             <label for="languageWords" class="col-sm-2 control-label">Words</label>
 
             <div class="col-sm-10">
-                <tags-input ng-model="selectedLanguage.words"
+                <tags-input id="languageWords"
+                            ng-model="selectedLanguage.words"
                             placeholder="Add a word"
                             add-from-autocomplete-only="true">
                     <auto-complete source="loadWords()"
@@ -55,6 +57,6 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()">run</button>
-    <button class="btn btn-default" ng-click="cancel()">cancel</button>
+    <button class="btn btn-primary" ng-click="ok()">Run</button>
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
 </div>
