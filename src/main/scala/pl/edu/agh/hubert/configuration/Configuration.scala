@@ -1,21 +1,31 @@
 package pl.edu.agh.hubert.configuration
 
+import com.typesafe.config.ConfigFactory
 import pl.edu.agh.hubert.languages.Language
 import pl.edu.agh.hubert.languages.math.MathLanguage
 import pl.edu.agh.hubert.languages.neurons.NeuronsLanguage
 import spray.json
 import spray.json._
 
-class InternalConfiguration {
+object Configuration {
+
+  private val config = ConfigFactory.load()
 
   val languages = List[Language](new MathLanguage, new NeuronsLanguage)
+  val threads = config.getInt("executor.threads")
+  val taskWaitTime = config.getInt("executor.taskWaitTime")
 
+  def export(): ExportableConfiguration = ExportableConfiguration(languages)
 }
+
+private case class ExportableConfiguration(
+                                            languages: List[Language]
+                                            )
 
 object ConfigurationProtocol extends DefaultJsonProtocol {
 
-  implicit object ConfigurationJsonFormat extends RootJsonFormat[InternalConfiguration] {
-    def write(c: InternalConfiguration) =
+  implicit object ConfigurationJsonFormat extends RootJsonFormat[ExportableConfiguration] {
+    def write(c: ExportableConfiguration) =
       JsObject(
         "languages" -> JsArray(
           c.languages.map(

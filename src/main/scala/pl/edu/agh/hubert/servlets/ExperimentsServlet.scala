@@ -14,6 +14,11 @@ class ExperimentsServlet extends LoggingServlet {
     "ok"
   }
 
+  post("/run") {
+    
+    
+  }
+  
   post("/upload") {
     logger.info("uploading new experiment: " + request.body)
   }
