@@ -8,6 +8,7 @@ lazy val root = (project in file(".")).settings(
         scalaVersion := "2.11.6",
         scalacOptions += "-target:jvm-1.8",
         libraryDependencies ++= Seq(
+            "com.typesafe"      %   "config"              % "1.3.0",
             "org.scalatra"      %%  "scalatra"            % scalatraVersion,
             "org.scalatra"      %%  "scalatra-scalate"    % scalatraVersion,
             "org.scalatra"      %%  "scalatra-specs2"     % scalatraVersion     % "test",
