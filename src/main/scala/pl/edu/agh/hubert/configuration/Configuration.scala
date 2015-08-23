@@ -16,6 +16,16 @@ object Configuration {
   val taskWaitTime = config.getInt("executor.taskWaitTime")
 
   def export(): ExportableConfiguration = ExportableConfiguration(languages)
+
+  def languageByName(name: String): Option[Language] = {
+    for (language <- languages) {
+      if (language.getClass.getSimpleName.toLowerCase.equals(name.toLowerCase)) {
+        return Some(language)
+      }
+    }
+
+    None
+  }
 }
 
 private case class ExportableConfiguration(
