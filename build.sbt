@@ -4,7 +4,7 @@ lazy val scalatraVersion = "2.3.1"
 
 lazy val root = (project in file(".")).settings(
         name := "hubert",
-        version := "1.0",
+        version := "2.0",
         scalaVersion := "2.11.6",
         scalacOptions += "-target:jvm-1.8",
         libraryDependencies ++= Seq(
