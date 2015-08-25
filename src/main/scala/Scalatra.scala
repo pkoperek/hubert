@@ -14,12 +14,12 @@ class ScalatraBootstrap extends LifeCycle {
 
     logger.info("Initializing Scalatra")
     val evolutionExecutor = new EvolutionExecutor(
-      Configuration.threads, 
+      Configuration.threads,
       Configuration.taskWaitTime
     )
     
     logger.info("Servlets")
-    context mount (new ExperimentsServlet, "/experiments")
+    context mount (new ExperimentsServlet(evolutionExecutor), "/experiments")
     context mount (new DatasetsServlet, "/datasets")
     context mount (new SystemConfigServlet, "/config")
   }

@@ -7,11 +7,10 @@ import spray.json._
 case class Experiment(
                        id: Int,
                        name: String,
+                       description: String,
                        language: Language
                        )
 
 object ExperimentProtocol extends DefaultJsonProtocol {
-
-  implicit val experimentFormat = jsonFormat3(Experiment)
-
+  implicit val experimentFormat = jsonFormat4(Experiment)
 }

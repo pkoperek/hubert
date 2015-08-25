@@ -1,9 +1,10 @@
 package pl.edu.agh.hubert.experiments
 
 import org.scalatest.FunSuite
+import pl.edu.agh.hubert.languages.Languages
 
 class MemoryExperimentRepositoryTest extends FunSuite {
-  val experiment = new Experiment(1, "Test")
+  val experiment = new Experiment(1, "Test", "some experiment", Languages.mathLanguage())
 
   test("should add experiment") {
     val repo = new MemoryExperimentRepository

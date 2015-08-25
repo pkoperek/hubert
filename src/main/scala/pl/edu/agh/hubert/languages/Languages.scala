@@ -38,18 +38,19 @@ object LanguageProtocol extends DefaultJsonProtocol {
     def write(l: Language) = JsObject(
       "name" -> JsString(l.name),
       "words" -> JsArray(
-        l.words.map( clazz => JsString(clazz.getCanonicalName) ).toVector
+        l.words.map(clazz => JsString(clazz.getCanonicalName)).toVector
       )
     )
 
-    def read(value: JsValue) = value match {
-      case Seq( JsString(name), JsArray(words)) =>
+    def read(value: JsValue) =
+      value.asJsObject.getFields("name", "words") match {
+        case Seq(JsString(name), JsArray(words)) =>
           Language(
-            name, 
-            words.map( word => Class.forName(word.toString()) ).toArray
+            name,
+            words.map(word => Class.forName(word.toString().replaceAll("\"", ""))).toArray
           )
-      case _ => deserializationError("Langugae expected")
-    }
+        case _ => deserializationError("Langugae expected")
+      }
   }
-  
+
 }

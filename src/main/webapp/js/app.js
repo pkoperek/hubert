@@ -17,9 +17,8 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
         openModal(
             'newExperiment',
             function(result) {
-                $log.info("New experiment modal success: " + result);
-                var experiment = "{ 'id': -1, 'name':" + $scope. + "}"
-                $http.post("experiments/run", experiment).success(function(data) {
+                $log.info("New experiment to send: " + result);
+                $http.post("experiments/run", result).success(function(data) {
                     $log.info("Got data from service: " + data)
                 })
             },
@@ -68,7 +67,23 @@ hubertApp.controller('newExperimentController', function($scope, $modalInstance,
     };
     
     $scope.ok = function() {
-        $modalInstance.close('new experiment');
+        var selectedWords = $scope.selectedLanguage.words;
+        var classNames = [];
+        for(var word in selectedWords) {
+            classNames.push(selectedWords[word]['text']);
+        }
+    
+        var newExperiment = {
+            "id": -1,
+            "name": $scope.experimentName,
+            "description": $scope.experimentDescription,
+            "language": {
+                "name": $scope.selectedLanguage.name,
+                "words": classNames
+            }
+        };
+
+        $modalInstance.close(newExperiment);
     };
 
 });
