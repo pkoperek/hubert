@@ -9,7 +9,7 @@ class MemoryExperimentRepositoryTest extends FunSuite {
   test("should add experiment") {
     val repo = new MemoryExperimentRepository
 
-    repo.addExperiment(experiment)
+    repo.recordExperiment(experiment)
     val experiments = repo.listExperiments()
     assert(experiments.contains(experiment))
   }
@@ -17,7 +17,7 @@ class MemoryExperimentRepositoryTest extends FunSuite {
   test("should remove experiment") {
     val repo = new MemoryExperimentRepository
 
-    repo.addExperiment(experiment)
+    repo.recordExperiment(experiment)
     repo.removeExperiment(experiment.id)    
     
     assert(repo.listExperiments().isEmpty)
@@ -26,7 +26,7 @@ class MemoryExperimentRepositoryTest extends FunSuite {
   test("should true from removeExperiment if successful") {
     val repo = new MemoryExperimentRepository
 
-    repo.addExperiment(experiment)
+    repo.recordExperiment(experiment)
     val removed = repo.removeExperiment(experiment.id)
     
     assert(removed)

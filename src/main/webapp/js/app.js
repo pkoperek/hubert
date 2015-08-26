@@ -77,6 +77,7 @@ hubertApp.controller('newExperimentController', function($scope, $modalInstance,
             "id": -1,
             "name": $scope.experimentName,
             "description": $scope.experimentDescription,
+            "iterations": $scope.iterations,
             "language": {
                 "name": $scope.selectedLanguage.name,
                 "words": classNames

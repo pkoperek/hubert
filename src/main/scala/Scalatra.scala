@@ -4,11 +4,12 @@ import org.scalatra.LifeCycle
 import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert.configuration.Configuration
 import pl.edu.agh.hubert.engine.EvolutionExecutor
+import pl.edu.agh.hubert.experiments.MemoryExperimentRepository
 import pl.edu.agh.hubert.servlets._
 
 class ScalatraBootstrap extends LifeCycle {
 
-  val logger =  LoggerFactory.getLogger(getClass)
+  val logger = LoggerFactory.getLogger(getClass)
 
   override def init(context: ServletContext) {
 
@@ -17,10 +18,15 @@ class ScalatraBootstrap extends LifeCycle {
       Configuration.threads,
       Configuration.taskWaitTime
     )
-    
+
+    val experimentRepository = new MemoryExperimentRepository()
+
     logger.info("Servlets")
-    context mount (new ExperimentsServlet(evolutionExecutor), "/experiments")
-    context mount (new DatasetsServlet, "/datasets")
-    context mount (new SystemConfigServlet, "/config")
+    context mount(new ExperimentsServlet(
+      evolutionExecutor,
+      experimentRepository
+    ), "/experiments")
+    context mount(new DatasetsServlet, "/datasets")
+    context mount(new SystemConfigServlet, "/config")
   }
 }

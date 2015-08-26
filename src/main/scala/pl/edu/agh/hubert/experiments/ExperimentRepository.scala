@@ -4,7 +4,7 @@ import scala.collection.concurrent.TrieMap
 
 trait ExperimentRepository {
 
-  def addExperiment(experiment: Experiment) 
+  def recordExperiment(experiment: Experiment)
   def removeExperiment(id: Int): Boolean
   def listExperiments(offset: Int = 0, limit: Int = Int.MaxValue): Array[Experiment]
   
@@ -13,7 +13,7 @@ trait ExperimentRepository {
 class MemoryExperimentRepository extends ExperimentRepository {
   private val storage = new TrieMap[Int, Experiment]()
   
-  override def addExperiment(experiment: Experiment): Unit = {
+  override def recordExperiment(experiment: Experiment): Unit = {
     storage += (experiment.id -> experiment)
   }
 
