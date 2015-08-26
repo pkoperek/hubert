@@ -55,7 +55,37 @@
     </div>
 </nav>
 
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="experimentsListController">
+
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Experiments list {{loadingIndicator}}</h1>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Name</th>
+                        <th>Iterations</th>
+                        <th>Progress</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="experiment in experiments">
+                        <td>{{experiment.id}}</td>
+                        <td>{{experiment.name}}</td>
+                        <td>{{experiment.description}}</td>
+                        <td>100%</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- TODO: there is a github issue for this! -->
+                <!--<pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" class="pagination-sm" boundary-links="true"></pagination>-->
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- Modal -->
