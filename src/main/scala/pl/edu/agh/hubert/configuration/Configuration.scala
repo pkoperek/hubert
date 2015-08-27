@@ -11,6 +11,7 @@ object Configuration {
 
   val threads = config.getInt("executor.threads")
   val taskWaitTime = config.getInt("executor.taskWaitTime")
+  val datasetsStorageDirectory = config.getString("datasets.storageDirectory")
 
   def export(): WebAppConfiguration = WebAppConfiguration(Languages.baseLanguages)
 }
