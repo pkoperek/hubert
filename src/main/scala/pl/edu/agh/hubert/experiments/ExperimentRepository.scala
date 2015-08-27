@@ -1,27 +1,45 @@
 package pl.edu.agh.hubert.experiments
 
+import pl.edu.agh.hubert.engine.EvolutionTask
+
 import scala.collection.concurrent.TrieMap
 
 trait ExperimentRepository {
 
-  def recordExperiment(experiment: Experiment)
-  def removeExperiment(id: Int): Boolean
-  def listExperiments(offset: Int = 0, limit: Int = Int.MaxValue): Array[Experiment]
-  
+  def recordExperiment(experiment: Experiment): EvolutionTask
+
+  def listExperimentExecutions(offset: Int = 0, limit: Int = Int.MaxValue): Array[EvolutionTask]
+
 }
 
 class MemoryExperimentRepository extends ExperimentRepository {
-  private val storage = new TrieMap[Int, Experiment]()
-  
-  override def recordExperiment(experiment: Experiment): Unit = {
-    storage += (experiment.id -> experiment)
+  private val storage = new TrieMap[Int, EvolutionTask]()
+  private var currentId: Int = 1
+
+  override def recordExperiment(experiment: Experiment): EvolutionTask = {
+    val evolutionTask = EvolutionTask(assignId(experiment))
+    storage += (evolutionTask.evolutionEngine.experiment.id -> evolutionTask)
+
+    evolutionTask
   }
 
-  override def removeExperiment(id: Int): Boolean = {
-    storage.remove(id).isDefined
+  private def assignId(experiment: Experiment): Experiment = {
+    Experiment(
+      nextId(),
+      experiment.name,
+      experiment.description,
+      experiment.iterations,
+      experiment.language
+    )
   }
 
-  override def listExperiments(offset: Int, limit: Int): Array[Experiment] = {
+  private def nextId(): Int = {
+    val id = currentId
+    currentId += 1
+    id
+  }
+
+  override def listExperimentExecutions(offset: Int, limit: Int): Array[EvolutionTask] = {
     storage.values.slice(offset, offset + limit).toArray
   }
 }

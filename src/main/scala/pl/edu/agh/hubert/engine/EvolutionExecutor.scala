@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent._
 
 import org.slf4j.LoggerFactory
+import pl.edu.agh.hubert.experiments.ExperimentStatus
 
 import util.control.Breaks._
 
@@ -29,6 +30,7 @@ class EvolutionExecutor(
   logger.info("Executor initialized")
   
   def addTask(task: EvolutionTask) = {
+    task.status = ExperimentStatus.Queued
     queue.add(task)
   }
   
@@ -45,22 +47,29 @@ class EvolutionExecutor(
 
       while (running.get()) {
         val task = queue.poll(waitTime, TimeUnit.MILLISECONDS)
+        
         if (task != null) {
+          debug("Executing: " + task.evolutionEngine.experiment.name)
+          task.status = ExperimentStatus.Running
+          
           breakable {
             for (iteration <- 1 to task.iterations) {
               if (Thread.currentThread().isInterrupted) {
                 debug("Breaking the loop")
+                task.status = ExperimentStatus.Stopped
                 break()
               }
 
+              task.currentIteration = iteration
               task.evolutionEngine.evolve()
             }
+            
+            task.status = ExperimentStatus.Finished
           }
         }
-
-        debug("Stopping")
       }
-
+      
+      debug("Stopping")
     }
 
     private def debug(text: String): Unit = {

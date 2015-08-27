@@ -1,12 +1,15 @@
 package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
+import pl.edu.agh.hubert.experiments.Experiment
 
 trait EvolutionEngine {
-  def evolve() 
+  def evolve()
+  
+  def experiment: Experiment
 }
 
-private class DefaultEvolutionEngine extends EvolutionEngine {
+private class DefaultEvolutionEngine(val experiment: Experiment) extends EvolutionEngine {
 
   private val logger =  LoggerFactory.getLogger(getClass)
   
@@ -19,8 +22,8 @@ private class DefaultEvolutionEngine extends EvolutionEngine {
 
 object EvolutionEngine {
   
-  def apply(): EvolutionEngine = {
-    new DefaultEvolutionEngine
+  def apply(experiment: Experiment): EvolutionEngine = {
+    new DefaultEvolutionEngine(experiment)
   }
   
 }

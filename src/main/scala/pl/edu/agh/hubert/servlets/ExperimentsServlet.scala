@@ -1,9 +1,10 @@
 package pl.edu.agh.hubert.servlets
 
-import pl.edu.agh.hubert.engine.{EvolutionEngine, EvolutionExecutor, EvolutionTask}
-import spray.json._
-import pl.edu.agh.hubert.experiments.{ExperimentRepository, Experiment}
+import pl.edu.agh.hubert.engine.EvolutionExecutor
+import pl.edu.agh.hubert.engine.EvolutionTaskProtocol._
 import pl.edu.agh.hubert.experiments.ExperimentProtocol._
+import pl.edu.agh.hubert.experiments.{Experiment, ExperimentRepository}
+import spray.json._
 
 class ExperimentsServlet(
                           val evolutionExecutor: EvolutionExecutor,
@@ -12,7 +13,12 @@ class ExperimentsServlet(
 
   get("*") {
     contentType = "application/json"
-    JsArray(experimentRepository.listExperiments().map(e => e.toJson).toVector)
+    
+    JsArray(experimentRepository
+      .listExperimentExecutions()
+      .map(e => e.toJson)
+      .toVector
+    )
   }
 
   post("/run") {
@@ -22,8 +28,8 @@ class ExperimentsServlet(
 
     logger.info("running new experiment: " + experiment)
 
-    experimentRepository.recordExperiment(experiment)
-    evolutionExecutor.addTask(EvolutionTask(experiment))
+    val evolutionTask = experimentRepository.recordExperiment(experiment)
+    evolutionExecutor.addTask(evolutionTask)
 
     "{ \"status\": \"started\" }"
   }

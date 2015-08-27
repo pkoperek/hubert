@@ -72,11 +72,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="experiment in experiments">
-                        <td>{{experiment.id}}</td>
-                        <td>{{experiment.name}}</td>
-                        <td>{{experiment.description}}</td>
-                        <td>100%</td>
+                    <tr ng-repeat="task in runningTasks">
+                        <td>{{task.experiment.id}}</td>
+                        <td>{{task.experiment.name}}</td>
+                        <td>{{task.experiment.description}}</td>
+                        <td>{{task | statusPrettyPrint }}</td>
                     </tr>
                     </tbody>
                 </table>

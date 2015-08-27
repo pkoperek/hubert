@@ -15,6 +15,16 @@ var openModal = function(modal, modalToOpen, successCallback, failureCallback, t
     modalInstance.result.then(successCallback, failureCallback);
 };
 
+hubertApp.filter('statusPrettyPrint', function() {
+    return function(input) {
+        if(input.status === "Running") {
+            return input.currentIteration + "/" + input.experiment.iterations
+        }
+        
+        return input.status;
+    };
+});
+
 hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $http) {
 
     $scope.new_experiment = function() {
@@ -57,7 +67,7 @@ hubertApp.controller('experimentsListController', function($scope, $modal, $log,
     $http.get("experiments").then(function(response) {
         $log.info("Got list of experiments from service: " + response.data);
         $scope.loadingIndicator = "";
-        $scope.experiments = response.data;
+        $scope.runningTasks = response.data;
     }, function(errorResponse) {
         // TODO: Handle error case
     });
