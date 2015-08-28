@@ -9,22 +9,22 @@ It is a part of research carried out on [AGH University of Science and Technolog
 Todo
 ====
 
-    * Add `sbt-bower` plugin to automatically call bower from sbt
+ * Add `sbt-bower` plugin to automatically call bower from sbt
 
 Developing
 ==========
 
-    * `cd src/main/webapp && bower install`
-    * `cd ../../../`
-    * `$ sbt`
-    *  ` $ > ~container:start` - `~` turns on the autoreload
+ * `cd src/main/webapp && bower install`
+ * `cd ../../../`
+ * `$ sbt`
+ *  ` $ > ~container:start` - `~` turns on the autoreload
 
 Building
 ========
 
-    * `sbt clean package`
+ * `sbt clean package`
 
-    * Result can be found in `target/`
+ * Result can be found in `target/`
 
 License
 =======
