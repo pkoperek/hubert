@@ -10,9 +10,9 @@ class MemoryExperimentRepositoryTest extends FunSuite {
   test("should add experiment") {
     val repo = new MemoryExperimentRepository
 
-    repo.recordExperiment(experiment)
+    val evolutionTask = repo.recordExperiment(experiment)
     val experiments = repo.listExperimentExecutions()
-    assert(experiments.contains(experiment))
+    assert(experiments.contains(evolutionTask))
   }
 
   test("should return EvolutionTask") {

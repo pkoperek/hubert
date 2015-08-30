@@ -1,10 +1,12 @@
 package pl.edu.agh.hubert.languages
 
+import spray.json.{DefaultJsonProtocol, JsArray, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
+
 object Languages {
 
   def mathLanguage(): Language = Language(
     "math",
-    Array(
+    Set(
       classOf[Sin],
       classOf[Cos],
       classOf[Constant],
@@ -12,7 +14,7 @@ object Languages {
     )
   )
 
-  def neuronsLanguage(): Language = Language("neurons", Array())
+  def neuronsLanguage(): Language = Language("neurons", Set())
 
   val baseLanguages = Array[Language](mathLanguage(), neuronsLanguage())
 
@@ -28,9 +30,14 @@ object Languages {
 
 }
 
-case class Language(name: String, words: Array[Class[_]])
-
-import spray.json.{DefaultJsonProtocol, JsArray, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
+final case class Language(name: String, words: Set[Class[_]]) {
+//  override def hashCode(): Int = super.hashCode()
+//
+//  override def equals(other: Any): Boolean = other match {
+//    case that: Language => that.name == this.name &&
+//    case _ => false
+//  }
+}
 
 object LanguageProtocol extends DefaultJsonProtocol {
 
@@ -47,7 +54,7 @@ object LanguageProtocol extends DefaultJsonProtocol {
         case Seq(JsString(name), JsArray(words)) =>
           Language(
             name,
-            words.map(word => Class.forName(word.toString().replaceAll("\"", ""))).toArray
+            words.map(word => Class.forName(word.toString().replaceAll("\"", ""))).toSet
           )
         case _ => deserializationError("Langugae expected")
       }

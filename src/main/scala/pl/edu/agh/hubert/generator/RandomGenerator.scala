@@ -15,8 +15,8 @@ trait IndividualGenerator {
 
 class RandomGenerator(val random: (Int) => Int, val language: Language) extends IndividualGenerator {
 
-  val terminalWords = language.words.filter( c => !classOf[CompositeWord].isAssignableFrom(c))
-  val allWords = language.words
+  val terminalWords = language.words.filter( c => !classOf[CompositeWord].isAssignableFrom(c)).toArray
+  val allWords = language.words.toArray
   
   private def generateTree(maxHeight: Int): LanguageWord = {
 
