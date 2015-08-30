@@ -1,21 +1,25 @@
 package pl.edu.agh.hubert.datasets
 
+import java.io.File
+
 import scala.collection.mutable.ArrayBuffer
 
 object DataSets {
 
   private val storage = ArrayBuffer[DataSet]()
 
-  def addDataSet(dataSet: DataSet): Unit = {
+  private def addDataSet(dataSet: DataSet): Unit = {
     storage += dataSet
   }
 
   def addFromPath(path: String): Unit = {
-    // TODO: read all csv files from path, read the first line and treat is as a list of 
-    // parameters, add new elements to storage
+    val datasetDirectory: File = new File(path)
 
+    if (!datasetDirectory.isDirectory) {
+      throw new IllegalArgumentException("Path " + path + " is not a directory!")
+    }
   }
-  
+
   def dataSets = storage.toArray
 
 }
