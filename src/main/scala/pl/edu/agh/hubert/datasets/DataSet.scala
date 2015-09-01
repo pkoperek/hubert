@@ -4,7 +4,7 @@ import spray.json.DefaultJsonProtocol
 
 case class DataSet(
                     path: String,
-                    variables: Array[String]
+                    variables: Set[String]
                     )
 
 
