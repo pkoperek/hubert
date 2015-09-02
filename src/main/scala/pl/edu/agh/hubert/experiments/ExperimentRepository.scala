@@ -29,7 +29,8 @@ class MemoryExperimentRepository extends ExperimentRepository {
       experiment.name,
       experiment.description,
       experiment.iterations,
-      experiment.language
+      experiment.language,
+      experiment.dataSet
     )
   }
 

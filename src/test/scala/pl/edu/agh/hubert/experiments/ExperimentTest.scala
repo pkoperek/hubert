@@ -1,6 +1,7 @@
 package pl.edu.agh.hubert.experiments
 
 import org.scalatest.FunSuite
+import pl.edu.agh.hubert.datasets.DataSet
 import pl.edu.agh.hubert.languages.Languages
 
 import spray.json._
@@ -13,7 +14,8 @@ class ExperimentTest extends FunSuite {
     "name of experiment",
     "description",
     10,
-    Languages.mathLanguage()
+    Languages.mathLanguage(),
+    DataSet("/some/path", Set("varA", "varB"))
   )
 
   test("serialize and deserialize experiment") {

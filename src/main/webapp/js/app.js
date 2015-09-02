@@ -1,5 +1,15 @@
 var hubertApp = angular.module('hubertApp', ['ui.bootstrap', 'ngTagsInput']);
 
+var extractText = function(arrayToExtract) {
+    var result = [];
+    
+    for(var key in arrayToExtract) {
+        result.push(arrayToExtract[key]['text']);
+    }
+    
+    return result;
+};
+
 var openModal = function(modal, modalToOpen, successCallback, failureCallback, title, experimentModel) {
     var modalInstance = modal.open({
         animation: true,
@@ -126,12 +136,6 @@ hubertApp.controller('experimentController', function(
     };
     
     $scope.ok = function() {
-        var selectedWords = $scope.selectedLanguage.words;
-        var classNames = [];
-        for(var word in selectedWords) {
-            classNames.push(selectedWords[word]['text']);
-        }
-    
         var newExperiment = {
             "id": -1,
             "name": $scope.experimentName || "Experiment",
@@ -139,7 +143,11 @@ hubertApp.controller('experimentController', function(
             "iterations": $scope.iterations || 10,
             "language": {
                 "name": $scope.selectedLanguage.name,
-                "words": classNames
+                "words": extractText($scope.selectedLanguage.words)
+            },
+            "dataSet": {
+                "path": $scope.selectedDataSet.path,
+                "variables": extractText($scope.selectedDataSet.variables)
             }
         };
 
