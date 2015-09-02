@@ -74,7 +74,15 @@ hubertApp.controller('experimentsListController', function($scope, $modal, $log,
     
 });
 
-hubertApp.controller('experimentController', function($scope, $modalInstance, $log, configuration, title, experiment) {
+hubertApp.controller('experimentController', function(
+    $scope, 
+    $modalInstance, 
+    $log, 
+    configuration, 
+    title, 
+    experiment,
+    datasets
+) {
 
     $scope.title = title;
     $scope.configuration = configuration;
@@ -82,6 +90,21 @@ hubertApp.controller('experimentController', function($scope, $modalInstance, $l
     $scope.description = experiment.description;
     $scope.iterations = experiment.iterations;
     $scope.selectedLanguage = experiment.language;
+    $scope.selectedDataSet = experiment.dataset;
+    $scope.datasets = datasets;
+
+    $scope.loadVariables = function() {
+        $log.info("Loading variables: " + $scope.selectedDataSet.variables);
+        
+        var variables = [];
+        var selectedVariables = $scope.selectedDataSet.variables;
+        
+        for(var key in selectedVariables) {
+            variables.push(selectedVariables[key]);
+        }
+        
+        return variables;
+    };
 
     $scope.loadWords = function() {
         $log.info("Loading words: " + $scope.selectedLanguage.words);
@@ -137,17 +160,19 @@ hubertApp.controller('uploadExperimentController', function($scope, $modalInstan
 
 });
 
-function fetchData() {
-    var initInjector = angular.injector(["ng"]);
-    var $http = initInjector.get("$http");
-    var $log = initInjector.get("$log");
-
-    return $http.get("config").then(function(response) {
-        $log.info("Got config from service: " + response.data);
-        hubertApp.constant("configuration", response.data);
-    }, function(errorResponse) {
-        // TODO: Handle error case
-    });
+function fetch(serviceUrl, constantName) {
+    return function() {
+        var initInjector = angular.injector(["ng"]);
+        var $http = initInjector.get("$http");
+        var $log = initInjector.get("$log");
+    
+        return $http.get(serviceUrl).then(function(response) {
+            $log.info("Got config from service: " + response.data);
+            hubertApp.constant(constantName, response.data);
+        }, function(errorResponse) {
+            // TODO: Handle error case
+        });
+    }
 }
 
 function bootstrapApplication() {
@@ -161,4 +186,4 @@ function bootstrapApplication() {
     backdropOverlay.parentNode.removeChild(backdropOverlay);
 }
 
-fetchData().then(bootstrapApplication);
+fetch("config", "configuration")().then(fetch("datasets", "datasets")).then(bootstrapApplication);
