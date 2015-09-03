@@ -23,16 +23,7 @@ class MemoryExperimentRepository extends ExperimentRepository {
     evolutionTask
   }
 
-  private def assignId(experiment: Experiment): Experiment = {
-    Experiment(
-      nextId(),
-      experiment.name,
-      experiment.description,
-      experiment.iterations,
-      experiment.language,
-      experiment.dataSet
-    )
-  }
+  private def assignId(experiment: Experiment): Experiment = experiment.copyWithId(nextId())
 
   private def nextId(): Int = {
     val id = currentId

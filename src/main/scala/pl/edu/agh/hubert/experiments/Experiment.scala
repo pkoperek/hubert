@@ -12,9 +12,22 @@ final case class Experiment(
                              description: String,
                              iterations: Int,
                              language: Language,
-                             dataSet: DataSet
-                             )
+                             dataSet: DataSet,
+                             maxHeight: Int
+                             ) {
+
+  def copyWithId(newId: Int): Experiment =
+    Experiment(
+      newId,
+      name,
+      description,
+      iterations,
+      language,
+      dataSet,
+      maxHeight
+    )
+}
 
 object ExperimentProtocol extends DefaultJsonProtocol {
-  implicit val experimentFormat = jsonFormat6(Experiment)
+  implicit val experimentFormat = jsonFormat7(Experiment)
 }

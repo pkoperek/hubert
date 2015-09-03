@@ -7,7 +7,7 @@ import pl.edu.agh.hubert.languages._
 class RandomGeneratorTest extends FunSuite {
 
   val dummyLanguage = Language("dummy", Set(classOf[DummyCompositeWord], classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord]))
-  
+
   test("should create individual with tree of height 0") {
     val individual = generateIndividualOfHeight(0)
     assert(individual.tree == null)
@@ -58,7 +58,7 @@ class RandomGeneratorTest extends FunSuite {
   }
 
   private def generateIndividualOfHeight(maxHeight: Int = 0, random: (Int) => Int = _ => 0): Individual = {
-    new RandomGenerator(random, dummyLanguage).generateIndividual(maxHeight)
+    new RandomGenerator(random, dummyLanguage, maxHeight).generateIndividual()
   }
 
   private def height(word: LanguageWord): Int = {
