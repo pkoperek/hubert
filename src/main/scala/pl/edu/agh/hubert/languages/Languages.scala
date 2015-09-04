@@ -30,14 +30,7 @@ object Languages {
 
 }
 
-final case class Language(name: String, words: Set[Class[_]]) {
-//  override def hashCode(): Int = super.hashCode()
-//
-//  override def equals(other: Any): Boolean = other match {
-//    case that: Language => that.name == this.name &&
-//    case _ => false
-//  }
-}
+final case class Language(name: String, words: Set[Class[_]]) {}
 
 object LanguageProtocol extends DefaultJsonProtocol {
 
