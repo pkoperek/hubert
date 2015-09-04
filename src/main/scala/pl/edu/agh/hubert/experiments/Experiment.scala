@@ -13,7 +13,7 @@ final case class Experiment(
                              iterations: Int,
                              language: Language,
                              dataSet: DataSet,
-                             maxHeight: Int
+                             maxHeight: Int = 7
                              ) {
 
   def copyWithId(newId: Int): Experiment =
