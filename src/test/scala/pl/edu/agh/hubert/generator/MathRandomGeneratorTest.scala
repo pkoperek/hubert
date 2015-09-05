@@ -1,12 +1,30 @@
 package pl.edu.agh.hubert.generator
 
 import org.scalatest.FunSuite
+import pl.edu.agh.hubert.datasets.DataSet
 import pl.edu.agh.hubert.{InputRow, Individual}
 import pl.edu.agh.hubert.languages._
 
-class RandomGeneratorTest extends FunSuite {
+class MathRandomGeneratorTest extends FunSuite {
 
-  val dummyLanguage = Language("dummy", Set(classOf[DummyCompositeWord], classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord]))
+  val dummyLanguage = Array[Class[_]](classOf[DummyCompositeWord], classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord])
+  val constantLanguage = Array[Class[_]](classOf[Constant])
+  val variableLanguage = Array[Class[_]](classOf[Variable])
+
+  test("should create Variable with random variable name") {
+    val individual = generateIndividualOfHeight(1, language = variableLanguage)
+
+    assert(individual.tree.isInstanceOf[Variable])
+    assert(individual.tree.asInstanceOf[Variable].id == "varA")
+  }
+
+  test("should create Constant with random value") {
+    val individual = generateIndividualOfHeight(1, language = constantLanguage)
+
+    assert(individual.tree.isInstanceOf[Constant])
+    assert(individual.tree.asInstanceOf[Constant].value <= 1.0)
+    assert(individual.tree.asInstanceOf[Constant].value >= 0.0)
+  }
 
   test("should create individual with tree of height 0") {
     val individual = generateIndividualOfHeight(0)
@@ -57,8 +75,13 @@ class RandomGeneratorTest extends FunSuite {
     assert(height(individual.tree) == 5)
   }
 
-  private def generateIndividualOfHeight(maxHeight: Int = 0, random: (Int) => Int = _ => 0): Individual = {
-    new RandomGenerator(random, dummyLanguage, maxHeight).generateIndividual()
+  private def generateIndividualOfHeight(
+                                          maxHeight: Int = 0,
+                                          random: (Int) => Int = _ => 0,
+                                          language: Array[Class[_]] = dummyLanguage,
+                                          variables: Array[String] = Array[String]("varA")
+                                          ): Individual = {
+    new MathRandomGenerator(language, maxHeight, random, variables).generateIndividual()
   }
 
   private def height(word: LanguageWord): Int = {
