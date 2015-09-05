@@ -3,9 +3,9 @@ package pl.edu.agh.hubert.generator
 import java.lang.reflect.Constructor
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.Individual
 import pl.edu.agh.hubert.experiments.Experiment
 import pl.edu.agh.hubert.languages._
+import pl.edu.agh.hubert.{Individual, MathIndividual}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -21,7 +21,7 @@ object IndividualGenerator {
 
   def apply(experiment: Experiment): IndividualGenerator = {
     experiment.language.name match {
-      case "math" => return new MathRandomGenerator(
+      case "math" => return new MathRandomIndividualGenerator(
         experiment.language.words.toArray,
         experiment.maxHeight, 
         randomWithMax, 
@@ -34,11 +34,11 @@ object IndividualGenerator {
 
 }
 
-class MathRandomGenerator(
+class MathRandomIndividualGenerator(
                            val words: Array[Class[_]],
-                           maxHeight: Int, 
+                           val maxHeight: Int,
                            val random: (Int) => Int, 
-                           variablesIds: Array[String]
+                           val variablesIds: Array[String]
                            ) extends IndividualGenerator {
 
   private val logger = LoggerFactory.getLogger(getClass)
@@ -104,7 +104,7 @@ class MathRandomGenerator(
   }
 
   def generateIndividual(): Individual = {
-    new Individual(generateTree(maxHeight))
+    new MathIndividual(generateTree(maxHeight))
   }
 
 }

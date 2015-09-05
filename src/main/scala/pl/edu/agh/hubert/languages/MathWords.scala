@@ -48,7 +48,7 @@ class Minus(val leftWord: LanguageWord, val rightWord: LanguageWord) extends Com
   }
 }
 
-class Multiply(val leftWord: LanguageWord, val rightWord: LanguageWord) extends CompositeWord(Array(leftWord, rightWord), 2) {
+class Mul(val leftWord: LanguageWord, val rightWord: LanguageWord) extends CompositeWord(Array(leftWord, rightWord), 2) {
   override def evaluateInput(input: InputRow): Double = {
     val left = leftWord.evaluateInput(input)
     val right = rightWord.evaluateInput(input)

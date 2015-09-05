@@ -104,6 +104,8 @@ hubertApp.controller('experimentController', function(
     $scope.maxHeight = experiment.maxHeight;
     $scope.datasets = datasets;
     $scope.populationSize = experiment.populationSize;
+    $scope.mutationProbability = experiment.mutationProbability;
+    $scope.crossOverProbability = experiment.crossOverProbability;
 
     $scope.loadVariables = function() {
         $log.info("Loading variables: " + $scope.selectedDataSet.variables);
@@ -152,7 +154,9 @@ hubertApp.controller('experimentController', function(
                 "variables": extractText($scope.selectedDataSet.variables)
             },
             "maxHeight": $scope.maxHeight || 7,
-            "populationSize": $scope.populationSize || 128
+            "populationSize": $scope.populationSize || 128,
+            "mutationProbability": $scope.mutationProbability || 1,
+            "crossOverProbability": $scope.crossOverProbability || 75,
         };
 
         $modalInstance.close(newExperiment);

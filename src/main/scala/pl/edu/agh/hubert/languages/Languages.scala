@@ -13,7 +13,7 @@ object Languages {
       classOf[Variable],
       classOf[Plus],
       classOf[Minus],
-      classOf[Multiply]
+      classOf[Mul]
     )
   )
 

@@ -5,7 +5,7 @@ import pl.edu.agh.hubert.datasets.DataSet
 import pl.edu.agh.hubert.{InputRow, Individual}
 import pl.edu.agh.hubert.languages._
 
-class MathRandomGeneratorTest extends FunSuite {
+class MathRandomIndividualGeneratorTest extends FunSuite {
 
   val dummyLanguage = Array[Class[_]](classOf[DummyCompositeWord], classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord])
   val constantLanguage = Array[Class[_]](classOf[Constant])
@@ -81,7 +81,7 @@ class MathRandomGeneratorTest extends FunSuite {
                                           language: Array[Class[_]] = dummyLanguage,
                                           variables: Array[String] = Array[String]("varA")
                                           ): Individual = {
-    new MathRandomGenerator(language, maxHeight, random, variables).generateIndividual()
+    new MathRandomIndividualGenerator(language, maxHeight, random, variables).generateIndividual()
   }
 
   private def height(word: LanguageWord): Int = {

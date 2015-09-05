@@ -14,7 +14,9 @@ final case class Experiment(
                              language: Language,
                              dataSet: DataSet,
                              maxHeight: Int = 7,
-                             populationSize: Int = 128
+                             populationSize: Int = 128,
+                             mutationProbability: Int = 1,
+                             crossOverProbability: Int = 75
                              ) {
 
 
@@ -26,10 +28,13 @@ final case class Experiment(
       iterations,
       language,
       dataSet,
-      maxHeight
+      maxHeight,
+      populationSize,
+      mutationProbability,
+      crossOverProbability
     )
 }
 
 object ExperimentProtocol extends DefaultJsonProtocol {
-  implicit val experimentFormat = jsonFormat8(Experiment)
+  implicit val experimentFormat = jsonFormat10(Experiment)
 }

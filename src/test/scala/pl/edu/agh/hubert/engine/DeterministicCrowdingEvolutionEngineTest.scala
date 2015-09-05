@@ -5,7 +5,7 @@ import pl.edu.agh.hubert.datasets.DataSet
 import pl.edu.agh.hubert.experiments.Experiment
 import pl.edu.agh.hubert.languages.Languages
 
-class DefaultEvolutionEngineTest extends FunSuite {
+class DeterministicCrowdingEvolutionEngineTest extends FunSuite {
 
   test("should execute experiment with math language") {
     val experiment = Experiment(
@@ -18,7 +18,7 @@ class DefaultEvolutionEngineTest extends FunSuite {
       7)
 
     try {
-      new DefaultEvolutionEngine(experiment).evolve()
+      new DeterministicCrowdingEvolutionEngine(experiment).evolve()
     } catch {
       case e: Throwable => fail("Exception thrown! " + e)
     }
