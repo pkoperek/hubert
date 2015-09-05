@@ -19,13 +19,13 @@ object DataSets {
   }
 
   def addFromPath(path: String): Unit = {
-    val datasetDirectory: File = new File(path)
+    val dataSetDirectory: File = new File(path)
 
-    if (!datasetDirectory.isDirectory) {
+    if (!dataSetDirectory.isDirectory) {
       throw new IllegalArgumentException("Path " + path + " is not a directory!")
     }
 
-    val csvFiles = datasetDirectory.listFiles.filter(x => x.getName.endsWith(".csv"))
+    val csvFiles = dataSetDirectory.listFiles.filter(x => x.getName.endsWith(".csv"))
 
     for (csvFile <- csvFiles) {
       val maybeDataSet = translateToDataSet(csvFile)
