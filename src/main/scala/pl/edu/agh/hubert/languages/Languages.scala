@@ -10,7 +10,10 @@ object Languages {
       classOf[Sin],
       classOf[Cos],
       classOf[Constant],
-      classOf[Variable]
+      classOf[Variable],
+      classOf[Plus],
+      classOf[Minus],
+      classOf[Multiply]
     )
   )
 
