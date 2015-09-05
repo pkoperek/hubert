@@ -13,8 +13,10 @@ final case class Experiment(
                              iterations: Int,
                              language: Language,
                              dataSet: DataSet,
-                             maxHeight: Int = 7
+                             maxHeight: Int = 7,
+                             populationSize: Int = 128
                              ) {
+
 
   def copyWithId(newId: Int): Experiment =
     Experiment(
@@ -29,5 +31,5 @@ final case class Experiment(
 }
 
 object ExperimentProtocol extends DefaultJsonProtocol {
-  implicit val experimentFormat = jsonFormat7(Experiment)
+  implicit val experimentFormat = jsonFormat8(Experiment)
 }
