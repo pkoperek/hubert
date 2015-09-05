@@ -8,8 +8,8 @@ lazy val root = (project in file(".")).settings(
   scalaVersion := "2.11.6",
   scalacOptions += "-target:jvm-1.8",
   libraryDependencies ++= Seq(
-    "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3",
-    "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.3",
+    "com.github.scala-incubator.io" %% "scala-io-core" % "0.4.3+",
+    "com.github.scala-incubator.io" %% "scala-io-file" % "0.4.3+",
     "com.typesafe" % "config" % "1.3.0",
     "org.scalatra" %% "scalatra" % scalatraVersion,
     "org.scalatra" %% "scalatra-scalate" % scalatraVersion,
