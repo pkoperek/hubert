@@ -68,7 +68,10 @@ class MathRandomGenerator(
   }
 
   private def instantiateCompositeWord(maxHeight: Int, word: Class[_]): LanguageWord = {
-    logger.debug("Composite, selected: " + word)
+    if(logger.isDebugEnabled) {
+      logger.debug("Composite, selected: " + word)
+    }
+    
     val selectedCompositeWord: Class[CompositeWord] = word.asInstanceOf[Class[CompositeWord]]
     val constructor: Constructor[_] = firstConstructor(selectedCompositeWord)
     val parametersCount = constructor.getParameterCount
