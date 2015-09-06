@@ -123,4 +123,8 @@ class MathIndividual(override val tree: LanguageWord) extends Individual(tree) {
     throw new RuntimeException("Unknown function: " + tree)
   }
 
+  override def toString: String = {
+    "Individual: " + tree
+  }
+  
 }

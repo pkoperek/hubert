@@ -6,12 +6,16 @@ class Constant(val value: Double) extends TerminalWord() {
   override def evaluateInput(input: InputRow): Double = {
     value
   }
+
+  override def toString: String = value.toString
 }
 
 class Variable(val id: String) extends TerminalWord() {
   override def evaluateInput(input: InputRow): Double = {
     input.valueForId(id)
   }
+
+  override def toString: String = id
 }
 
 class Sin(val internalWord: LanguageWord) extends CompositeWord(Array(internalWord), 1) {
@@ -20,6 +24,8 @@ class Sin(val internalWord: LanguageWord) extends CompositeWord(Array(internalWo
 
     Math.sin(internalResult)
   }
+
+  override def toString: String = "sin(" + internalWord + ")"
 }
 
 class Cos(val internalWord: LanguageWord) extends CompositeWord(Array(internalWord), 1) {
@@ -28,6 +34,8 @@ class Cos(val internalWord: LanguageWord) extends CompositeWord(Array(internalWo
 
     Math.cos(internalResult)
   }
+
+  override def toString: String = "cos(" + internalWord + ")"
 }
 
 class Plus(val leftWord: LanguageWord, val rightWord: LanguageWord) extends CompositeWord(Array(leftWord, rightWord), 2) {
@@ -37,6 +45,8 @@ class Plus(val leftWord: LanguageWord, val rightWord: LanguageWord) extends Comp
 
     left + right
   }
+
+  override def toString: String = "(" + leftWord + " + " + rightWord + ")"
 }
 
 class Minus(val leftWord: LanguageWord, val rightWord: LanguageWord) extends CompositeWord(Array(leftWord, rightWord), 2) {
@@ -46,6 +56,8 @@ class Minus(val leftWord: LanguageWord, val rightWord: LanguageWord) extends Com
 
     left - right
   }
+
+  override def toString: String = "(" + leftWord + " - " + rightWord + ")"
 }
 
 class Mul(val leftWord: LanguageWord, val rightWord: LanguageWord) extends CompositeWord(Array(leftWord, rightWord), 2) {
@@ -55,4 +67,6 @@ class Mul(val leftWord: LanguageWord, val rightWord: LanguageWord) extends Compo
 
     left * right
   }
+
+  override def toString: String = "(" + leftWord + " * " + rightWord + ")"
 }
