@@ -10,6 +10,11 @@ class Individual(val tree: LanguageWord) {
   }
 }
 
+case class EvaluatedIndividual(individual: Individual, fitness: Double) {
+  def tree = individual.tree
+
+}
+
 package object hubert {
   type Input = Array[Array[Double]]
 }
