@@ -25,7 +25,7 @@ object IndividualGenerator {
         experiment.language.words.toArray,
         experiment.maxHeight, 
         randomWithMax, 
-        experiment.dataSet.variables.toArray
+        experiment.dataSet.variables.size
       )
     }
 
@@ -38,18 +38,18 @@ class MathRandomIndividualGenerator(
                            val words: Array[Class[_]],
                            val maxHeight: Int,
                            val random: (Int) => Int, 
-                           val variablesIds: Array[String]
+                           val variablesIdsNo: Int
                            ) extends IndividualGenerator {
 
   private val logger = LoggerFactory.getLogger(getClass)
   
   private val terminalWords = words.filter(c => !isCompositeWord(c))
+  private val allWords = words
+  private val variablesIds = (0 to variablesIdsNo-1).toArray
 
   private def isCompositeWord(c: Class[_]): Boolean = {
     classOf[CompositeWord].isAssignableFrom(c)
   }
-
-  private val allWords = words
 
   private def generateTree(maxHeight: Int): LanguageWord = {
     if (maxHeight == 0)
@@ -91,7 +91,7 @@ class MathRandomIndividualGenerator(
     }
 
     if (classOf[Variable].isAssignableFrom(word)) {
-      return firstConstructor(word).newInstance(randomElement(variablesIds)).asInstanceOf[LanguageWord]
+      return firstConstructor(word).newInstance(randomElement(variablesIds).asInstanceOf[Object]).asInstanceOf[LanguageWord]
     }
 
     word.newInstance().asInstanceOf[LanguageWord]

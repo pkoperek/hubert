@@ -20,19 +20,19 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
   private val logger = LoggerFactory.getLogger(getClass)
 
   private val individualGenerator = IndividualGenerator(experiment)
-
-  private val loadedDataSet = new LoadedDataSet(CSVLoader.load(experiment.dataSet))
-
+  private val loadedDataSet = CSVLoader.load(experiment.dataSet)
+  private var population = generateInitialPopulation(experiment.populationSize)
+  private val pairings = (0 to loadedDataSet.raw.size-1).combinations(2).toArray.map( c => (c.seq(0), c.seq(1)))
+  
   def generateInitialPopulation(size: Int): Array[Individual] = {
     logger.info("Generating: " + size + " random individuals")
     (1 to size).map(_ => individualGenerator.generateIndividual()).toArray
   }
 
-  private var population = generateInitialPopulation(experiment.populationSize)
-
   def evaluateIndividual(individual: Individual): Double = {
-    1.0
     
+//    individual..evaluate(loadedDataSet.raw)
+    1.0
   }
   
   def evaluateFitness(toEvaluate: Array[(Individual, Individual)]) {
@@ -44,7 +44,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
   }
 
   def groupIntoPairs(): Array[(Individual, Individual)] = {
-    Random.shuffle(population).grouped(2).map(array => (array(0), array(1))).toArray
+    Random.shuffle(population.toIterator).grouped(2).map(array => (array(0), array(1))).toArray
   }
 
   def crossOverInPairs(parents: Array[(Individual, Individual)]): Array[(Individual, Individual)] = {
@@ -54,7 +54,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
   def evolve() = {
     logger.debug("Evolution iteration")
 
-    evaluateFitness()
+//    evaluateFitness()
     val parents = groupIntoPairs()
     val children = crossOverInPairs(parents)
     val mutatedChildren = mutate(children)

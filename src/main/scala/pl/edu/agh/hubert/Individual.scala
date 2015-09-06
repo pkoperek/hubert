@@ -1,13 +1,15 @@
 package pl.edu.agh.hubert
 
+import pl.edu.agh.hubert.hubert.Input
 import pl.edu.agh.hubert.languages._
-
-import scala.collection.mutable
 
 class Individual(val tree: LanguageWord) {
 
-  def evaluate(inputRow: InputRow): Double = {
-    tree.evaluateInput(inputRow)
+  def evaluate(input: Input): Array[Double] = {
+    tree.evaluateInput(input)
   }
 }
 
+package object hubert {
+  type Input = Array[Array[Double]]
+}

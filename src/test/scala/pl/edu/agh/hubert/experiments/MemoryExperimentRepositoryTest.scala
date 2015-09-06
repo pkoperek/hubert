@@ -1,13 +1,26 @@
 package pl.edu.agh.hubert.experiments
 
-import org.scalatest.FunSuite
+import java.io.File
+
+import org.scalatest.{BeforeAndAfter, FunSuite}
 import pl.edu.agh.hubert.datasets.DataSet
-import pl.edu.agh.hubert.engine.EvolutionTask
 import pl.edu.agh.hubert.languages.Languages
 
-class MemoryExperimentRepositoryTest extends FunSuite {
-  val experiment = new Experiment(1, "Test", "some experiment", 1, Languages.mathLanguage(), new DataSet("/some", Set()))
+class MemoryExperimentRepositoryTest extends FunSuite with BeforeAndAfter{
+  val temporaryFile = File.createTempFile("temp", ".csv")
+  val experiment = new Experiment(
+    1, 
+    "Test", 
+    "some experiment", 
+    1, 
+    Languages.mathLanguage(), 
+    new DataSet(temporaryFile.getAbsolutePath, Set("varA"))
+  )
 
+  before {
+    temporaryFile.deleteOnExit()
+  }
+  
   test("should add experiment") {
     val repo = new MemoryExperimentRepository
 

@@ -1,13 +1,12 @@
 package pl.edu.agh.hubert.generator
 
 import org.scalatest.FunSuite
-import pl.edu.agh.hubert.datasets.DataSet
-import pl.edu.agh.hubert.{InputRow, Individual}
+import pl.edu.agh.hubert._
 import pl.edu.agh.hubert.languages._
 
 class MathRandomIndividualGeneratorTest extends FunSuite {
 
-  val dummyLanguage = Array[Class[_]](classOf[DummyCompositeWord], classOf[DummyTerminalWord], classOf[OtherDummyTerminalWord])
+  val dummyLanguage = DummyLanguage.dummyLanguage()
   val constantLanguage = Array[Class[_]](classOf[Constant])
   val variableLanguage = Array[Class[_]](classOf[Variable])
 
@@ -15,7 +14,7 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
     val individual = generateIndividualOfHeight(1, language = variableLanguage)
 
     assert(individual.tree.isInstanceOf[Variable])
-    assert(individual.tree.asInstanceOf[Variable].id == "varA")
+    assert(individual.tree.asInstanceOf[Variable].id == 0)
   }
 
   test("should create Constant with random value") {
@@ -78,10 +77,10 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
   private def generateIndividualOfHeight(
                                           maxHeight: Int = 0,
                                           random: (Int) => Int = _ => 0,
-                                          language: Array[Class[_]] = dummyLanguage,
+                                          language: Array[Class[_]] = dummyLanguage.words.toArray,
                                           variables: Array[String] = Array[String]("varA")
                                           ): Individual = {
-    new MathRandomIndividualGenerator(language, maxHeight, random, variables).generateIndividual()
+    new MathRandomIndividualGenerator(language, maxHeight, random, variables.size).generateIndividual()
   }
 
   private def height(word: LanguageWord): Int = {
@@ -103,20 +102,3 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
   }
 }
 
-class DummyTerminalWord extends TerminalWord {
-  override def evaluateInput(input: InputRow): Double = {
-    1.0
-  }
-}
-
-class OtherDummyTerminalWord extends TerminalWord {
-  override def evaluateInput(input: InputRow): Double = {
-    1.0
-  }
-}
-
-class DummyCompositeWord(val left: LanguageWord, val right: LanguageWord) extends CompositeWord(Array(left, right), 2) {
-  override def evaluateInput(input: InputRow): Double = {
-    internalWords.map(w => w.evaluateInput(input)).sum
-  }
-}

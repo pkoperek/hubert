@@ -6,9 +6,9 @@ import scala.collection.mutable
 
 class MathIndividual(override val tree: LanguageWord) extends Individual(tree) {
 
-  private val differentiatedCache = mutable.Map[String, LanguageWord]()
+  private val differentiatedCache = mutable.Map[Int, LanguageWord]()
 
-  def differentiatedBy(variable: String) = differentiatedCache.getOrElseUpdate(variable, simplify(differentiateBy(variable, tree)))
+  def differentiatedBy(variable: Int) = differentiatedCache.getOrElseUpdate(variable, simplify(differentiateBy(variable, tree)))
 
   private def simplify(word: LanguageWord): LanguageWord = {
     if (word.isInstanceOf[TerminalWord]) {
@@ -69,7 +69,7 @@ class MathIndividual(override val tree: LanguageWord) extends Individual(tree) {
     word.isInstanceOf[Constant]
   }
 
-  private def differentiateBy(variable: String, tree: LanguageWord): LanguageWord = {
+  private def differentiateBy(variable: Int, tree: LanguageWord): LanguageWord = {
     tree match {
       case sin: Sin =>
         return new Mul(

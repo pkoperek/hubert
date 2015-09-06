@@ -1,10 +1,12 @@
 package pl.edu.agh.hubert.datasets
 
+import pl.edu.agh.hubert.hubert.Input
+
 import scala.collection.mutable.ArrayBuffer
 
-class LoadedDataSet(val raw: Map[String, Array[Double]]) {
+class LoadedDataSet(val raw: Input, val nameIdx: Map[String, Int]) {
 
-  lazy val differentiated: Map[String, Array[Double]] = raw.mapValues(rawValues => differentiate(rawValues))
+  lazy val differentiated: Input = raw.map(rawValues => differentiate(rawValues))
 
   private def differentiate(raw: Array[Double]): Array[Double] = {
     val differentiated = ArrayBuffer[Double]()
@@ -13,6 +15,26 @@ class LoadedDataSet(val raw: Map[String, Array[Double]]) {
     }
 
     differentiated.toArray
+  }
+  
+  def rawByName(name: String): Option[Array[Double]] = {
+    val index = nameIdx.get(name)
+    
+    if(index.isDefined) {
+      return Some(raw(index.get)) 
+    }
+      
+    None
+  }
+
+  def differentiatedByName(name: String): Option[Array[Double]] = {
+    val index = nameIdx.get(name)
+    
+    if(index.isDefined) {
+      return Some(differentiated(index.get))
+    }
+      
+    None
   }
 }
 

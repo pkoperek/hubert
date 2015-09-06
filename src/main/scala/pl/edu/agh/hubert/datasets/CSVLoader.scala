@@ -1,11 +1,12 @@
 package pl.edu.agh.hubert.datasets
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
-import scala.io.{BufferedSource, Source}
+import scala.io.Source
 
 object CSVLoader {
 
-  def load(dataSet: DataSet): Map[String, Array[Double]] = {
+  def load(dataSet: DataSet): LoadedDataSet = {
     val source = Source.fromFile(dataSet.path)
 
     val buffers = dataSet.variables.map(v => (v, ArrayBuffer[Double]())).toMap
@@ -38,7 +39,17 @@ object CSVLoader {
       source.close()
     }
 
-    buffers.mapValues[Array[Double]](v => v.toArray)
+    toLoadedDataSet(buffers)
   }
 
+  private def toLoadedDataSet(buffers: Map[String, ArrayBuffer[Double]]): LoadedDataSet = {
+    val seriesBuffer = ArrayBuffer[Array[Double]]()
+    val namesToIdx = mutable.Map[String, Int]()
+    for (variableSerie <- buffers) {
+      seriesBuffer += variableSerie._2.toArray
+      namesToIdx += (variableSerie._1 -> (seriesBuffer.size - 1))
+    }
+
+    new LoadedDataSet(seriesBuffer.toArray, namesToIdx.toMap)
+  }
 }

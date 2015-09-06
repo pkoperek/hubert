@@ -1,6 +1,7 @@
 package pl.edu.agh.hubert.languages
 
-import spray.json.{DefaultJsonProtocol, JsArray, JsNumber, JsObject, JsString, JsValue, RootJsonFormat, _}
+import pl.edu.agh.hubert.hubert.Input
+import spray.json.{DefaultJsonProtocol, JsArray, JsObject, JsString, JsValue, RootJsonFormat, _}
 
 object Languages {
 
@@ -58,11 +59,8 @@ object LanguageProtocol extends DefaultJsonProtocol {
 
 }
 
-import pl.edu.agh.hubert.InputRow
-
-
 abstract class LanguageWord() {
-  def evaluateInput(input: InputRow): Double
+  def evaluateInput(input: Input): Array[Double]
 }
 
 abstract class TerminalWord extends LanguageWord {}
