@@ -14,7 +14,8 @@ class MemoryExperimentRepositoryTest extends FunSuite with BeforeAndAfter{
     "some experiment", 
     1, 
     Languages.mathLanguage(), 
-    new DataSet(temporaryFile.getAbsolutePath, Set("varA"))
+    new DataSet(temporaryFile.getAbsolutePath, Set("varA")),
+    fitnessFunction = "fitnessFunction"
   )
 
   before {

@@ -1,9 +1,12 @@
 package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.Individual
+import pl.edu.agh.hubert.crossingover.CrossOverOperator
+import pl.edu.agh.hubert.mutation.MutationOperator
+import pl.edu.agh.hubert.{EvaluatedIndividual, Individual}
 import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
 import pl.edu.agh.hubert.experiments.Experiment
+import pl.edu.agh.hubert.fitness.FitnessFunction
 import pl.edu.agh.hubert.generator.IndividualGenerator
 
 import scala.util.Random
@@ -14,49 +17,49 @@ trait EvolutionEngine {
   def experiment: Experiment
 }
 
-
 private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) extends EvolutionEngine {
 
   private val logger = LoggerFactory.getLogger(getClass)
 
   private val individualGenerator = IndividualGenerator(experiment)
-  private val loadedDataSet = CSVLoader.load(experiment.dataSet)
+  private val fitnessFunction = FitnessFunction(experiment)
+  private val crossOverOperator = CrossOverOperator(experiment)
+  private val mutationOperator = MutationOperator(experiment)
   private var population = generateInitialPopulation(experiment.populationSize)
-  private val pairings = (0 to loadedDataSet.raw.size-1).combinations(2).toArray.map( c => (c.seq(0), c.seq(1)))
-  
-  def generateInitialPopulation(size: Int): Array[Individual] = {
+
+  private def generateInitialPopulation(size: Int): Array[Individual] = {
     logger.info("Generating: " + size + " random individuals")
     (1 to size).map(_ => individualGenerator.generateIndividual()).toArray
   }
 
-  def evaluateIndividual(individual: Individual): Double = {
-    
-//    individual..evaluate(loadedDataSet.raw)
-    1.0
-  }
-  
-  def evaluateFitness(toEvaluate: Array[(Individual, Individual)]) {
-    toEvaluate.map( pair => (evaluateIndividual(pair._1), evaluateIndividual(pair._2)) )
+  private def evaluateFitness(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
+    toEvaluate.par.map(individual =>
+      new EvaluatedIndividual(
+        individual,
+        fitnessFunction.evaluateIndividual(individual)
+      )
+    ).toArray
   }
 
-  def mutate(toMutate: Array[(Individual, Individual)]): Array[(Individual, Individual)] = {
+  private def mutate(toMutate: Array[(Individual, Individual)]): Array[(Individual, Individual)] = {
     toMutate
   }
 
-  def groupIntoPairs(): Array[(Individual, Individual)] = {
-    Random.shuffle(population.toIterator).grouped(2).map(array => (array(0), array(1))).toArray
+  private def groupIntoPairs(toGroup: Array[EvaluatedIndividual]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
+    Random.shuffle(toGroup.toIterator).grouped(2).map(array => (array(0), array(1))).toArray
   }
 
-  def crossOverInPairs(parents: Array[(Individual, Individual)]): Array[(Individual, Individual)] = {
-    parents
+  private def crossOverInPairs(parents: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[(Individual, Individual)] = {
+//    parents
+    return null
   }
 
   def evolve() = {
     logger.debug("Evolution iteration")
 
-//    evaluateFitness()
-    val parents = groupIntoPairs()
-    val children = crossOverInPairs(parents)
+    val evaluatedParents = evaluateFitness(population)
+    val groupedParents = groupIntoPairs(evaluatedParents)
+    val children = crossOverInPairs(groupedParents)
     val mutatedChildren = mutate(children)
   }
 

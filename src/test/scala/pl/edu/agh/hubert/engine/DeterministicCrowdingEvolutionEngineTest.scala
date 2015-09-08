@@ -17,7 +17,8 @@ class DeterministicCrowdingEvolutionEngineTest extends FunSuite {
       "desc1",
       10,
       Languages.mathLanguage(),
-      new DataSet(tmp.getAbsolutePath, Set("varA", "varB"))
+      new DataSet(tmp.getAbsolutePath, Set("varA", "varB")),
+      fitnessFunction = "fitnessFunction"
     )
 
     try {

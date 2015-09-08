@@ -15,7 +15,8 @@ class ExperimentTest extends FunSuite {
     "description",
     10,
     Languages.mathLanguage(),
-    DataSet("/some/path", Set("varA", "varB"))
+    DataSet("/some/path", Set("varA", "varB")),
+    fitnessFunction = "fitnessFunction"
   )
 
   test("serialize and deserialize experiment") {
