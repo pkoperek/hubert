@@ -4,6 +4,7 @@ import java.io.File
 
 import org.scalatest.{BeforeAndAfter, FunSuite}
 import pl.edu.agh.hubert.datasets.DataSet
+import pl.edu.agh.hubert.fitness.DifferentiationFitnessFunction
 import pl.edu.agh.hubert.languages.Languages
 
 class MemoryExperimentRepositoryTest extends FunSuite with BeforeAndAfter{
@@ -15,7 +16,7 @@ class MemoryExperimentRepositoryTest extends FunSuite with BeforeAndAfter{
     1, 
     Languages.mathLanguage(), 
     new DataSet(temporaryFile.getAbsolutePath, Set("varA")),
-    fitnessFunction = "fitnessFunction"
+    fitnessFunction = classOf[DifferentiationFitnessFunction].getName
   )
 
   before {
