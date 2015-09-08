@@ -159,7 +159,7 @@ hubertApp.controller('experimentController', function(
             "populationSize": $scope.populationSize || 128,
             "mutationProbability": $scope.mutationProbability || 1,
             "crossOverProbability": $scope.crossOverProbability || 75,
-            "fitnessFunction": $scope.fitnessFunction,
+            "fitnessFunction": $scope.selectedFitnessFunction || "Unknown",
         };
 
         $modalInstance.close(newExperiment);
