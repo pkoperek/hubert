@@ -6,7 +6,9 @@ import scala.collection.mutable.ArrayBuffer
 
 class LoadedDataSet(val raw: Input, val nameIdx: Map[String, Int]) {
 
-  lazy val differentiated: Input = raw.map(rawValues => differentiate(rawValues))
+  val differentiated: Input = raw.map(rawValues => differentiate(rawValues))
+
+  val size: Int = if (raw.length > 0) raw(0).length else 0
 
   private def differentiate(raw: Array[Double]): Array[Double] = {
     val differentiated = ArrayBuffer[Double]()
@@ -16,24 +18,24 @@ class LoadedDataSet(val raw: Input, val nameIdx: Map[String, Int]) {
 
     differentiated.toArray
   }
-  
+
   def rawByName(name: String): Option[Array[Double]] = {
     val index = nameIdx.get(name)
-    
-    if(index.isDefined) {
-      return Some(raw(index.get)) 
+
+    if (index.isDefined) {
+      return Some(raw(index.get))
     }
-      
+
     None
   }
 
   def differentiatedByName(name: String): Option[Array[Double]] = {
     val index = nameIdx.get(name)
-    
-    if(index.isDefined) {
+
+    if (index.isDefined) {
       return Some(differentiated(index.get))
     }
-      
+
     None
   }
 }

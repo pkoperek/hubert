@@ -1,6 +1,6 @@
 package pl.edu.agh.hubert.fitness
 
-import pl.edu.agh.hubert.Individual
+import pl.edu.agh.hubert.{MathIndividual, Individual}
 import pl.edu.agh.hubert.datasets.CSVLoader
 import pl.edu.agh.hubert.experiments.Experiment
 
@@ -31,9 +31,36 @@ object FitnessFunction {
 class DifferentiationFitnessFunction(val experiment: Experiment) extends FitnessFunction {
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
-  private val pairings = (0 to loadedDataSet.raw.size - 1).combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
+  private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
 
   override def evaluateIndividual(individual: Individual): Double = {
-    1.0 // TODO: implement me
+    evaluateIndividual(individual.asInstanceOf[MathIndividual])
+  }
+
+  private def evaluateIndividual(individual: MathIndividual): Double = {
+    pairings.par.map(pairing => {
+      val x = pairing._1
+      val y = pairing._2
+      val N = loadedDataSet.size
+
+      val dx_sym = individual.differentiatedBy(x).evaluateInput(loadedDataSet.raw)
+      val dy_sym = individual.differentiatedBy(y).evaluateInput(loadedDataSet.raw)
+
+      val dx_num = loadedDataSet.differentiated(x)
+      val dy_num = loadedDataSet.differentiated(y)
+
+      val symbolic = divide(dx_sym, dy_sym)
+      val numerical = divide(dx_num, dy_num)
+
+      minus(numerical, symbolic).par.map(x => Math.log(1 + (if (x > 0) x else -x))).sum / N
+    }).min
+  }
+
+  private def divide(left: Array[Double], right: Array[Double]): Array[Double] = {
+    left.zip(right).map(pair => pair._1 / pair._2)
+  }
+
+  private def minus(left: Array[Double], right: Array[Double]): Array[Double] = {
+    left.zip(right).map(pair => pair._1 - pair._2)
   }
 }
