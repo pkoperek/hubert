@@ -17,7 +17,7 @@ object MutationOperator {
 
   def apply(experiment: Experiment): MutationOperator = {
     experiment.language.name match {
-      case "math" => new MathMutationOperator(
+      case "math" => return new MathMutationOperator(
         experiment.mutationProbability,
         experiment.maxHeight,
         IndividualGenerator(experiment))
