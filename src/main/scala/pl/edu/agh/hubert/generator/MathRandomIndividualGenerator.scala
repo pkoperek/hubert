@@ -11,6 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 
 trait IndividualGenerator {
 
+  def generateGenome(maxHeight: Int): LanguageWord
   def generateIndividual(): Individual
 
 }
@@ -51,7 +52,7 @@ class MathRandomIndividualGenerator(
     classOf[CompositeWord].isAssignableFrom(c)
   }
 
-  private def generateTree(maxHeight: Int): LanguageWord = {
+  def generateGenome(maxHeight: Int): LanguageWord = {
     if (maxHeight == 0)
       return null
 
@@ -78,7 +79,7 @@ class MathRandomIndividualGenerator(
 
     val buffer = ArrayBuffer[LanguageWord]()
     for (parameterNo <- 1 to parametersCount) {
-      buffer += generateTree(maxHeight - 1)
+      buffer += generateGenome(maxHeight - 1)
     }
 
     constructor.newInstance(buffer: _*).asInstanceOf[LanguageWord]
@@ -104,7 +105,7 @@ class MathRandomIndividualGenerator(
   }
 
   def generateIndividual(): Individual = {
-    new MathIndividual(generateTree(maxHeight))
+    new MathIndividual(generateGenome(maxHeight))
   }
 
 }
