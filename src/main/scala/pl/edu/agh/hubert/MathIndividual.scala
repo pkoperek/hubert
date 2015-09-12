@@ -4,11 +4,23 @@ import pl.edu.agh.hubert.languages._
 
 import scala.collection.mutable
 
-class MathIndividual(override val tree: LanguageWord) extends Individual(tree) {
+class MathIndividual(val rawTree: LanguageWord) extends Individual(rawTree) {
 
+  private lazy val simplifiedTree = simplify(rawTree)
   private val differentiatedCache = mutable.Map[Int, LanguageWord]()
 
+  lazy val size = countElements(tree)
+
+  override def tree = simplifiedTree
+
   def differentiatedBy(variable: Int) = differentiatedCache.getOrElseUpdate(variable, simplify(differentiateBy(variable, tree)))
+
+  private def countElements(tree: LanguageWord): Int = {
+    1 + (tree match {
+      case compositeWord: CompositeWord => compositeWord.internalWords.map( word => countElements(word) ).sum
+      case _ => 0
+    })
+  }
 
   private def simplify(word: LanguageWord): LanguageWord = {
     if (word.isInstanceOf[TerminalWord]) {
@@ -126,5 +138,5 @@ class MathIndividual(override val tree: LanguageWord) extends Individual(tree) {
   override def toString: String = {
     "Individual: " + tree
   }
-  
+
 }
