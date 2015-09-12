@@ -3,15 +3,16 @@ package pl.edu.agh.hubert
 import pl.edu.agh.hubert.hubert.Input
 import pl.edu.agh.hubert.languages._
 
-class Individual(val tree: LanguageWord) {
+class Individual(val rawTree: LanguageWord) {
 
   def evaluate(input: Input): Array[Double] = {
-    tree.evaluateInput(input)
+    rawTree.evaluateInput(input)
   }
 }
 
 case class EvaluatedIndividual(individual: Individual, fitness: Double) {
-  def tree = individual.tree
+  
+  def rawTree = individual.rawTree
 
 }
 

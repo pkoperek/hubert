@@ -13,38 +13,38 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
   test("should create Variable with random variable name") {
     val individual = generateIndividualOfHeight(1, language = variableLanguage)
 
-    assert(individual.tree.isInstanceOf[Variable])
-    assert(individual.tree.asInstanceOf[Variable].id == 0)
+    assert(individual.rawTree.isInstanceOf[Variable])
+    assert(individual.rawTree.asInstanceOf[Variable].id == 0)
   }
 
   test("should create Constant with random value") {
     val individual = generateIndividualOfHeight(1, language = constantLanguage)
 
-    assert(individual.tree.isInstanceOf[Constant])
-    assert(individual.tree.asInstanceOf[Constant].value <= 1.0)
-    assert(individual.tree.asInstanceOf[Constant].value >= 0.0)
+    assert(individual.rawTree.isInstanceOf[Constant])
+    assert(individual.rawTree.asInstanceOf[Constant].value <= 1.0)
+    assert(individual.rawTree.asInstanceOf[Constant].value >= 0.0)
   }
 
   test("should create individual with tree of height 0") {
     val individual = generateIndividualOfHeight(0)
-    assert(individual.tree == null)
+    assert(individual.rawTree == null)
   }
 
   test("should create individual with tree of height 1") {
     val individual = generateIndividualOfHeight(1)
-    assert(individual.tree != null)
+    assert(individual.rawTree != null)
   }
 
   test("should create individual with tree of height 1 and with Terminal at top") {
     val individual = generateIndividualOfHeight(1)
-    assert(individual.tree != null)
-    assert(individual.tree.isInstanceOf[TerminalWord])
+    assert(individual.rawTree != null)
+    assert(individual.rawTree.isInstanceOf[TerminalWord])
   }
 
   test("should use random number generator to choose word") {
     val individual = generateIndividualOfHeight(1, _ => 1)
-    assert(individual.tree != null)
-    assert(individual.tree.isInstanceOf[OtherDummyTerminalWord])
+    assert(individual.rawTree != null)
+    assert(individual.rawTree.isInstanceOf[OtherDummyTerminalWord])
   }
 
   test("should create two level tree") {
@@ -62,16 +62,16 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
     }
 
     val individual = generateIndividualOfHeight(2, random)
-    assert(individual.tree != null)
-    assert(individual.tree.isInstanceOf[DummyCompositeWord])
-    val root = individual.tree.asInstanceOf[CompositeWord]
+    assert(individual.rawTree != null)
+    assert(individual.rawTree.isInstanceOf[DummyCompositeWord])
+    val root = individual.rawTree.asInstanceOf[CompositeWord]
     assert(root.internalWords(0).isInstanceOf[DummyTerminalWord])
     assert(root.internalWords(1).isInstanceOf[OtherDummyTerminalWord])
   }
 
   test("should create a tree with height 5") {
     val individual = generateIndividualOfHeight(5, _ => 0)
-    assert(height(individual.tree) == 5)
+    assert(height(individual.rawTree) == 5)
   }
 
   private def generateIndividualOfHeight(

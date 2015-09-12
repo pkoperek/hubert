@@ -4,14 +4,13 @@ import pl.edu.agh.hubert.languages._
 
 import scala.collection.mutable
 
-class MathIndividual(val rawTree: LanguageWord) extends Individual(rawTree) {
+class MathIndividual(override val rawTree: LanguageWord) extends Individual(rawTree) {
 
-  private lazy val simplifiedTree = simplify(rawTree)
   private val differentiatedCache = mutable.Map[Int, LanguageWord]()
 
   lazy val size = countElements(tree)
 
-  override def tree = simplifiedTree
+  lazy val tree = simplify(rawTree)
 
   def differentiatedBy(variable: Int) = differentiatedCache.getOrElseUpdate(variable, simplify(differentiateBy(variable, tree)))
 
@@ -31,11 +30,13 @@ class MathIndividual(val rawTree: LanguageWord) extends Individual(rawTree) {
       case sin: Sin =>
         simplify(sin.internalWord) match {
           case constant: Constant => return new Constant(Math.sin(constant.value))
+          case word: LanguageWord => return sin
         }
 
       case cos: Cos =>
         simplify(cos.internalWord) match {
           case constant: Constant => return new Constant(Math.cos(constant.value))
+          case word: LanguageWord => return cos
         }
 
       case plus: Plus =>

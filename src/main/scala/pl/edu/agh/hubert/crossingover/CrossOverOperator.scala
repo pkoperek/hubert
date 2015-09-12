@@ -46,6 +46,8 @@ class MathCrossOverOperator(crossOverProbability: Double) extends CrossOverOpera
 
       (new MathIndividual(leftCrossed), new MathIndividual(rightCrossed))
     }
+
+    (left, right)
   }
 
   private def findSubtreeToCut(

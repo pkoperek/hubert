@@ -25,7 +25,7 @@ class DeterministicCrowdingEvolutionEngineTest extends FunSuite {
     try {
       new DeterministicCrowdingEvolutionEngine(experiment).evolve()
     } catch {
-      case e: Throwable => fail("Exception thrown! " + e)
+      case e: Throwable => fail("Exception thrown! ", e)
     }
   }
 

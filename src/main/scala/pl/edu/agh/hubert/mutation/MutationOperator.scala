@@ -35,7 +35,8 @@ class MathMutationOperator(
                             ) extends MutationOperator {
 
   override def mutate(individual: Individual): Individual = {
-    new MathIndividual(mutate(individual.tree, 0))
+    val mathIndividual = individual.asInstanceOf[MathIndividual]
+    new MathIndividual(mutate(mathIndividual.tree, 0))
   }
 
   private def mutate(root: LanguageWord, depth: Int): LanguageWord = {
