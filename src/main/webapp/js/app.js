@@ -94,20 +94,23 @@ hubertApp.controller('experimentController', function(
     datasets
 ) {
 
+    $scope.fitnessFunctions = configuration.fitnessFunctions;
+    $scope.datasets = datasets;
+    $scope.languages = configuration.languages;
+
     $scope.title = title;
     $scope.configuration = configuration;
     $scope.experimentName = experiment.name;
     $scope.description = experiment.description;
     $scope.iterations = experiment.iterations;
-    $scope.selectedLanguage = experiment.language;
-    $scope.selectedDataSet = experiment.dataset;
-    $scope.selectedFitnessFunction = experiment.fitnessFunction;
     $scope.maxHeight = experiment.maxHeight;
-    $scope.datasets = datasets;
     $scope.populationSize = experiment.populationSize;
     $scope.mutationProbability = experiment.mutationProbability;
     $scope.crossOverProbability = experiment.crossOverProbability;
-    $scope.fitnessFunctions = configuration.fitnessFunctions;
+
+    $scope.selectedLanguage = experiment.language || $scope.languages[0];
+    $scope.selectedDataSet = experiment.dataset || $scope.datasets[0];
+    $scope.selectedFitnessFunction = experiment.fitnessFunction || $scope.fitnessFunctions[0];
 
     $scope.loadVariables = function() {
         $log.info("Loading variables: " + $scope.selectedDataSet.variables);
@@ -157,7 +160,7 @@ hubertApp.controller('experimentController', function(
             },
             "maxHeight": $scope.maxHeight || 7,
             "populationSize": $scope.populationSize || 128,
-            "mutationProbability": $scope.mutationProbability || 1,
+            "mutationProbability": $scope.mutationProbability || 0.01,
             "crossOverProbability": $scope.crossOverProbability || 75,
             "fitnessFunction": $scope.selectedFitnessFunction || "Unknown",
         };

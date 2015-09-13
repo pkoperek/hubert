@@ -27,7 +27,7 @@
                 <select id="language"
                         class="form-control"
                         ng-model="selectedLanguage"
-                        ng-options="language.name for language in configuration.languages">
+                        ng-options="language.name for language in languages">
                 </select>
             </div>
         </div>
@@ -106,7 +106,7 @@
             <label for="mutationProbability" class="col-sm-2 control-label">Mutation probability</label>
 
             <div class="col-sm-10">
-                <input type="number" class="form-control" ng-model="mutationProbability" name="mutationProbability" placeholder="1">
+                <input type="number" min="0" max="1" step="0.01" class="form-control" ng-model="mutationProbability" name="mutationProbability" placeholder="0.01">
             </div>
         </div>
 
