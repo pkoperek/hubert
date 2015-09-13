@@ -25,13 +25,32 @@ var openModal = function(modal, modalToOpen, successCallback, failureCallback, t
     modalInstance.result.then(successCallback, failureCallback);
 };
 
-hubertApp.filter('statusPrettyPrint', function() {
+hubertApp.filter('progressBarClass', function() {
     return function(input) {
         if(input.status === "Running") {
-            return input.currentIteration + "/" + input.experiment.iterations
+            return "progress-striped active"
         }
         
-        return input.status;
+        return "progress";
+    };
+});
+
+hubertApp.filter('type', function() {
+    return function(task) {
+        if(task.status === "Running") {
+            return "info"
+        }
+        if(task.status === "Finished") {
+            return "success"
+        }
+        if(task.status === "Failed") {
+            return "danger"
+        }
+        if(task.status === "Running") {
+            return "info"
+        }
+
+        return "warn";
     };
 });
 

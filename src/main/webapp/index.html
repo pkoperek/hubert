@@ -67,7 +67,7 @@
                     <tr>
                         <th>id</th>
                         <th>Name</th>
-                        <th>Iterations</th>
+                        <th>Description</th>
                         <th>Progress</th>
                     </tr>
                     </thead>
@@ -76,7 +76,16 @@
                         <td>{{task.experiment.id}}</td>
                         <td>{{task.experiment.name}}</td>
                         <td>{{task.experiment.description}}</td>
-                        <td>{{task | statusPrettyPrint }}</td>
+                        <td>
+                            <progressbar
+                                    class="{{task | progressBarClass}}"
+                                    animate="true"
+                                    max="task.experiment.iterations"
+                                    value="task.currentIteration"
+                                    type="{{task | type}}">
+                                <span style="color:white; white-space:nowrap;">{{task.currentIteration}} / {{task.experiment.iterations}}</span>
+                            </progressbar>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
