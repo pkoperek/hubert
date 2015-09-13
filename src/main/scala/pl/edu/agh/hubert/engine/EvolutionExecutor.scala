@@ -28,12 +28,12 @@ class EvolutionExecutor(
   }
 
   logger.info("Executor initialized")
-  
+
   def addTask(task: EvolutionTask) = {
     task.status = ExperimentStatus.Queued
     queue.add(task)
   }
-  
+
   def stop() = {
     running.set(false)
   }
@@ -47,29 +47,39 @@ class EvolutionExecutor(
 
       while (running.get()) {
         val task = queue.poll(waitTime, TimeUnit.MILLISECONDS)
-        
+
         if (task != null) {
           debug("Executing: " + task.evolutionEngine.experiment.name)
           task.status = ExperimentStatus.Running
-          
-          breakable {
-            for (iteration <- 1 to task.iterations) {
-              if (Thread.currentThread().isInterrupted) {
-                debug("Breaking the loop")
-                task.status = ExperimentStatus.Stopped
-                break()
-              }
-
-              task.currentIteration = iteration
-              task.evolutionEngine.evolve()
+          try {
+            executeTask(task)
+          } catch {
+            case t: Throwable => {
+              task.status = ExperimentStatus.Failed
+              logger.warn("Task failed: " + task)
             }
-            
-            task.status = ExperimentStatus.Finished
           }
         }
       }
-      
+
       debug("Stopping")
+    }
+
+    private def executeTask(task: EvolutionTask): Unit = {
+      breakable {
+        for (iteration <- 1 to task.iterations) {
+          if (Thread.currentThread().isInterrupted) {
+            debug("Breaking the loop")
+            task.status = ExperimentStatus.Stopped
+            break()
+          }
+
+          task.currentIteration = iteration
+          task.evolutionEngine.evolve()
+        }
+
+        task.status = ExperimentStatus.Finished
+      }
     }
 
     private def debug(text: String): Unit = {
