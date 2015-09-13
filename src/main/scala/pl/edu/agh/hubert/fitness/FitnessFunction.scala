@@ -52,7 +52,8 @@ class DifferentiationFitnessFunction(val experiment: Experiment) extends Fitness
       val symbolic = divide(dx_sym, dy_sym)
       val numerical = divide(dx_num, dy_num)
 
-      minus(numerical, symbolic).par.map(x => Math.log(1 + (if (x > 0) x else -x))).sum / N
+      // -N - the same as multiplyiing by -1 at the beginning
+      minus(numerical, symbolic).par.map(x => Math.log(1 + (if (x > 0) x else -x))).sum / -N
     }).min
   }
 
