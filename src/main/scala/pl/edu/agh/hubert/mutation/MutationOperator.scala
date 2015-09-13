@@ -45,14 +45,13 @@ class MathMutationOperator(
     } else {
 
       root match {
-        case plus: Plus => return new Plus(mutate(plus.leftWord, depth + 1), mutate(plus.rightWord, depth + 1))
-        case minus: Minus => return new Plus(mutate(minus.leftWord, depth + 1), mutate(minus.rightWord, depth + 1))
-        case mul: Mul => return new Plus(mutate(mul.leftWord, depth + 1), mutate(mul.rightWord, depth + 1))
-        case sin: Sin => return new Sin(mutate(sin.internalWord, depth + 1))
-        case cos: Cos => return new Cos(mutate(cos.internalWord, depth + 1))
+        case plus: Plus => new Plus(mutate(plus.leftWord, depth + 1), mutate(plus.rightWord, depth + 1))
+        case minus: Minus => new Plus(mutate(minus.leftWord, depth + 1), mutate(minus.rightWord, depth + 1))
+        case mul: Mul => new Plus(mutate(mul.leftWord, depth + 1), mutate(mul.rightWord, depth + 1))
+        case sin: Sin => new Sin(mutate(sin.internalWord, depth + 1))
+        case cos: Cos => new Cos(mutate(cos.internalWord, depth + 1))
+        case word: LanguageWord => word
       }
-
-      root
     }
   }
 }
