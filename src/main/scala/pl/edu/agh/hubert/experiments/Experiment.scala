@@ -15,8 +15,8 @@ final case class Experiment(
                              dataSet: DataSet,
                              maxHeight: Int = 7,
                              populationSize: Int = 128,
-                             mutationProbability: Int = 1,
-                             crossOverProbability: Int = 75,
+                             mutationProbability: Double = 0.01,
+                             crossOverProbability: Double = 0.75,
                              fitnessFunction: String
                              ) {
 
