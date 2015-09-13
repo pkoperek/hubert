@@ -56,7 +56,7 @@ class EvolutionExecutor(
           } catch {
             case t: Throwable => {
               task.status = ExperimentStatus.Failed
-              logger.warn("Task failed: " + task)
+              logger.warn("Task failed: " + task, t)
             }
           }
         }
