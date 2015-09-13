@@ -4,7 +4,7 @@ import pl.edu.agh.hubert.hubert.Input
 
 class Constant(val value: Double) extends TerminalWord() {
   override def evaluateInput(input: Input): Array[Double] = {
-    Array.fill[Double](input.length)(value)
+    Array.fill[Double](input(0).length)(value)
   }
 
   override def toString: String = value.toString
@@ -43,7 +43,7 @@ class Plus(val leftWord: LanguageWord, val rightWord: LanguageWord) extends Comp
     val left = leftWord.evaluateInput(input)
     val right = rightWord.evaluateInput(input)
 
-    left.zip(right).map(pair => pair._1 + pair._2).toArray
+    left.zip(right).map(pair => pair._1 + pair._2)
   }
 
   override def toString: String = "(" + leftWord + " + " + rightWord + ")"
@@ -54,7 +54,7 @@ class Minus(val leftWord: LanguageWord, val rightWord: LanguageWord) extends Com
     val left = leftWord.evaluateInput(input)
     val right = rightWord.evaluateInput(input)
 
-    left.zip(right).map(pair => pair._1 - pair._2).toArray
+    left.zip(right).map(pair => pair._1 - pair._2)
   }
 
   override def toString: String = "(" + leftWord + " - " + rightWord + ")"
@@ -65,7 +65,7 @@ class Mul(val leftWord: LanguageWord, val rightWord: LanguageWord) extends Compo
     val left = leftWord.evaluateInput(input)
     val right = rightWord.evaluateInput(input)
 
-    left.zip(right).map(pair => pair._1 * pair._2).toArray
+    left.zip(right).map(pair => pair._1 * pair._2)
   }
 
   override def toString: String = "(" + leftWord + " * " + rightWord + ")"
