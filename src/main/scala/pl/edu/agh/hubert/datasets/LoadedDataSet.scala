@@ -10,10 +10,10 @@ class LoadedDataSet(val raw: Input, val nameIdx: Map[String, Int]) {
 
   val size: Int = if (raw.length > 0) raw(0).length else 0
 
-  private def differentiate(raw: Array[Double]): Array[Double] = {
+  private def differentiate(serie: Array[Double]): Array[Double] = {
     val differentiated = ArrayBuffer[Double]()
-    for (idx <- 1 to raw.length - 1) {
-      differentiated += raw(idx) - raw(idx - 1)
+    for (idx <- 1 to serie.length - 1) {
+      differentiated += serie(idx) - serie(idx - 1)
     }
 
     differentiated.toArray
