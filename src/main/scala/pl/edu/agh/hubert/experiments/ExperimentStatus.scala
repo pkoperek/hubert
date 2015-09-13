@@ -7,4 +7,5 @@ object ExperimentStatus extends Enumeration {
   val Paused = Value
   val Finished = Value
   val Stopped = Value
+  val Failed = Value
 }
