@@ -10,10 +10,8 @@ class Individual(val rawTree: LanguageWord) {
   }
 }
 
-case class EvaluatedIndividual(individual: Individual, fitness: Double) {
-  
+case class EvaluatedIndividual(individual: Individual, fitness: Option[Double]) {
   def rawTree = individual.rawTree
-
 }
 
 package object hubert {

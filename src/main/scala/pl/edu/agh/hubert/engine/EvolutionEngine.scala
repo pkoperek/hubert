@@ -9,6 +9,7 @@ import pl.edu.agh.hubert.experiments.Experiment
 import pl.edu.agh.hubert.fitness.FitnessFunction
 import pl.edu.agh.hubert.generator.IndividualGenerator
 
+import scala.collection.mutable
 import scala.util.Random
 
 trait EvolutionEngine {
@@ -58,7 +59,9 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
                   groupedParents: Array[(EvaluatedIndividual, EvaluatedIndividual)],
                   mutatedChildren: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[EvaluatedIndividual] = {
     groupedParents.zip(mutatedChildren).flatMap(p => {
-      Array(p._1._1, p._1._2, p._2._1, p._2._2).sortBy(_.fitness).slice(0, 2)
+      val slice = Array(p._1._1, p._1._2, p._2._1, p._2._2).sortBy(-_.fitness).slice(0, 2)
+      logger.debug("Selected individuals: " + slice.mkString(","))
+      slice
     })
   }
 
@@ -75,8 +78,6 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
     val evaluatedChildren = evaluateFitness(mutatedChildren)
 
     population = tournament(groupedParents, evaluatedChildren)
-
-    population.foreach( i => logger.debug("Individual: " + i.fitness + " > " + i ))
   }
 
 }
