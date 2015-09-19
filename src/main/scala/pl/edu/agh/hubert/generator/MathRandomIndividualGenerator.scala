@@ -8,6 +8,7 @@ import pl.edu.agh.hubert.languages._
 import pl.edu.agh.hubert.{Individual, MathIndividual}
 
 import scala.collection.mutable.ArrayBuffer
+import scala.util.Random
 
 trait IndividualGenerator {
 
@@ -18,14 +19,12 @@ trait IndividualGenerator {
 
 object IndividualGenerator {
 
-  private def randomWithMax(x: Int): Int = (Math.random() * (x - 1)).toInt
-
   def apply(experiment: Experiment): IndividualGenerator = {
     experiment.language.name match {
       case "math" => return new MathRandomIndividualGenerator(
         experiment.language.words.toArray,
         experiment.maxHeight, 
-        randomWithMax, 
+        new Random(),
         experiment.dataSet.variables.size
       )
     }
@@ -38,7 +37,7 @@ object IndividualGenerator {
 class MathRandomIndividualGenerator(
                            val words: Array[Class[_]],
                            val maxHeight: Int,
-                           val random: (Int) => Int, 
+                           val random: Random,
                            val variablesIdsNo: Int
                            ) extends IndividualGenerator {
 
@@ -98,7 +97,7 @@ class MathRandomIndividualGenerator(
     word.newInstance().asInstanceOf[LanguageWord]
   }
 
-  private def randomElement[ElementType](array: Array[ElementType]): ElementType = array(random(array.length))
+  private def randomElement[ElementType](array: Array[ElementType]): ElementType = array(random.nextInt(array.length))
 
   private def firstConstructor(word: Class[_]): Constructor[_] = {
     word.getConstructors()(0)

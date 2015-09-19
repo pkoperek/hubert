@@ -4,6 +4,8 @@ import org.scalatest.FunSuite
 import pl.edu.agh.hubert._
 import pl.edu.agh.hubert.languages._
 
+import scala.util.Random
+
 class MathRandomIndividualGeneratorTest extends FunSuite {
 
   val dummyLanguage = DummyLanguage.dummyLanguage()
@@ -42,26 +44,14 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
   }
 
   test("should use random number generator to choose word") {
-    val individual = generateIndividualOfHeight(1, _ => 1)
+    val individual = generateIndividualOfHeight(1, new ConstRandom(Array.fill[Int](1)(1)))
     assert(individual.rawTree != null)
     assert(individual.rawTree.isInstanceOf[OtherDummyTerminalWord])
   }
 
   test("should create two level tree") {
-    var execution = 0
-    val random: (Int) => Int = max => {
-      var retVal = 1
-      if (execution == 0) {
-        retVal = 0
-      } else if (execution == 1) {
-        retVal = 0
-      }
+    val individual = generateIndividualOfHeight(2, new ConstRandom(Array(0,0,1)))
 
-      execution += 1
-      retVal
-    }
-
-    val individual = generateIndividualOfHeight(2, random)
     assert(individual.rawTree != null)
     assert(individual.rawTree.isInstanceOf[DummyCompositeWord])
     val root = individual.rawTree.asInstanceOf[CompositeWord]
@@ -70,13 +60,13 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
   }
 
   test("should create a tree with height 5") {
-    val individual = generateIndividualOfHeight(5, _ => 0)
+    val individual = generateIndividualOfHeight(5)
     assert(height(individual.rawTree) == 5)
   }
 
   private def generateIndividualOfHeight(
                                           maxHeight: Int = 0,
-                                          random: (Int) => Int = _ => 0,
+                                          random: Random = new ConstRandom(),
                                           language: Array[Class[_]] = dummyLanguage.words.toArray,
                                           variables: Array[String] = Array[String]("varA")
                                           ): Individual = {
@@ -100,5 +90,14 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
 
     1
   }
-}
 
+  private class ConstRandom(val values: Array[Int] = Array.fill[Int](1)(0)) extends Random {
+    var execution:Int = 0
+    override def nextInt(n: Int): Int = {
+      val retVal = values(execution % values.length)
+      execution += 1
+      retVal
+    }
+  }
+
+}
