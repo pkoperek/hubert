@@ -26,11 +26,28 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
   private val fitnessFunction = FitnessFunction(experiment)
   private val crossOverOperator = CrossOverOperator(experiment)
   private val mutationOperator = MutationOperator(experiment)
-  private var population = generateInitialPopulation(experiment.populationSize)
+  private var population = Array[EvaluatedIndividual]()
 
-  private def generateInitialPopulation(size: Int): Array[EvaluatedIndividual] = {
-    logger.info("Generating: " + size + " random individuals")
-    evaluateFitness((1 to size).map(_ => individualGenerator.generateIndividual()).toArray)
+  def evolve() = {
+    logger.debug("Evolution iteration")
+
+    population ++= missingIndividuals
+
+    val groupedParents = groupedIntoPairs(population)
+    val children = crossOverInPairs(groupedParents)
+    val mutatedChildren = mutate(children)
+    val evaluatedChildren = evaluateFitness(mutatedChildren)
+
+    population = tournament(groupedParents, evaluatedChildren)
+  }
+
+  private def missingIndividuals: Array[EvaluatedIndividual] = {
+    generateRandomIndividuals(experiment.populationSize - population.length)
+  }
+
+  private def generateRandomIndividuals(targetSize: Int): Array[EvaluatedIndividual] = {
+    logger.info("Generating: " + targetSize + " random individuals")
+    evaluateFitness((1 to targetSize).map(_ => individualGenerator.generateIndividual()).toArray)
   }
 
   private def evaluateFitness(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
@@ -47,7 +64,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
     toMutate.map(pair => (mutationOperator.mutate(pair._1), mutationOperator.mutate(pair._2)))
   }
 
-  private def groupIntoPairs(toGroup: Array[EvaluatedIndividual]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
+  private def groupedIntoPairs(toGroup: Array[EvaluatedIndividual]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
     Random.shuffle(toGroup.toIterator).grouped(2).map(array => (array.head, array(1))).toArray
   }
 
@@ -55,31 +72,19 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
     parentsPairs.map(parents => crossOverOperator.crossOver(parents._1.individual, parents._2.individual))
   }
 
-  def tournament(
-                  groupedParents: Array[(EvaluatedIndividual, EvaluatedIndividual)],
-                  mutatedChildren: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[EvaluatedIndividual] = {
+  private def tournament(
+                          groupedParents: Array[(EvaluatedIndividual, EvaluatedIndividual)],
+                          mutatedChildren: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[EvaluatedIndividual] = {
     groupedParents.zip(mutatedChildren).flatMap(p => {
-      val slice = Array(p._1._1, p._1._2, p._2._1, p._2._2).sortBy(-_.fitness).slice(0, 2)
+      val slice = Array(p._1._1, p._1._2, p._2._1, p._2._2).filter( i => i.isValid ).sortBy(-_.fitnessValue).slice(0, 2)
       logger.debug("Selected individuals: " + slice.mkString(","))
       slice
     })
   }
 
-  def evaluateFitness(toEvaluate: Array[(Individual, Individual)]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
+  private def evaluateFitness(toEvaluate: Array[(Individual, Individual)]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
     toEvaluate.map(siblings => (evaluateFitness(siblings._1), evaluateFitness(siblings._2)))
   }
-
-  def evolve() = {
-    logger.debug("Evolution iteration")
-
-    val groupedParents = groupIntoPairs(population)
-    val children = crossOverInPairs(groupedParents)
-    val mutatedChildren = mutate(children)
-    val evaluatedChildren = evaluateFitness(mutatedChildren)
-
-    population = tournament(groupedParents, evaluatedChildren)
-  }
-
 }
 
 object EvolutionEngine {

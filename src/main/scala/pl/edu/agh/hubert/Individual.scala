@@ -12,6 +12,10 @@ class Individual(val rawTree: LanguageWord) {
 
 case class EvaluatedIndividual(individual: Individual, fitness: Option[Double]) {
   def rawTree = individual.rawTree
+
+  val isValid = fitness.isDefined
+
+  val fitnessValue = fitness.getOrElse(Double.NaN)
 }
 
 package object hubert {
