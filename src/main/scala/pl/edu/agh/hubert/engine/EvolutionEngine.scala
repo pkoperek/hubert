@@ -40,7 +40,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
 
     population = tournament(groupedParents, evaluatedChildren)
 
-    val result = if (population.nonEmpty) population.maxBy(_.fitnessValue) else "None!"
+    val result = if (population.nonEmpty) population.minBy(_.fitnessValue) else "None!"
     logger.debug("Final fitness: " + result)
   }
 
