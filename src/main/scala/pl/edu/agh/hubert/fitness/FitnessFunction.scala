@@ -39,8 +39,6 @@ class DifferentiationFitnessFunction(val experiment: Experiment) extends Fitness
     evaluateIndividual(individual.asInstanceOf[MathIndividual])
   }
 
-  private val logger = LoggerFactory.getLogger(getClass)
-
   private def evaluateIndividual(individual: MathIndividual): Option[Double] = {
 
     val pairingErrors = pairings.par.map(pairing => {
@@ -49,22 +47,14 @@ class DifferentiationFitnessFunction(val experiment: Experiment) extends Fitness
 
       val N = loadedDataSet.size
 
-      //      logger.debug("N: " + N)
-      logger.debug("Raw input: " + loadedDataSet.raw.map(a => a.mkString(",")).mkString(" | "))
-      logger.debug("Raw input: " + loadedDataSet.nameIdx.mkString(","))
-
       val dx: LanguageWord = individual.differentiatedBy(x)
       val dy: LanguageWord = individual.differentiatedBy(y)
 
       val dx_sym = dx.evaluateInput(loadedDataSet.raw)
       val dy_sym = dy.evaluateInput(loadedDataSet.raw)
 
-      logger.debug("Symbolically: " + dy_sym.mkString(","))
-
       val dx_num = loadedDataSet.differentiated(x)
       val dy_num = loadedDataSet.differentiated(y)
-
-      logger.debug("Numerically: " + dy_num.mkString(","))
 
       val filtered = dx_sym.zip(dy_sym).zip(dx_num).zip(dy_num)
         .filter(r => r._1._1._2 > 0 && r._2 > 0)
@@ -84,9 +74,9 @@ class DifferentiationFitnessFunction(val experiment: Experiment) extends Fitness
     })
       .seq
       .filter(o => o.isDefined)
-      .map( o => o.get )
+      .map(o => o.get)
 
-    if(pairingErrors.nonEmpty) {
+    if (pairingErrors.nonEmpty) {
       Some(pairingErrors.min)
     } else {
       None
