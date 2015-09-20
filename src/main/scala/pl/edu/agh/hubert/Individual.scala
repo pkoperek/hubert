@@ -15,7 +15,7 @@ case class EvaluatedIndividual(individual: Individual, fitness: Option[Double]) 
 
   val isValid = fitness.isDefined
 
-  val fitnessValue = fitness.getOrElse(Double.NaN)
+  val fitnessValue = fitness.getOrElse(Double.PositiveInfinity)
 }
 
 package object hubert {
