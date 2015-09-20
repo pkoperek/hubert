@@ -39,10 +39,18 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
     val evaluatedChildren = evaluateFitness(mutatedChildren)
 
     population = tournament(groupedParents, evaluatedChildren)
+
+    val result = if (population.nonEmpty) population.maxBy(_.fitnessValue) else "None!"
+    logger.debug("Final fitness: " + result)
   }
 
   private def missingIndividuals: Array[EvaluatedIndividual] = {
-    generateRandomIndividuals(experiment.populationSize - population.length)
+    val missingIndividualsNo = experiment.populationSize - population.length
+    if(missingIndividualsNo > 0) {
+      return generateRandomIndividuals(missingIndividualsNo)
+    }
+
+    Array.empty[EvaluatedIndividual]
   }
 
   private def generateRandomIndividuals(targetSize: Int): Array[EvaluatedIndividual] = {
@@ -76,9 +84,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
                           groupedParents: Array[(EvaluatedIndividual, EvaluatedIndividual)],
                           mutatedChildren: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[EvaluatedIndividual] = {
     groupedParents.zip(mutatedChildren).flatMap(p => {
-      val slice = Array(p._1._1, p._1._2, p._2._1, p._2._2).filter( i => i.isValid ).sortBy(-_.fitnessValue).slice(0, 2)
-      logger.debug("Selected individuals: " + slice.mkString(","))
-      slice
+      Array(p._1._1, p._1._2, p._2._1, p._2._2).filter(i => i.isValid).sortBy(-_.fitnessValue).slice(0, 2)
     })
   }
 
