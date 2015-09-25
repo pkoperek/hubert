@@ -126,6 +126,7 @@ hubertApp.controller('experimentController', function(
     $scope.populationSize = experiment.populationSize;
     $scope.mutationProbability = experiment.mutationProbability;
     $scope.crossOverProbability = experiment.crossOverProbability;
+    $scope.targetFitness = experiment.targetFitness;
 
     $scope.selectedLanguage = experiment.language || $scope.languages[0];
     $scope.selectedDataSet = experiment.dataset || $scope.datasets[0];
@@ -182,6 +183,7 @@ hubertApp.controller('experimentController', function(
             "mutationProbability": $scope.mutationProbability || 0.01,
             "crossOverProbability": $scope.crossOverProbability || 75,
             "fitnessFunction": $scope.selectedFitnessFunction || "Unknown",
+            "targetFitness": $scope.targetFitness || 0.0000001
         };
 
         $modalInstance.close(newExperiment);
