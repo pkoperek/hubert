@@ -1,14 +1,25 @@
 package pl.edu.agh.hubert.fitness
 
-import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.languages.LanguageWord
-import pl.edu.agh.hubert.{MathIndividual, Individual}
-import pl.edu.agh.hubert.datasets.CSVLoader
 import pl.edu.agh.hubert.experiments.Experiment
+import pl.edu.agh.hubert.{EvaluatedIndividual, Individual}
 
 trait FitnessFunction {
 
-  def evaluateIndividual(individual: Individual): Option[Double]
+  def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
+    toEvaluate.map(individual => evaluateIndividual(individual))
+  }
+
+  def evaluatePopulation(toEvaluate: Array[(Individual, Individual)]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
+    toEvaluate.map(siblings => (evaluateIndividual(siblings._1), evaluateIndividual(siblings._2)))
+  }
+
+  protected def evaluateIndividual(individual: Individual): EvaluatedIndividual =
+    new EvaluatedIndividual(
+      individual,
+      evaluateFitness(individual)
+    )
+
+  protected def evaluateFitness(individual: Individual): Option[Double]
 
 }
 

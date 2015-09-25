@@ -1,15 +1,14 @@
 package pl.edu.agh.hubert.fitness
 
-import pl.edu.agh.hubert.Individual
+import pl.edu.agh.hubert.{EvaluatedIndividual, Individual}
 import pl.edu.agh.hubert.datasets.CSVLoader
-import pl.edu.agh.hubert.engine.PopulationRepository
 import pl.edu.agh.hubert.experiments.Experiment
 import pl.edu.agh.hubert.hubert.Input
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-class CoevolutionFitnessFunction(val experiment: Experiment, val populationProvider: PopulationRepository) extends FitnessFunction {
+class CoevolutionFitnessFunction(val experiment: Experiment) extends FitnessFunction {
 
   type FitnessPredictor = Input
 
@@ -20,7 +19,11 @@ class CoevolutionFitnessFunction(val experiment: Experiment, val populationProvi
   private val crossOverProbability = 0.75
   private val dataSetSize = loadedDataSet.size
 
-  override def evaluateIndividual(individual: Individual): Option[Double] = {
+  override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
+    Array[EvaluatedIndividual]()
+  }
+
+  override protected def evaluateFitness(individual: Individual): Option[Double] = {
     None
   }
 
@@ -46,6 +49,7 @@ class CoevolutionFitnessFunction(val experiment: Experiment, val populationProvi
   }
 
   private class MutationOperator {
+
     def mutate(fitnessPredictor: FitnessPredictor): FitnessPredictor = {
       if(Random.nextDouble() < mutationProbability) {
         val pointToChange = Random.nextInt(fitnessPredictorSize)
@@ -58,6 +62,7 @@ class CoevolutionFitnessFunction(val experiment: Experiment, val populationProvi
 
       fitnessPredictor
     }
+
   }
 
   private class CrossOverOperator {
