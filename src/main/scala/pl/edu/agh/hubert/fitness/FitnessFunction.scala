@@ -36,8 +36,8 @@ object FitnessFunction {
       return new DifferentiationFitnessFunction(experiment)
     }
 
-    if(classOf[CoevolutionFitnessFunctionProxy].getName == experiment.fitnessFunction) {
-      return new CoevolutionFitnessFunctionProxy(experiment)
+    if(classOf[CoevolutionWithDifferentiationFitnessFunction].getName == experiment.fitnessFunction) {
+      return new CoevolutionWithDifferentiationFitnessFunction(experiment)
     }
 
     throw new IllegalArgumentException("Unknown fitness function: " + experiment.fitnessFunction)
