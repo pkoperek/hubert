@@ -19,7 +19,7 @@ trait FitnessFunction {
       evaluateFitness(individual)
     )
 
-  protected def evaluateFitness(individual: Individual): Option[Double]
+  protected def evaluateFitness(individual: Individual): Option[Double] = None
 
 }
 
@@ -34,6 +34,10 @@ object FitnessFunction {
   def apply(experiment: Experiment): FitnessFunction = {
     if (classOf[DifferentiationFitnessFunction].getName == experiment.fitnessFunction) {
       return new DifferentiationFitnessFunction(experiment)
+    }
+
+    if(classOf[CoevolutionFitnessFunctionProxy].getName == experiment.fitnessFunction) {
+      return new CoevolutionFitnessFunctionProxy(experiment)
     }
 
     throw new IllegalArgumentException("Unknown fitness function: " + experiment.fitnessFunction)
