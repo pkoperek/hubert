@@ -10,7 +10,7 @@ class DifferentiationFitnessFunction(val experiment: Experiment) extends Fitness
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
 
-  def evaluateFitness(individual: Individual): Option[Double] = {
+  override def evaluateFitness(individual: Individual): Option[Double] = {
     evaluateFitness(individual.asInstanceOf[MathIndividual])
   }
 
