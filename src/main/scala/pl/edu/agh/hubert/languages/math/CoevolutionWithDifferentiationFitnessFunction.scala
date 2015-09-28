@@ -27,22 +27,36 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
     evaluateFitnessPredictors(fitnessPredictorPopulation)
 
-    // select trainers
     Array[EvaluatedIndividual]()
   }
 
-  private def evaluateFitnessPredictors(predictors: Array[FitnessPredictor]): Option[Double] = {
-//    predictors.map(predictor => evaluateFitnessPredictor(predictor))
-    None
+  private def evaluateFitnessPredictors(predictors: Array[FitnessPredictor]): Array[Option[Double]] = {
+    predictors.map(predictor => evaluateFitnessPredictor(predictor))
   }
 
   private def evaluateFitnessPredictor(predictor: FitnessPredictor): Option[Double] = {
-//    trainersPopulation.map(trainer =>
-//      (
-//        evaluateSolutionIndividual(trainer.individual.asInstanceOf[MathIndividual], predictor),
-//        trainer.fitnessValue
-//      )
-//    ).map()
+    /**
+     * Implemented formula:
+     * SUM( ABS(Exact_Fitness_of_Trainer(t) - Predicted_Fitness_of_Trainer(t)) ) / size_of_trainers_population
+     *
+     * Source:
+     * Michael D. Schmidt and Hod Lipson: Coevolution of Fitness Predictors,
+     * IEEE TRANSACTIONS ON EVOLUTIONARY COMPUTATION, VOL. 12, NO. 6, DECEMBER 2008,
+     * p. 738
+     */
+
+    val evaluatedTrainers = trainersPopulation.map(trainer =>
+      (
+        trainer.fitnessValue,
+        evaluateSolutionIndividual(trainer.individual.asInstanceOf[MathIndividual], predictor)
+        )
+    ).filter(fitness => fitness._2.isDefined)
+
+    if (evaluatedTrainers.nonEmpty) {
+      val N = trainersPopulation.length
+      return Some(evaluatedTrainers.map(fitness => Math.abs(fitness._1 - fitness._2.get)).sum / N)
+    }
+
     None
   }
 
