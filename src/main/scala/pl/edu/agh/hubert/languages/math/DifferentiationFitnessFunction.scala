@@ -1,9 +1,7 @@
-package pl.edu.agh.hubert.fitness
+package pl.edu.agh.hubert.languages.math
 
-import pl.edu.agh.hubert.languages.LanguageWord
-import pl.edu.agh.hubert.{MathIndividual, Individual}
 import pl.edu.agh.hubert.datasets.CSVLoader
-import pl.edu.agh.hubert.experiments.Experiment
+import pl.edu.agh.hubert.engine.{Individual, Experiment, FitnessFunction, LanguageWord}
 
 class DifferentiationFitnessFunction(val experiment: Experiment) extends FitnessFunction {
 

@@ -1,7 +1,6 @@
-package pl.edu.agh.hubert.fitness
+package pl.edu.agh.hubert.engine
 
-import pl.edu.agh.hubert.experiments.Experiment
-import pl.edu.agh.hubert.{EvaluatedIndividual, Individual}
+import pl.edu.agh.hubert.languages.math.{CoevolutionWithDifferentiationFitnessFunction, DifferentiationFitnessFunction}
 
 trait FitnessFunction {
 

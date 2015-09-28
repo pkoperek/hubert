@@ -1,6 +1,7 @@
-package pl.edu.agh.hubert.languages
+package pl.edu.agh.hubert.languages.math
 
-import pl.edu.agh.hubert.hubert.Input
+import pl.edu.agh.hubert.engine.{CompositeWord, LanguageWord, TerminalWord}
+import pl.edu.agh.hubert.engine.Input
 
 class Constant(val value: Double) extends TerminalWord() {
   override def evaluateInput(input: Input): Array[Double] = {

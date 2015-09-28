@@ -1,15 +1,7 @@
 package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.crossingover.CrossOverOperator
-import pl.edu.agh.hubert.mutation.MutationOperator
-import pl.edu.agh.hubert.{EvaluatedIndividual, Individual}
-import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
-import pl.edu.agh.hubert.experiments.Experiment
-import pl.edu.agh.hubert.fitness.FitnessFunction
-import pl.edu.agh.hubert.generator.IndividualGenerator
 
-import scala.collection.mutable
 import scala.util.Random
 
 trait EvolutionEngine {

@@ -1,7 +1,6 @@
 package pl.edu.agh.hubert.datasets
 
-import pl.edu.agh.hubert.hubert.Input
-
+import pl.edu.agh.hubert.engine.Input
 import scala.collection.mutable.ArrayBuffer
 
 class LoadedDataSet(val raw: Input, val nameIdx: Map[String, Int]) {

@@ -4,9 +4,7 @@ import java.io.File
 
 import org.scalatest.FunSuite
 import pl.edu.agh.hubert.datasets.DataSet
-import pl.edu.agh.hubert.experiments.Experiment
-import pl.edu.agh.hubert.fitness.DifferentiationFitnessFunction
-import pl.edu.agh.hubert.languages.Languages
+import pl.edu.agh.hubert.languages.math.DifferentiationFitnessFunction
 
 class DeterministicCrowdingEvolutionEngineTest extends FunSuite {
 

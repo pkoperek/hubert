@@ -1,7 +1,4 @@
-package pl.edu.agh.hubert
-
-import pl.edu.agh.hubert.hubert.Input
-import pl.edu.agh.hubert.languages._
+package pl.edu.agh.hubert.engine
 
 class Individual(val rawTree: LanguageWord) {
 
@@ -16,8 +13,4 @@ case class EvaluatedIndividual(individual: Individual, fitness: Option[Double]) 
   val isValid = fitness.isDefined
 
   val fitnessValue = fitness.getOrElse(Double.PositiveInfinity)
-}
-
-package object hubert {
-  type Input = Array[Array[Double]]
 }

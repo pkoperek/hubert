@@ -1,11 +1,10 @@
-package pl.edu.agh.hubert.experiments
+package pl.edu.agh.hubert.engine
 
 import java.io.File
 
 import org.scalatest.{BeforeAndAfter, FunSuite}
 import pl.edu.agh.hubert.datasets.DataSet
-import pl.edu.agh.hubert.fitness.DifferentiationFitnessFunction
-import pl.edu.agh.hubert.languages.Languages
+import pl.edu.agh.hubert.languages.math.DifferentiationFitnessFunction
 
 class MemoryExperimentRepositoryTest extends FunSuite with BeforeAndAfter{
   val temporaryFile = File.createTempFile("temp", ".csv")

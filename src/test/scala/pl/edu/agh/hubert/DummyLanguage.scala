@@ -1,7 +1,6 @@
 package pl.edu.agh.hubert
 
-import pl.edu.agh.hubert.hubert._
-import pl.edu.agh.hubert.languages.{Language, CompositeWord, LanguageWord, TerminalWord}
+import pl.edu.agh.hubert.engine._
 
 object DummyLanguage {
   def dummyLanguage() = {

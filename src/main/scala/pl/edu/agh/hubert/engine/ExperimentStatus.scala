@@ -1,4 +1,4 @@
-package pl.edu.agh.hubert.experiments
+package pl.edu.agh.hubert.engine
 
 object ExperimentStatus extends Enumeration {
   val Queued = Value

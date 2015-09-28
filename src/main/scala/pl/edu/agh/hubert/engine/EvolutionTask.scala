@@ -1,7 +1,6 @@
 package pl.edu.agh.hubert.engine
 
-import pl.edu.agh.hubert.experiments.ExperimentProtocol._
-import pl.edu.agh.hubert.experiments.{ExperimentStatus, Experiment}
+import pl.edu.agh.hubert.engine.ExperimentProtocol._
 import spray.json._
 
 class EvolutionTask(

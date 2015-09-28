@@ -1,15 +1,13 @@
 package pl.edu.agh.hubert.engine
 
 
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent._
+import java.util.concurrent.atomic.AtomicBoolean
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.experiments.ExperimentStatus
-
-import util.control.Breaks._
 
 import scala.collection.mutable.ArrayBuffer
+import scala.util.control.Breaks._
 
 class EvolutionExecutor(
                          val numberOfThreads: Int,

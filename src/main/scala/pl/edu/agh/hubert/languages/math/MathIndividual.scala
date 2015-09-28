@@ -1,6 +1,6 @@
-package pl.edu.agh.hubert
+package pl.edu.agh.hubert.languages.math
 
-import pl.edu.agh.hubert.languages._
+import pl.edu.agh.hubert.engine.{Individual, CompositeWord, LanguageWord, TerminalWord}
 
 import scala.collection.mutable
 

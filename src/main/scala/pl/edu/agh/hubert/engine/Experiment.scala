@@ -1,9 +1,8 @@
-package pl.edu.agh.hubert.experiments
+package pl.edu.agh.hubert.engine
 
 import pl.edu.agh.hubert.datasets.DataSet
 import pl.edu.agh.hubert.datasets.DataSetProtocol._
-import pl.edu.agh.hubert.languages.Language
-import pl.edu.agh.hubert.languages.LanguageProtocol._
+import pl.edu.agh.hubert.engine.LanguageProtocol._
 import spray.json._
 
 final case class Experiment(

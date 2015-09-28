@@ -1,9 +1,8 @@
 package pl.edu.agh.hubert.configuration
 
 import com.typesafe.config.ConfigFactory
-import pl.edu.agh.hubert.fitness.FitnessFunction
-import pl.edu.agh.hubert.languages.LanguageProtocol._
-import pl.edu.agh.hubert.languages.{Language, Languages}
+import pl.edu.agh.hubert.engine.LanguageProtocol._
+import pl.edu.agh.hubert.engine.{FitnessFunction, Language, LanguageProtocol, Languages}
 import spray.json._
 
 object Configuration {

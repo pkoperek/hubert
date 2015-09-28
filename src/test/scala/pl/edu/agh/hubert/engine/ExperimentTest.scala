@@ -1,11 +1,9 @@
-package pl.edu.agh.hubert.experiments
+package pl.edu.agh.hubert.engine
 
 import org.scalatest.FunSuite
 import pl.edu.agh.hubert.datasets.DataSet
-import pl.edu.agh.hubert.languages.Languages
-
+import pl.edu.agh.hubert.engine.ExperimentProtocol._
 import spray.json._
-import pl.edu.agh.hubert.experiments.ExperimentProtocol._
 
 class ExperimentTest extends FunSuite {
 

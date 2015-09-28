@@ -1,10 +1,7 @@
-package pl.edu.agh.hubert.fitness
+package pl.edu.agh.hubert.languages.math
 
 import pl.edu.agh.hubert.datasets.CSVLoader
-import pl.edu.agh.hubert.experiments.Experiment
-import pl.edu.agh.hubert.hubert.Input
-import pl.edu.agh.hubert.languages.LanguageWord
-import pl.edu.agh.hubert.{EvaluatedIndividual, Individual, MathIndividual}
+import pl.edu.agh.hubert.engine._
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
@@ -35,11 +32,18 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   }
 
   private def evaluateFitnessPredictors(predictors: Array[FitnessPredictor]): Option[Double] = {
-    predictors.map(predictor => evaluateFitnessPredictor(predictor))
+//    predictors.map(predictor => evaluateFitnessPredictor(predictor))
+    None
   }
 
   private def evaluateFitnessPredictor(predictor: FitnessPredictor): Option[Double] = {
-    trainersPopulation.map(trainer => )
+//    trainersPopulation.map(trainer =>
+//      (
+//        evaluateSolutionIndividual(trainer.individual.asInstanceOf[MathIndividual], predictor),
+//        trainer.fitnessValue
+//      )
+//    ).map()
+    None
   }
 
   private def evaluateSolutionIndividual(solutionIndividual: MathIndividual, input: Input): Option[Double] = {

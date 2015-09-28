@@ -1,32 +1,8 @@
-package pl.edu.agh.hubert.mutation
+package pl.edu.agh.hubert.languages.math
 
-import pl.edu.agh.hubert.{MathIndividual, Individual}
-import pl.edu.agh.hubert.experiments.Experiment
-import pl.edu.agh.hubert.generator.IndividualGenerator
-import pl.edu.agh.hubert.languages._
+import pl.edu.agh.hubert.engine.{Individual, IndividualGenerator, LanguageWord, MutationOperator}
 
 import scala.util.Random
-
-trait MutationOperator {
-
-  def mutate(individual: Individual): Individual
-
-}
-
-object MutationOperator {
-
-  def apply(experiment: Experiment): MutationOperator = {
-    experiment.language.name match {
-      case "math" => return new MathMutationOperator(
-        experiment.mutationProbability,
-        experiment.maxHeight,
-        IndividualGenerator(experiment))
-
-    }
-    throw new IllegalArgumentException("Unknown language!")
-  }
-
-}
 
 class MathMutationOperator(
                             mutationProbability: Double,
