@@ -19,16 +19,91 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private val fitnessPredictorPopulationSize = 512
 
   private val trainersPopulationSize = 128
-  private var trainersPopulation = Array[EvaluatedIndividual]()
+  private var trainersPopulation = Array.empty[EvaluatedIndividual]
+
+  private var iteration = 0
+  private val trainerSelectionInterval = 100
 
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
-    evaluateFitnessPredictors(fitnessPredictorPopulation)
+    val mathPopulation = toEvaluate.asInstanceOf[Array[MathIndividual]]
 
-    Array[EvaluatedIndividual]()
+    selectTrainers(mathPopulation)
+    evolvePredictors()
+    evaluateSolutions(mathPopulation, bestFitnessPredictor())
   }
 
-  private def evaluateFitnessPredictors(predictors: Array[FitnessPredictor]): Array[Option[Double]] = {
-    predictors.map(predictor => evaluateFitnessPredictor(predictor))
+  private def evaluateSolutions(
+                                 mathPopulation: Array[MathIndividual],
+                                 fitnessPredictor: FitnessPredictor
+                                 ): Array[EvaluatedIndividual] = {
+    mathPopulation.map(individual =>
+      new EvaluatedIndividual(
+        individual,
+        evaluateSolutionIndividual(individual, fitnessPredictor.data)
+      )
+    )
+  }
+
+  private def selectTrainers(solutionPopulation: Array[MathIndividual]): Unit = {
+    if (iteration % trainerSelectionInterval == 0) {
+      val N = solutionPopulation.length
+
+      val newTrainers = solutionPopulation
+        .map(solution => (solution, evaluateTrainerVariance(solution, N)))
+        .sortBy(-_._2)
+        .take(trainersPopulationSize)
+        .map(trainer => evaluateTrainer(trainer))
+
+      trainersPopulation = newTrainers
+    }
+
+    iteration += 1
+  }
+
+  private def evaluateTrainer(trainer: (MathIndividual, Double)): EvaluatedIndividual = {
+    EvaluatedIndividual(
+      trainer._1,
+      evaluateSolutionIndividual(trainer._1, loadedDataSet)
+    )
+  }
+
+  private def evaluateTrainerVariance(trainer: MathIndividual, N: Int): Double = {
+
+    val evaluations = fitnessPredictorPopulation
+      .map(predictor => evaluateSolutionIndividual(trainer, predictor.data))
+      .filter(_.isDefined)
+      .map(_.get)
+
+    val avg = evaluations.sum / N
+    val variance = evaluations.map( e => (e - avg) * (e - avg)).sum / N
+
+    variance
+  }
+
+  private def evolvePredictors(): Unit = {
+    crossOverPredictors()
+    mutatePredictors()
+  }
+
+  private def crossOverPredictors() = {}
+
+  private def mutatePredictors() = {
+
+
+  }
+
+
+  private def bestFitnessPredictor(): FitnessPredictor = {
+    val evaluatedPredictors = fitnessPredictorPopulation
+      .map(predictor => (evaluateFitnessPredictor(predictor), predictor))
+      .filter(_._1.isDefined)
+
+    if (evaluatedPredictors.length > 0) {
+      val bestFitnessPredictor = evaluatedPredictors.maxBy(_._1)._2
+      return bestFitnessPredictor
+    }
+
+    fitnessPredictorPopulation(Random.nextInt(fitnessPredictorPopulationSize))
   }
 
   private def evaluateFitnessPredictor(predictor: FitnessPredictor): Option[Double] = {
