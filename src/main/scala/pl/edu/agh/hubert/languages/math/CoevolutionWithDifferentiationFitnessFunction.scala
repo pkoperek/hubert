@@ -1,14 +1,12 @@
 package pl.edu.agh.hubert.languages.math
 
-import pl.edu.agh.hubert.datasets.CSVLoader
+import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
 import pl.edu.agh.hubert.engine._
 
-import scala.collection.mutable.ArrayBuffer
+import scala.reflect.ClassTag
 import scala.util.Random
 
 class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) extends FitnessFunction {
-
-  type FitnessPredictor = Input
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
@@ -24,7 +22,6 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private var trainersPopulation = Array[EvaluatedIndividual]()
 
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
-
     evaluateFitnessPredictors(fitnessPredictorPopulation)
 
     Array[EvaluatedIndividual]()
@@ -48,7 +45,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
     val evaluatedTrainers = trainersPopulation.map(trainer =>
       (
         trainer.fitnessValue,
-        evaluateSolutionIndividual(trainer.individual.asInstanceOf[MathIndividual], predictor)
+        evaluateSolutionIndividual(trainer.individual.asInstanceOf[MathIndividual], predictor.data)
         )
     ).filter(fitness => fitness._2.isDefined)
 
@@ -60,9 +57,9 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
     None
   }
 
-  private def evaluateSolutionIndividual(solutionIndividual: MathIndividual, input: Input): Option[Double] = {
+  private def evaluateSolutionIndividual(solutionIndividual: MathIndividual, input: LoadedDataSet): Option[Double] = {
 
-    val N = dataSetSize
+    val N = input.size
 
     val pairingErrors = pairings.par.map(pairing => {
       val x = pairing._1
@@ -71,11 +68,11 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
       val dx: LanguageWord = solutionIndividual.differentiatedBy(x)
       val dy: LanguageWord = solutionIndividual.differentiatedBy(y)
 
-      val dx_sym = dx.evaluateInput(loadedDataSet.raw)
-      val dy_sym = dy.evaluateInput(loadedDataSet.raw)
+      val dx_sym = dx.evaluateInput(input.raw)
+      val dy_sym = dy.evaluateInput(input.raw)
 
-      val dx_num = loadedDataSet.differentiated(x)
-      val dy_num = loadedDataSet.differentiated(y)
+      val dx_num = input.differentiated(x)
+      val dy_num = input.differentiated(y)
 
       val filtered = dx_sym.zip(dy_sym).zip(dx_num).zip(dy_num)
         .filter(r => r._1._1._2 > 0 && r._2 > 0)
@@ -83,7 +80,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
       if (filtered.length == 0) {
         None
       } else {
-        // -N - the same as multiplyiing by -1 at the beginning
+        // -N - the same as multiplying by -1 at the beginning
         val pairingError = filtered
           //          .par
           .map(r => (r._1._1._1 / r._1._1._2) - (r._1._2 / r._2))
@@ -104,42 +101,33 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
     }
   }
 
-  private def generateFitnessPredictors(howMuchToGenerate: Int): Array[Input] = {
+  private def generateFitnessPredictors(howMuchToGenerate: Int): Array[FitnessPredictor] = {
     (1 to howMuchToGenerate).map(_ => generateFitnessPredictor()).toArray
   }
 
-  private def generateFitnessPredictor(): Input = {
+  private def generateFitnessPredictor(): FitnessPredictor = {
     val predictorRows: Array[Int] = (1 to fitnessPredictorSize).map(_ => Random.nextInt(dataSetSize)).toArray
 
-    val buffer = ArrayBuffer[Array[Double]]()
-    for (serie <- loadedDataSet.raw) {
-      val serieBuffer = ArrayBuffer[Double]()
-
-      for (selectedRow <- predictorRows) {
-        serieBuffer += serie(selectedRow)
-      }
-
-      buffer += serieBuffer.toArray
-    }
-
-    buffer.toArray
+    FitnessPredictor(predictorRows, loadedDataSet.subset(predictorRows))
   }
 
   private class MutationOperator {
 
     val random = new Random(System.currentTimeMillis())
 
-    def mutate(fitnessPredictor: FitnessPredictor): FitnessPredictor = {
+    def mutate(parentPredictor: FitnessPredictor): FitnessPredictor = {
       if (random.nextDouble() < fitnessPredictorMutationProbability) {
         val pointToChange = random.nextInt(fitnessPredictorSize)
         val newRow = random.nextInt(dataSetSize)
 
-        for (serieIdx <- fitnessPredictor.indices) {
-          fitnessPredictor(serieIdx)(pointToChange) = loadedDataSet.raw(serieIdx)(newRow)
+        parentPredictor.predictorIndices(pointToChange) = newRow
+
+        for (serieIdx <- parentPredictor.data.raw.indices) {
+          parentPredictor.data.raw(serieIdx)(pointToChange) = loadedDataSet.raw(serieIdx)(newRow)
         }
       }
 
-      fitnessPredictor
+      parentPredictor
     }
 
   }
@@ -152,24 +140,37 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
       if (random.nextDouble() < fitnessPredictorCrossOverProbability) {
         val crossOverPoint = random.nextInt(fitnessPredictorSize)
 
-        val leftChild = ArrayBuffer[Array[Double]]()
-        val rightChild = ArrayBuffer[Array[Double]]()
+        val (leftIndices, rightIndices) = crossOver(crossOverPoint, left.predictorIndices, right.predictorIndices)
 
-        for (serieIdx <- left.indices) {
-          val leftSerie = left(serieIdx)
-          val rightSerie = right(serieIdx)
-
-          val (leftChildHead, leftChildTail) = leftSerie.splitAt(crossOverPoint)
-          val (rightChildHead, rightChildTail) = leftSerie.splitAt(crossOverPoint)
-
-          leftChild += leftChildHead ++ rightChildTail
-          rightChild += rightChildHead ++ leftChildTail
-        }
-
-        return (leftChild.toArray, rightChild.toArray)
+        return (
+          FitnessPredictor(leftIndices, loadedDataSet.subset(leftIndices)),
+          FitnessPredictor(rightIndices, loadedDataSet.subset(rightIndices))
+          )
       }
 
       (left, right)
+    }
+
+    private def crossOver[T: ClassTag](
+                                        crossOverPoint: Int,
+                                        leftSerie: Array[T],
+                                        rightSerie: Array[T]
+                                        ): (Array[T], Array[T]) = {
+      val (leftChildHead, leftChildTail) = leftSerie.splitAt(crossOverPoint)
+      val (rightChildHead, rightChildTail) = rightSerie.splitAt(crossOverPoint)
+
+      val leftChildArray = leftChildHead ++ rightChildTail
+      val rightChildArray = rightChildHead ++ leftChildTail
+      (leftChildArray, rightChildArray)
+    }
+  }
+
+  private class FitnessPredictor(val predictorIndices: Array[Int], val data: LoadedDataSet) {}
+
+  private object FitnessPredictor {
+
+    def apply(predictorIndices: Array[Int], mainDataSet: LoadedDataSet): FitnessPredictor = {
+      new FitnessPredictor(predictorIndices, mainDataSet.subset(predictorIndices))
     }
 
   }
