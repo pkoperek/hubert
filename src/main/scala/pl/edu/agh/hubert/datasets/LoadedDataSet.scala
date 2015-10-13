@@ -2,8 +2,6 @@ package pl.edu.agh.hubert.datasets
 
 import pl.edu.agh.hubert.engine.Input
 
-import scala.collection.mutable.ArrayBuffer
-
 class LoadedDataSet private(
                              val raw: Input,
                              val nameIdx: Map[String, Int],
@@ -14,15 +12,6 @@ class LoadedDataSet private(
 
   def this(raw: Input, nameIdx: Map[String, Int]) {
     this(raw, nameIdx, raw.map(rawValues => differentiate(rawValues)))
-  }
-
-  private def differentiate(serie: Array[Double]): Array[Double] = {
-    val differentiated = ArrayBuffer[Double]()
-    for (idx <- 1 to serie.length - 1) {
-      differentiated += serie(idx) - serie(idx - 1)
-    }
-
-    differentiated.toArray
   }
 
   def rawByName(name: String): Option[Array[Double]] = {
@@ -54,4 +43,3 @@ class LoadedDataSet private(
   }
 
 }
-
