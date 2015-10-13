@@ -1,8 +1,7 @@
 package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
-
-import scala.util.Random
+import pl.edu.agh.hubert.groupIntoPairs
 
 trait EvolutionEngine {
   def evolve()
@@ -25,7 +24,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
 
     population ++= missingIndividuals
 
-    val groupedParents = groupedIntoPairs(population)
+    val groupedParents = groupIntoPairs(population)
     val children = crossOverInPairs(groupedParents)
     val mutatedChildren = mutate(children)
     val evaluatedChildren = fitnessFunction.evaluatePopulation(mutatedChildren)
@@ -52,10 +51,6 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
 
   private def mutate(toMutate: Array[(Individual, Individual)]): Array[(Individual, Individual)] = {
     toMutate.map(pair => (mutationOperator.mutate(pair._1), mutationOperator.mutate(pair._2)))
-  }
-
-  private def groupedIntoPairs(toGroup: Array[EvaluatedIndividual]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
-    Random.shuffle(toGroup.toIterator).grouped(2).map(array => (array.head, array(1))).toArray
   }
 
   private def crossOverInPairs(parentsPairs: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[(Individual, Individual)] = {
