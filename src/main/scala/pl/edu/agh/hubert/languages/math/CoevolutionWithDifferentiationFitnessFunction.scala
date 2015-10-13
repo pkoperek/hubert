@@ -16,8 +16,8 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private val fitnessPredictorSize = 128
   private val fitnessPredictorMutationProbability = 0.10
   private val fitnessPredictorCrossOverProbability = 0.50
-  private var fitnessPredictorPopulation = generateFitnessPredictors(fitnessPredictorPopulationSize)
   private val fitnessPredictorPopulationSize = 512
+  private var fitnessPredictorPopulation = generateFitnessPredictors(fitnessPredictorPopulationSize)
 
   private val trainersPopulationSize = 128
   private var trainersPopulation = Array.empty[EvaluatedIndividual]
@@ -25,8 +25,8 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private var iteration = 0
   private val trainerSelectionInterval = 100
 
-  private val crossOverOperator = new CrossOverOperator
-  private val mutationOperator = new MutationOperator
+  private val crossOverOperator = new FitnessPredictorCrossOverOperator
+  private val mutationOperator = new FitnessPredictorMutationOperator
 
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
     val mathPopulation = toEvaluate.asInstanceOf[Array[MathIndividual]]
@@ -179,12 +179,12 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   }
 
   private def generateFitnessPredictor(): FitnessPredictor = {
-    val predictorRows: Array[Int] = (1 to fitnessPredictorSize).map(_ => Random.nextInt(dataSetSize)).toArray
+    val predictorRows = (1 to fitnessPredictorSize).map(_ => Random.nextInt(dataSetSize)).toArray
 
     FitnessPredictor(predictorRows, loadedDataSet.subset(predictorRows))
   }
 
-  private class MutationOperator {
+  private class FitnessPredictorMutationOperator {
 
     val random = new Random(System.currentTimeMillis())
 
@@ -205,7 +205,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
   }
 
-  private class CrossOverOperator {
+  private class FitnessPredictorCrossOverOperator {
 
     val random = new Random(System.currentTimeMillis())
 
