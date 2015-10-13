@@ -2,6 +2,7 @@ package pl.edu.agh.hubert.languages.math
 
 import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
 import pl.edu.agh.hubert.engine._
+import pl.edu.agh.hubert.groupIntoPairs
 
 import scala.reflect.ClassTag
 import scala.util.Random
@@ -23,6 +24,9 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
   private var iteration = 0
   private val trainerSelectionInterval = 100
+
+  private val crossOverOperator = new CrossOverOperator
+  private val mutationOperator = new MutationOperator
 
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
     val mathPopulation = toEvaluate.asInstanceOf[Array[MathIndividual]]
@@ -50,7 +54,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
       val newTrainers = solutionPopulation
         .map(solution => (solution, evaluateTrainerVariance(solution, N)))
-        .sortBy(-_._2)
+        .sortBy(_._2)(Ordering[Double].reverse)
         .take(trainersPopulationSize)
         .map(trainer => evaluateTrainer(trainer))
 
@@ -75,23 +79,17 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
       .map(_.get)
 
     val avg = evaluations.sum / N
-    val variance = evaluations.map( e => (e - avg) * (e - avg)).sum / N
+    val variance = evaluations.map(e => (e - avg) * (e - avg)).sum / N
 
     variance
   }
 
-  private def evolvePredictors(): Unit = {
-    crossOverPredictors()
-    mutatePredictors()
+  private def evolvePredictors() = {
+    fitnessPredictorPopulation = groupIntoPairs(fitnessPredictorPopulation)
+      .map(pair => crossOverOperator.crossOver(pair._1, pair._2))
+      .flatMap(pair => Array(pair._1, pair._2))
+      .map(predictor => mutationOperator.mutate(predictor))
   }
-
-  private def crossOverPredictors() = {}
-
-  private def mutatePredictors() = {
-
-
-  }
-
 
   private def bestFitnessPredictor(): FitnessPredictor = {
     val evaluatedPredictors = fitnessPredictorPopulation
