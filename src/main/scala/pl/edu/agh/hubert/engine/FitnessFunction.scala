@@ -25,7 +25,8 @@ trait FitnessFunction {
 object FitnessFunction {
 
   def functions() = Set[String](
-    name(classOf[DifferentiationFitnessFunction])
+    name(classOf[DifferentiationFitnessFunction]),
+    name(classOf[CoevolutionWithDifferentiationFitnessFunction])
   )
 
   private def name(value: Class[_]): String = value.getName
