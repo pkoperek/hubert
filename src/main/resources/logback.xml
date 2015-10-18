@@ -7,7 +7,7 @@
         </layout>
     </appender>
 
-    <logger name="pl.edu.agh.hubert.generator" level="INFO"/>
+    <logger name="pl.edu.agh.hubert.languages.math.MathRandomIndividualGenerator" level="INFO"/>
 
     <root level="debug">
         <appender-ref ref="STDOUT" />

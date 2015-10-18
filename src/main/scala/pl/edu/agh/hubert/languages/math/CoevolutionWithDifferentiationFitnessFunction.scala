@@ -1,5 +1,6 @@
 package pl.edu.agh.hubert.languages.math
 
+import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
 import pl.edu.agh.hubert.engine._
 import pl.edu.agh.hubert.groupIntoPairs
@@ -8,6 +9,8 @@ import scala.reflect.ClassTag
 import scala.util.Random
 
 class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) extends FitnessFunction {
+
+  private val logger = LoggerFactory.getLogger(getClass)
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
@@ -29,17 +32,17 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private val mutationOperator = new FitnessPredictorMutationOperator
 
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
-    val mathPopulation = toEvaluate.asInstanceOf[Array[MathIndividual]]
+    val mathPopulation = toEvaluate.map( individual => individual.asInstanceOf[MathIndividual])
 
     selectTrainers(mathPopulation)
     evolvePredictors()
-    evaluateSolutions(mathPopulation, bestFitnessPredictor())
+    evaluateSolutions(mathPopulation)
   }
 
-  private def evaluateSolutions(
-                                 mathPopulation: Array[MathIndividual],
-                                 fitnessPredictor: FitnessPredictor
-                                 ): Array[EvaluatedIndividual] = {
+  private def evaluateSolutions(mathPopulation: Array[MathIndividual]): Array[EvaluatedIndividual] = {
+    logger.debug("Evaluating solutions")
+
+    val fitnessPredictor =  bestFitnessPredictor()
     mathPopulation.map(individual =>
       new EvaluatedIndividual(
         individual,
@@ -50,6 +53,8 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
   private def selectTrainers(solutionPopulation: Array[MathIndividual]): Unit = {
     if (iteration % trainerSelectionInterval == 0) {
+      logger.debug("Selecting trainers, iteration: " + iteration)
+
       val N = solutionPopulation.length
 
       val newTrainers = solutionPopulation
@@ -85,6 +90,8 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   }
 
   private def evolvePredictors() = {
+    logger.debug("Evaluating predictors")
+
     fitnessPredictorPopulation = groupIntoPairs(fitnessPredictorPopulation)
       .map(pair => crossOverOperator.crossOver(pair._1, pair._2))
       .flatMap(pair => Array(pair._1, pair._2))

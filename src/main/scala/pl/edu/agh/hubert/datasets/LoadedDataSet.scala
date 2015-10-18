@@ -36,8 +36,6 @@ class LoadedDataSet private(
   }
 
   def subset(indices: Array[Int]): LoadedDataSet = {
-    println("Subset with indices: " + indices.mkString(",") + " size: " +  rawSize)
-
     new LoadedDataSet(
       raw.map(rawSerie => indices.map(index => rawSerie(index))),
       nameIdx,
