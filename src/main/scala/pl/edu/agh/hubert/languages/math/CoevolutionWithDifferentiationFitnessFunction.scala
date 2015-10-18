@@ -11,7 +11,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
-  private val dataSetSize = loadedDataSet.rawSize
+  private val dataSetSize = loadedDataSet.differentiatedSize
 
   private val fitnessPredictorSize = 128
   private val fitnessPredictorMutationProbability = 0.10

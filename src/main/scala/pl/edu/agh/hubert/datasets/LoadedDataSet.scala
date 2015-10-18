@@ -9,6 +9,7 @@ class LoadedDataSet private(
                              ) {
 
   val rawSize: Int = if (raw.length > 0) raw(0).length else 0
+  val differentiatedSize: Int = rawSize - 1
 
   def this(raw: Input, nameIdx: Map[String, Int]) {
     this(raw, nameIdx, raw.map(rawValues => differentiate(rawValues)))
