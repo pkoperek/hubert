@@ -14,7 +14,7 @@ class DifferentiationFitnessFunction(val experiment: Experiment) extends Fitness
 
   private def evaluateFitness(individual: MathIndividual): Option[Double] = {
 
-    val N = loadedDataSet.size
+    val N = loadedDataSet.rawSize
 
     val pairingErrors = pairings.par.map(pairing => {
       val x = pairing._1

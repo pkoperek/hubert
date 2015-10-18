@@ -8,7 +8,7 @@ class LoadedDataSet private(
                              val differentiated: Input
                              ) {
 
-  val size: Int = if (raw.length > 0) raw(0).length else 0
+  val rawSize: Int = if (raw.length > 0) raw(0).length else 0
 
   def this(raw: Input, nameIdx: Map[String, Int]) {
     this(raw, nameIdx, raw.map(rawValues => differentiate(rawValues)))
@@ -35,6 +35,8 @@ class LoadedDataSet private(
   }
 
   def subset(indices: Array[Int]): LoadedDataSet = {
+    println("Subset with indices: " + indices.mkString(",") + " size: " +  rawSize)
+
     new LoadedDataSet(
       raw.map(rawSerie => indices.map(index => rawSerie(index))),
       nameIdx,

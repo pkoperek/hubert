@@ -11,7 +11,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
-  private val dataSetSize = loadedDataSet.size
+  private val dataSetSize = loadedDataSet.rawSize
 
   private val fitnessPredictorSize = 128
   private val fitnessPredictorMutationProbability = 0.10
@@ -132,7 +132,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
   private def evaluateSolutionIndividual(solutionIndividual: MathIndividual, input: LoadedDataSet): Option[Double] = {
 
-    val N = input.size
+    val N = input.rawSize
 
     val pairingErrors = pairings.par.map(pairing => {
       val x = pairing._1
@@ -179,9 +179,9 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   }
 
   private def generateFitnessPredictor(): FitnessPredictor = {
-    val predictorRows = (1 to fitnessPredictorSize).map(_ => Random.nextInt(dataSetSize)).toArray
+    val predictorRows = (1 to fitnessPredictorSize).map(_ => Random.nextInt(dataSetSize)).toArray.sorted
 
-    FitnessPredictor(predictorRows, loadedDataSet.subset(predictorRows))
+    new FitnessPredictor(predictorRows, loadedDataSet.subset(predictorRows))
   }
 
   private class FitnessPredictorMutationOperator {
@@ -216,9 +216,9 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
         val (leftIndices, rightIndices) = crossOver(crossOverPoint, left.predictorIndices, right.predictorIndices)
 
         return (
-          FitnessPredictor(leftIndices, loadedDataSet.subset(leftIndices)),
-          FitnessPredictor(rightIndices, loadedDataSet.subset(rightIndices))
-          )
+          new FitnessPredictor(leftIndices, loadedDataSet.subset(leftIndices)),
+          new FitnessPredictor(rightIndices, loadedDataSet.subset(rightIndices))
+        )
       }
 
       (left, right)
@@ -239,14 +239,6 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   }
 
   private class FitnessPredictor(val predictorIndices: Array[Int], val data: LoadedDataSet) {}
-
-  private object FitnessPredictor {
-
-    def apply(predictorIndices: Array[Int], mainDataSet: LoadedDataSet): FitnessPredictor = {
-      new FitnessPredictor(predictorIndices, mainDataSet.subset(predictorIndices))
-    }
-
-  }
 
 }
 
