@@ -32,7 +32,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private val mutationOperator = new FitnessPredictorMutationOperator
 
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
-    val mathPopulation = toEvaluate.map( individual => individual.asInstanceOf[MathIndividual])
+    val mathPopulation = toEvaluate.map(individual => individual.asInstanceOf[MathIndividual])
 
     selectTrainers(mathPopulation)
     evolvePredictors()
@@ -42,7 +42,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private def evaluateSolutions(mathPopulation: Array[MathIndividual]): Array[EvaluatedIndividual] = {
     logger.debug("Evaluating solutions")
 
-    val fitnessPredictor =  bestFitnessPredictor()
+    val fitnessPredictor = bestFitnessPredictor()
     mathPopulation.map(individual =>
       new EvaluatedIndividual(
         individual,
@@ -78,6 +78,8 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
   private def evaluateTrainerVariance(trainer: MathIndividual, N: Int): Double = {
 
+    logger.debug("Evaluate trainer variance")
+
     val evaluations = fitnessPredictorPopulation
       .map(predictor => evaluateSolutionIndividual(trainer, predictor.data))
       .filter(_.isDefined)
@@ -105,8 +107,13 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
 
     if (evaluatedPredictors.length > 0) {
       val bestFitnessPredictor = evaluatedPredictors.maxBy(_._1)._2
+
+      logger.debug("Found best predictor: " + bestFitnessPredictor)
+
       return bestFitnessPredictor
     }
+
+    logger.debug("No best predictor found: choosing random one")
 
     fitnessPredictorPopulation(Random.nextInt(fitnessPredictorPopulationSize))
   }
