@@ -123,6 +123,8 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
      * Implemented formula:
      * SUM( ABS(Exact_Fitness_of_Trainer(t) - Predicted_Fitness_of_Trainer(t)) ) / size_of_trainers_population
      *
+     * The smaller - the better
+     *
      * Source:
      * Michael D. Schmidt and Hod Lipson: Coevolution of Fitness Predictors,
      * IEEE TRANSACTIONS ON EVOLUTIONARY COMPUTATION, VOL. 12, NO. 6, DECEMBER 2008,
