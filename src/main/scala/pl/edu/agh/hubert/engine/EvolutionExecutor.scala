@@ -75,9 +75,8 @@ class EvolutionExecutor(
           }
 
           task.currentIteration = iteration
-          val currentFitness = task.evolutionEngine.evolve()
-          if(currentFitness >= targetFitness) {
-            debug("Breaking the loop - found individual with target fitness")
+          if(!task.evolutionEngine.evolve()) {
+            debug("Breaking the loop - objective reached")
             task.status = ExperimentStatus.FinishedSuccess
             break()
           }
