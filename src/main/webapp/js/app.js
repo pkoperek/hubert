@@ -40,14 +40,11 @@ hubertApp.filter('type', function() {
         if(task.status === "Running") {
             return "info"
         }
-        if(task.status === "Finished") {
+        if(task.status === "FinishedSuccess") {
             return "success"
         }
         if(task.status === "Failed") {
             return "danger"
-        }
-        if(task.status === "Running") {
-            return "info"
         }
 
         return "warn";
