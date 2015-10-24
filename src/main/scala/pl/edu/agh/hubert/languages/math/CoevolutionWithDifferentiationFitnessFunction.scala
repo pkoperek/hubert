@@ -16,57 +16,73 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
   private val dataSetSize = loadedDataSet.differentiatedSize
 
+  private var bestFitnessPredictor: FitnessPredictor = null
   private val fitnessPredictorSize = 128
   private val fitnessPredictorMutationProbability = 0.10
   private val fitnessPredictorCrossOverProbability = 0.50
   private val fitnessPredictorPopulationSize = 512
   private var fitnessPredictorPopulation = generateFitnessPredictors(fitnessPredictorPopulationSize)
 
-  private val trainersPopulationSize = 128
-  private var trainersPopulation = Array.empty[EvaluatedIndividual]
+  private val trainersPopulationSize = 16
 
   private var iteration = 0
-  private val trainerSelectionInterval = 100
+  private val predictorEvolutionInterval = 10
 
   private val crossOverOperator = new FitnessPredictorCrossOverOperator
   private val mutationOperator = new FitnessPredictorMutationOperator
 
+  override def evaluatePopulation(
+                                   toEvaluate: Array[(Individual, Individual)]
+                                   ): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
+
+    val mathPopulation = toEvaluate.map(
+      pair => (
+        pair._1.asInstanceOf[MathIndividual],
+        pair._2.asInstanceOf[MathIndividual]
+        )
+    )
+
+    evolvePredictors(mathPopulation.flatMap(pair => Array(pair._1, pair._2)))
+
+    val evaluatedSolutions = mathPopulation.map(pair =>
+      (asEvaluatedIndividual(pair._1), asEvaluatedIndividual(pair._2))
+    )
+
+    iteration += 1
+
+    evaluatedSolutions
+  }
+
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
     val mathPopulation = toEvaluate.map(individual => individual.asInstanceOf[MathIndividual])
 
-    selectTrainers(mathPopulation)
-    evolvePredictors()
-    evaluateSolutions(mathPopulation)
+    evolvePredictors(mathPopulation)
+
+    val evaluatedSolutions = mathPopulation.map(asEvaluatedIndividual)
+
+    iteration += 1
+
+    evaluatedSolutions
   }
 
-  private def evaluateSolutions(mathPopulation: Array[MathIndividual]): Array[EvaluatedIndividual] = {
-    logger.debug("Evaluating solutions")
-
-    val fitnessPredictor = bestFitnessPredictor()
-    mathPopulation.map(individual =>
-      new EvaluatedIndividual(
-        individual,
-        evaluateSolutionIndividual(individual, fitnessPredictor.data)
-      )
+  private def asEvaluatedIndividual(individual: MathIndividual): EvaluatedIndividual = {
+    new EvaluatedIndividual(
+      individual,
+      evaluateSolutionIndividual(individual, bestFitnessPredictor.data)
     )
   }
 
-  private def selectTrainers(solutionPopulation: Array[MathIndividual]): Unit = {
-    if (iteration % trainerSelectionInterval == 0) {
-      logger.debug("Selecting trainers, iteration: " + iteration)
+  private def selectTrainers(solutionPopulation: Array[MathIndividual]): Array[EvaluatedIndividual] = {
+    val N = solutionPopulation.length
 
-      val N = solutionPopulation.length
+    val newTrainers = solutionPopulation
+      .map(solution => (solution, evaluateTrainerVariance(solution, N)))
+      // take the trainers with _highest_ variance
+      .sortBy(_._2)(Ordering[Double].reverse)
+      .take(trainersPopulationSize)
+      .map(trainer => evaluateTrainer(trainer))
 
-      val newTrainers = solutionPopulation
-        .map(solution => (solution, evaluateTrainerVariance(solution, N)))
-        .sortBy(_._2)(Ordering[Double].reverse)
-        .take(trainersPopulationSize)
-        .map(trainer => evaluateTrainer(trainer))
-
-      trainersPopulation = newTrainers
-    }
-
-    iteration += 1
+    newTrainers
   }
 
   private def evaluateTrainer(trainer: (MathIndividual, Double)): EvaluatedIndividual = {
@@ -77,9 +93,6 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
   }
 
   private def evaluateTrainerVariance(trainer: MathIndividual, N: Int): Double = {
-
-    logger.debug("Evaluate trainer variance")
-
     val evaluations = fitnessPredictorPopulation
       .map(predictor => evaluateSolutionIndividual(trainer, predictor.data))
       .filter(_.isDefined)
@@ -88,37 +101,64 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
     val avg = evaluations.sum / N
     val variance = evaluations.map(e => (e - avg) * (e - avg)).sum / N
 
+    logger.debug("Evaluated trainer variance: " + variance)
+
     variance
   }
 
-  private def evolvePredictors() = {
-    logger.debug("Evaluating predictors")
+  private def evolvePredictors(solutionPopulation: Array[MathIndividual]) = {
+    if (iteration % predictorEvolutionInterval == 0) {
+      logger.debug("Evolving predictors: " + iteration)
 
-    fitnessPredictorPopulation = groupIntoPairs(fitnessPredictorPopulation)
-      .map(pair => crossOverOperator.crossOver(pair._1, pair._2))
-      .flatMap(pair => Array(pair._1, pair._2))
-      .map(predictor => mutationOperator.mutate(predictor))
-  }
+      val trainers = selectTrainers(solutionPopulation)
 
-  private def bestFitnessPredictor(): FitnessPredictor = {
-    val evaluatedPredictors = fitnessPredictorPopulation
-      .map(predictor => (evaluateFitnessPredictor(predictor), predictor))
-      .filter(_._1.isDefined)
+      // cross-over and mutation of fitness predictors
+      val fitnessPredictorChildren = randomPairs(fitnessPredictorPopulation)
+        .map(pair => crossOverOperator.crossOver(pair._1, pair._2))
+        .flatMap(pair => Array(pair._1, pair._2))
+        .map(predictor => mutationOperator.mutate(predictor))
 
-    if (evaluatedPredictors.length > 0) {
-      val bestFitnessPredictor = evaluatedPredictors.maxBy(_._1)._2
+      // we want to evaluate both parents and children
+      val toEvaluate = fitnessPredictorPopulation ++ fitnessPredictorChildren
 
-      logger.debug("Found best predictor: " + bestFitnessPredictor)
+      fitnessPredictorPopulation = toEvaluate
+        // perform evaluation
+        .map(predictor => (evaluateFitnessPredictor(predictor, trainers), predictor))
+        // ignore those who can't be evaluated
+        .filter(_._1.isDefined)
+        // get out of Option[Double]
+        .map(pair => (pair._1.get, pair._2))
+        // choose the ones with smallest error
+        .sortBy(_._1)
+        // drop evaluation metric value
+        .map(_._2)
+        // get just the best ones
+        .slice(0, fitnessPredictorPopulationSize)
 
-      return bestFitnessPredictor
+      fitnessPredictorPopulation ++= missingPredictors
+
+      bestFitnessPredictor = fitnessPredictorPopulation(0)
+    } else {
+      logger.debug("Omitting predictors evolution: " + iteration)
     }
-
-    logger.debug("No best predictor found: choosing random one")
-
-    fitnessPredictorPopulation(Random.nextInt(fitnessPredictorPopulationSize))
   }
 
-  private def evaluateFitnessPredictor(predictor: FitnessPredictor): Option[Double] = {
+  private def missingPredictors: Array[FitnessPredictor] = {
+    val missingPredictorsCount: Int = fitnessPredictorPopulationSize - fitnessPredictorPopulation.length
+
+    logger.debug(
+      "After evaluation got: " +
+        fitnessPredictorPopulation.length +
+        " predictors, filling in : " +
+        missingPredictorsCount)
+
+    generateFitnessPredictors(missingPredictorsCount)
+  }
+
+  private def evaluateFitnessPredictor(
+                                        predictor: FitnessPredictor,
+                                        trainersPopulation: Array[EvaluatedIndividual]
+                                        ): Option[Double] = {
     /**
      * Implemented formula:
      * SUM( ABS(Exact_Fitness_of_Trainer(t) - Predicted_Fitness_of_Trainer(t)) ) / size_of_trainers_population
@@ -234,7 +274,7 @@ class CoevolutionWithDifferentiationFitnessFunction(val experiment: Experiment) 
         return (
           new FitnessPredictor(leftIndices, loadedDataSet.subset(leftIndices)),
           new FitnessPredictor(rightIndices, loadedDataSet.subset(rightIndices))
-        )
+          )
       }
 
       (left, right)
