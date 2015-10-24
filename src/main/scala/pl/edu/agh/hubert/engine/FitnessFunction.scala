@@ -20,6 +20,13 @@ trait FitnessFunction {
 
   protected def evaluateFitness(individual: Individual): Option[Double] = None
 
+  /**
+   * This implementation assumes that target fitness is the max error of the solution
+   */
+  def targetFitnessAchieved(targetFitness: Double, currentValue: Double): Boolean = {
+    targetFitness > Math.abs(currentValue)
+  }
+
 }
 
 object FitnessFunction {
