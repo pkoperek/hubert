@@ -8,7 +8,7 @@ import scala.util.Random
  */
 package object hubert {
 
-  def groupIntoPairs[T: ClassTag](toGroup: Array[T]): Array[(T, T)] = {
+  def randomPairs[T: ClassTag](toGroup: Array[T]): Array[(T, T)] = {
     Random.shuffle(toGroup.toIterator).grouped(2).map(array => (array.head, array(1))).toArray
   }
 

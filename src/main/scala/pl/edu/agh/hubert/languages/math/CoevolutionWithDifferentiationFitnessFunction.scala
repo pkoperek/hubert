@@ -3,7 +3,7 @@ package pl.edu.agh.hubert.languages.math
 import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
 import pl.edu.agh.hubert.engine._
-import pl.edu.agh.hubert.groupIntoPairs
+import pl.edu.agh.hubert.randomPairs
 
 import scala.reflect.ClassTag
 import scala.util.Random

@@ -1,7 +1,7 @@
 package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.groupIntoPairs
+import pl.edu.agh.hubert.randomPairs
 
 trait EvolutionEngine {
   def evolve()
@@ -24,7 +24,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
 
     population ++= missingIndividuals
 
-    val groupedParents = groupIntoPairs(population)
+    val groupedParents = randomPairs(population)
     val children = crossOverInPairs(groupedParents)
     val mutatedChildren = mutate(children)
     val evaluatedChildren = fitnessFunction.evaluatePopulation(mutatedChildren)
