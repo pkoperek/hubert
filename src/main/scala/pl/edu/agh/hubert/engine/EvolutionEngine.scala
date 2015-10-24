@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert.randomPairs
 
 trait EvolutionEngine {
-  def evolve()
+  def evolve(): Double
 
   def experiment: Experiment
 }
@@ -19,8 +19,8 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
   private val mutationOperator = MutationOperator(experiment)
   private var population = Array[EvaluatedIndividual]()
 
-  def evolve() = {
-    logger.debug("Evolution iteration")
+  def evolve(): Double = {
+    logger.debug("Evolution iteration: start")
 
     population ++= missingIndividuals
 
@@ -31,9 +31,20 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
 
     population = tournament(groupedParents, evaluatedChildren)
 
+    bestIndividual()
+  }
+
+  def bestIndividual(): Double = {
     // assume that the higher fitness, the better
-    val result = if (population.nonEmpty) population.maxBy(_.fitnessValue) else "None!"
-    logger.debug("Final fitness: " + result)
+    val result = if (population.nonEmpty) Some(population.maxBy(_.fitnessValue)) else None
+
+    logger.debug("Evolution iteration: end -> " + result)
+
+    if(result.isDefined) {
+      return result.get.fitnessValue
+    }
+
+    return Double.MinValue
   }
 
   private def missingIndividuals: Array[EvaluatedIndividual] = {

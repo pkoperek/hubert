@@ -64,6 +64,8 @@ class EvolutionExecutor(
     }
 
     private def executeTask(task: EvolutionTask): Unit = {
+      val targetFitness = task.evolutionEngine.experiment.targetFitness
+
       breakable {
         for (iteration <- 1 to task.iterations) {
           if (Thread.currentThread().isInterrupted) {
@@ -73,10 +75,15 @@ class EvolutionExecutor(
           }
 
           task.currentIteration = iteration
-          task.evolutionEngine.evolve()
+          val currentFitness = task.evolutionEngine.evolve()
+          if(currentFitness >= targetFitness) {
+            debug("Breaking the loop - found individual with target fitness")
+            task.status = ExperimentStatus.FinishedSuccess
+            break()
+          }
         }
 
-        task.status = ExperimentStatus.Finished
+        task.status = ExperimentStatus.FinishedIterationLimitExceeded
       }
     }
 

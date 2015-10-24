@@ -5,7 +5,8 @@ object ExperimentStatus extends Enumeration {
   val New = Value
   val Running = Value
   val Paused = Value
-  val Finished = Value
+  val FinishedSuccess = Value
+  val FinishedIterationLimitExceeded = Value
   val Stopped = Value
   val Failed = Value
 }
