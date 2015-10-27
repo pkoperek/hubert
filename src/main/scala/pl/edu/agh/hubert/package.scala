@@ -12,4 +12,8 @@ package object hubert {
     Random.shuffle(toGroup.toIterator).grouped(2).map(array => (array.head, array(1))).toArray
   }
 
+  def flat[T: ClassTag](toFlat: Array[(T,T)]): Array[T] = {
+    toFlat.flatMap( pair => Array(pair._1, pair._2))
+  }
+
 }
