@@ -1,6 +1,6 @@
 package pl.edu.agh.hubert.engine
 
-import pl.edu.agh.hubert.languages.math.{CoevolutionWithDifferentiationFitnessFunction, DifferentiationFitnessFunction}
+import pl.edu.agh.hubert.languages.math.{DifferentiationWithFitnessPredictionFitnessFunction, DifferentiationFitnessFunction}
 
 trait FitnessFunction {
 
@@ -33,7 +33,7 @@ object FitnessFunction {
 
   def functions() = Set[String](
     name(classOf[DifferentiationFitnessFunction]),
-    name(classOf[CoevolutionWithDifferentiationFitnessFunction])
+    name(classOf[DifferentiationWithFitnessPredictionFitnessFunction])
   )
 
   private def name(value: Class[_]): String = value.getName
@@ -43,8 +43,8 @@ object FitnessFunction {
       return new DifferentiationFitnessFunction(experiment)
     }
 
-    if(classOf[CoevolutionWithDifferentiationFitnessFunction].getName == experiment.fitnessFunction) {
-      return new CoevolutionWithDifferentiationFitnessFunction(experiment)
+    if(classOf[DifferentiationWithFitnessPredictionFitnessFunction].getName == experiment.fitnessFunction) {
+      return new DifferentiationWithFitnessPredictionFitnessFunction(experiment)
     }
 
     throw new IllegalArgumentException("Unknown fitness function: " + experiment.fitnessFunction)
