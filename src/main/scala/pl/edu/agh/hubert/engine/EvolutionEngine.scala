@@ -49,7 +49,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
       return result.get.fitnessValue
     }
 
-    return Double.MinValue
+    Double.MinValue
   }
 
   private def missingIndividuals: Array[EvaluatedIndividual] = {
