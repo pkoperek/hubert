@@ -6,6 +6,9 @@ import pl.edu.agh.hubert.flat
 import pl.edu.agh.hubert.pairs
 
 trait EvolutionIteration {
+  /**
+    * Returns true if the solution hasn't been found
+    */
   def evolve(): Boolean
 
   def experiment: Experiment
