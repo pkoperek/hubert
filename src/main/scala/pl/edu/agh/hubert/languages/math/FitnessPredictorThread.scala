@@ -32,7 +32,7 @@ private class FitnessPredictorThread(
   private val fitnessPredictorPopulationSize = 512
   private var fitnessPredictorPopulation = generateFitnessPredictors(fitnessPredictorPopulationSize)
   private val executorThread = new Thread(this)
-  private var started = false
+  private var running = false
   private var iteration = 0
   // According to http://creativemachines.cornell.edu/papers/GPTP06_Schmidt.pdf
   // it should be couple hundred, or each time evolution plateaus
@@ -41,16 +41,16 @@ private class FitnessPredictorThread(
   mostRecentBestPredictor.set(fitnessPredictorPopulation(0))
 
   def ensureWorking(): Unit = {
-    if (!started) {
+    if (!running) {
       logger.debug("Starting the coevolution thread")
 
       executorThread.start()
-      started = true
+      running = true
     }
   }
 
   override def run(): Unit = {
-    while(true) {
+    while(running) {
       evolvePredictors(solutionPopulation())
       iteration += 1
     }
@@ -208,7 +208,7 @@ private class FitnessPredictorThread(
       val dx_num = input.differentiated(x)
       val dy_num = input.differentiated(y)
 
-      val filtered = dx_sym.zip(dy_sym).zip(dx_num).zip(dy_num)
+      val filtered = dy_sym.zip(dx_sym).zip(dx_num).zip(dy_num)
         .filter(r => r._1._1._2 > 0 && r._2 > 0)
 
       if (filtered.length == 0) {
