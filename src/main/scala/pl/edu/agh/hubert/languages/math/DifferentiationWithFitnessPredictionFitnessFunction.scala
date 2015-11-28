@@ -35,45 +35,20 @@ class DifferentiationWithFitnessPredictionFitnessFunction(val experiment: Experi
     fitnessPredictorSize
   )
 
-  override def evaluatePopulation(
-                                   toEvaluate: Array[(Individual, Individual)]
-                                   ): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
-
-    fitnessPredictorEngine.ensureWorking()
-
-    val mathPopulation = asMathIndividualPairs(toEvaluate)
-    storeMostRecentSolutionPopulation(flat(mathPopulation))
-    val fitnessPredictor = fitnessPredictorEngine.bestFitnessPredictor()
-    val asEvaluatedWithFitnessPredictor = asEvaluatedIndividual(fitnessPredictor)_
-    val evaluatedSolutions = mathPopulation.map(pair =>
-      (
-        asEvaluatedWithFitnessPredictor(pair._1),
-        asEvaluatedWithFitnessPredictor(pair._2)
-        )
-    )
-
-    evaluatedSolutions
-  }
-
-  private def asMathIndividualPairs(toEvaluate: Array[(Individual, Individual)]): Array[(MathIndividual, MathIndividual)] = {
-    toEvaluate.map(
-      pair => (
-        pair._1.asInstanceOf[MathIndividual],
-        pair._2.asInstanceOf[MathIndividual]
-        )
-    )
-  }
-
   private def storeMostRecentSolutionPopulation(mathPopulation: Array[MathIndividual]): Unit = {
     fitnessPredictorEngine.mostRecentSolutionPopulation(mathPopulation)
   }
 
   override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
-    val mathPopulation = toEvaluate.map(individual => individual.asInstanceOf[MathIndividual])
+    val mathPopulation = toEvaluate.map(asMathIndividual)
     storeMostRecentSolutionPopulation(mathPopulation)
     val fitnessPredictor = fitnessPredictorEngine.bestFitnessPredictor()
     val evaluatedSolutions = mathPopulation.map(asEvaluatedIndividual(fitnessPredictor))
     evaluatedSolutions
+  }
+
+  private def asMathIndividual(individual: Individual): MathIndividual = {
+    individual.asInstanceOf[MathIndividual]
   }
 
   private def asEvaluatedIndividual(fitnessPredictor: FitnessPredictor)(individual: MathIndividual): EvaluatedIndividual = {
@@ -100,7 +75,7 @@ class DifferentiationWithFitnessPredictionFitnessFunction(val experiment: Experi
       val dx_num = input.differentiated(x)
       val dy_num = input.differentiated(y)
 
-      val filtered = dx_sym.zip(dy_sym).zip(dx_num).zip(dy_num)
+      val filtered = dy_sym.zip(dx_sym).zip(dx_num).zip(dy_num)
         .filter(r => r._1._1._2 > 0 && r._2 > 0)
 
       if (filtered.length == 0) {
@@ -109,7 +84,7 @@ class DifferentiationWithFitnessPredictionFitnessFunction(val experiment: Experi
         // -N - the same as multiplying by -1 at the beginning
         val pairingError = filtered
           //          .par
-          .map(r => (r._1._1._1 / r._1._1._2) - (r._1._2 / r._2))
+          .map(r => Math.abs(r._1._1._1 / r._1._1._2) - Math.abs(r._1._2 / r._2))
           .map(x => Math.log(1 + (if (x > 0) x else -x)))
           .sum / -N
 

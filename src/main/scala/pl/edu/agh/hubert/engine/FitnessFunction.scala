@@ -4,21 +4,7 @@ import pl.edu.agh.hubert.languages.math.{DifferentiationWithFitnessPredictionFit
 
 trait FitnessFunction {
 
-  def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
-    toEvaluate.map(individual => evaluateIndividual(individual))
-  }
-
-  def evaluatePopulation(toEvaluate: Array[(Individual, Individual)]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
-    toEvaluate.map(siblings => (evaluateIndividual(siblings._1), evaluateIndividual(siblings._2)))
-  }
-
-  protected def evaluateIndividual(individual: Individual): EvaluatedIndividual =
-    new EvaluatedIndividual(
-      individual,
-      evaluateFitness(individual)
-    )
-
-  protected def evaluateFitness(individual: Individual): Option[Double] = None
+  def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual]
 
   /**
    * This implementation assumes that target fitness is the max error of the solution

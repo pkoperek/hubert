@@ -2,6 +2,8 @@ package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert.randomPairs
+import pl.edu.agh.hubert.flat
+import pl.edu.agh.hubert.pairs
 
 trait EvolutionEngine {
   def evolve(): Boolean
@@ -30,7 +32,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
     val mutatedChildren = mutate(children)
     val evaluatedChildren = fitnessFunction.evaluatePopulation(mutatedChildren)
 
-    population = tournament(groupedParents, evaluatedChildren)
+    population = tournament(groupedParents, pairs(evaluatedChildren))
 
     shouldContinue()
   }
@@ -66,8 +68,8 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
     fitnessFunction.evaluatePopulation((1 to targetSize).map(_ => individualGenerator.generateIndividual()).toArray)
   }
 
-  private def mutate(toMutate: Array[(Individual, Individual)]): Array[(Individual, Individual)] = {
-    toMutate.map(pair => (mutationOperator.mutate(pair._1), mutationOperator.mutate(pair._2)))
+  private def mutate(toMutate: Array[(Individual, Individual)]): Array[Individual] = {
+    flat(toMutate.map(pair => (mutationOperator.mutate(pair._1), mutationOperator.mutate(pair._2))))
   }
 
   private def crossOverInPairs(parentsPairs: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[(Individual, Individual)] = {
