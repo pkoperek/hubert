@@ -1,4 +1,5 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.inactive { color: gray }
 
 .modal.in {
     display:block;
