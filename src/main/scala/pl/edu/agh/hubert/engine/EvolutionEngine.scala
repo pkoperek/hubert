@@ -23,7 +23,7 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
   private val targetFitness = experiment.targetFitness
 
   def evolve(): Boolean = {
-    logger.debug("Evolution iteration: start")
+    logger.debug("Deterministic Crowding Evolution iteration: start")
 
     population ++= missingIndividuals
 
