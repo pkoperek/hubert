@@ -5,13 +5,13 @@ import pl.edu.agh.hubert.randomPairs
 import pl.edu.agh.hubert.flat
 import pl.edu.agh.hubert.pairs
 
-trait EvolutionEngine {
+trait EvolutionIteration {
   def evolve(): Boolean
 
   def experiment: Experiment
 }
 
-private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) extends EvolutionEngine {
+private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment) extends EvolutionIteration {
 
   private val logger = LoggerFactory.getLogger(getClass)
 
@@ -86,10 +86,10 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
 
 }
 
-object EvolutionEngine {
+object EvolutionIteration {
 
-  def apply(experiment: Experiment): EvolutionEngine = {
-    new DeterministicCrowdingEvolutionEngine(experiment)
+  def apply(experiment: Experiment): EvolutionIteration = {
+    new DeterministicCrowdingEvolutionIteration(experiment)
   }
 
 }

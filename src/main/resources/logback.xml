@@ -8,7 +8,7 @@
     </appender>
 
     <logger name="pl.edu.agh.hubert.languages.math.MathRandomIndividualGenerator" level="INFO"/>
-    <logger name="pl.edu.agh.hubert.engine.DeterministicCrowdingEvolutionEngine" level="DEBUG"/>
+    <logger name="pl.edu.agh.hubert.engine.DeterministicCrowdingEvolutionIteration" level="DEBUG"/>
 
     <root level="debug">
         <appender-ref ref="STDOUT" />

@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 import pl.edu.agh.hubert.datasets.DataSet
 import pl.edu.agh.hubert.languages.math.DifferentiationFitnessFunction
 
-class DeterministicCrowdingEvolutionEngineTest extends FunSuite {
+class DeterministicCrowdingEvolutionIterationTest extends FunSuite {
 
   test("should execute experiment with math language") {
     val tmp = File.createTempFile("temp",".csv")
@@ -21,7 +21,7 @@ class DeterministicCrowdingEvolutionEngineTest extends FunSuite {
     )
 
     try {
-      new DeterministicCrowdingEvolutionEngine(experiment).evolve()
+      new DeterministicCrowdingEvolutionIteration(experiment).evolve()
     } catch {
       case e: Throwable => fail("Exception thrown! ", e)
     }
