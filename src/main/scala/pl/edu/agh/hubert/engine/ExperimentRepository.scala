@@ -8,6 +8,7 @@ trait ExperimentRepository {
 
   def listExperimentExecutions(offset: Int = 0, limit: Int = Int.MaxValue): Array[EvolutionTask]
 
+  def experimentById(experimentId: Int): Option[Experiment]
 }
 
 class MemoryExperimentRepository extends ExperimentRepository {
@@ -31,5 +32,15 @@ class MemoryExperimentRepository extends ExperimentRepository {
 
   override def listExperimentExecutions(offset: Int, limit: Int): Array[EvolutionTask] = {
     storage.values.slice(offset, offset + limit).toArray
+  }
+
+  override def experimentById(experimentId: Int): Option[Experiment] = {
+    val maybeTask = storage.get(experimentId)
+
+    if(maybeTask.nonEmpty) {
+      return Some(maybeTask.get.evolutionEngine.experiment)
+    }
+
+    None
   }
 }

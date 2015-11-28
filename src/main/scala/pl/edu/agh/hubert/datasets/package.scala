@@ -2,9 +2,6 @@ package pl.edu.agh.hubert
 
 import scala.collection.mutable.ArrayBuffer
 
-/**
- * Created by pkoperek on 10/13/15.
- */
 package object datasets {
 
   def differentiate(serie: Array[Double]): Array[Double] = {

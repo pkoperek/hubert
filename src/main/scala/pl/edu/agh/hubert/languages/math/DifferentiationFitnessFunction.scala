@@ -1,14 +1,24 @@
 package pl.edu.agh.hubert.languages.math
 
 import pl.edu.agh.hubert.datasets.CSVLoader
-import pl.edu.agh.hubert.engine.{Individual, Experiment, FitnessFunction, LanguageWord}
+import pl.edu.agh.hubert.engine._
 
 class DifferentiationFitnessFunction(val experiment: Experiment) extends FitnessFunction {
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
 
-  override def evaluateFitness(individual: Individual): Option[Double] = {
+  override def evaluatePopulation(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
+    toEvaluate.map(individual => evaluateIndividual(individual))
+  }
+
+  private def evaluateIndividual(individual: Individual): EvaluatedIndividual =
+    new EvaluatedIndividual(
+      individual,
+      evaluateFitness(individual)
+    )
+
+  private def evaluateFitness(individual: Individual): Option[Double] = {
     evaluateFitness(individual.asInstanceOf[MathIndividual])
   }
 

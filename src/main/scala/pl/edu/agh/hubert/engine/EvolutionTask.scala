@@ -5,7 +5,7 @@ import spray.json._
 
 class EvolutionTask(
                      val iterations: Int,
-                     val evolutionEngine: EvolutionEngine
+                     val evolutionEngine: EvolutionIteration
                      ) {
 
   var status = ExperimentStatus.New
@@ -15,7 +15,7 @@ class EvolutionTask(
 object EvolutionTask {
 
   def apply(experiment: Experiment): EvolutionTask = {
-    new EvolutionTask(experiment.iterations, EvolutionEngine(experiment))
+    new EvolutionTask(experiment.iterations, EvolutionIteration(experiment))
   }
 
 }

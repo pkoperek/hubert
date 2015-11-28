@@ -8,16 +8,31 @@ import spray.json._
 class ExperimentsServlet(
                           val evolutionExecutor: EvolutionExecutor,
                           val experimentRepository: ExperimentRepository
-                          ) extends LoggingServlet {
+                        ) extends LoggingServlet {
 
-  get("*") {
+  get("/") {
     contentType = "application/json"
-    
+
     JsArray(experimentRepository
       .listExperimentExecutions()
       .map(e => e.toJson)
       .toVector
     )
+  }
+
+  get("/:experimentId") {
+
+    val experimentId = params("experimentId").toInt
+    val maybeExperiment = experimentRepository.experimentById(experimentId)
+
+    if (maybeExperiment.isEmpty) {
+      throw new RuntimeException("No such experiment registered! (experiment id: " + experimentId + ")")
+    }
+
+    contentType = "application/octet-stream"
+    response.setHeader("Content-Disposition", "attachment; filename=experiment-" + experimentId + ".json")
+
+    maybeExperiment.get.toJson
   }
 
   post("/run") {

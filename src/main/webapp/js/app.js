@@ -86,18 +86,25 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
     };
 });
 
-hubertApp.controller('experimentsListController', function($scope, $modal, $log, $http) {
+hubertApp.controller('experimentsListController', function($scope, $interval, $modal, $log, $http) {
     
     $scope.loadingIndicator = "(loading...)";
-    
-    $http.get("experiments").then(function(response) {
-        $log.info("Got list of experiments from service: " + response.data);
-        $scope.loadingIndicator = "";
-        $scope.runningTasks = response.data;
-    }, function(errorResponse) {
-        // TODO: Handle error case
-    });
-    
+
+    $scope.refresh = function() {
+        $http.get("experiments").then(function(response) {
+            $log.info("Got list of experiments from service: " + response.data);
+            $scope.loadingIndicator = "";
+            $scope.runningTasks = response.data;
+        }, function(errorResponse) {
+            // TODO: Handle error case
+        });
+    };
+
+    $interval(function(){
+        $scope.refresh();
+    }, 10000);
+
+    $scope.refresh();
 });
 
 hubertApp.controller('experimentController', function(

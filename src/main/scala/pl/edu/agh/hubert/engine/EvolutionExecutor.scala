@@ -63,9 +63,11 @@ class EvolutionExecutor(
       debug("Stopping")
     }
 
+    /**
+      * Assumption: There has to be a fixed limit to the number of iterations !!! It is better to track this here
+      * in one place than in each engine implementation separately.
+      */
     private def executeTask(task: EvolutionTask): Unit = {
-      val targetFitness = task.evolutionEngine.experiment.targetFitness
-
       breakable {
         for (iteration <- 1 to task.iterations) {
           if (Thread.currentThread().isInterrupted) {
