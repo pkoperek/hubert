@@ -15,6 +15,7 @@ Developing
  * `cd ../../../`
  * `$ sbt`
  *  ` $ > ~container:start` - `~` turns on the autoreload
+ * Open browser at `http://localhost:8080`
 
 Building
 ========
