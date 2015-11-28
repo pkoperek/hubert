@@ -1,8 +1,8 @@
-package pl.edu.agh.hubert.generator
+package pl.edu.agh.hubert.languages.math
 
 import org.scalatest.FunSuite
 import pl.edu.agh.hubert._
-import pl.edu.agh.hubert.languages._
+import pl.edu.agh.hubert.engine.{CompositeWord, Individual, LanguageWord, TerminalWord}
 
 import scala.util.Random
 

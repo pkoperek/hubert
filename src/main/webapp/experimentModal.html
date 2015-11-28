@@ -53,7 +53,7 @@
             <label for="iterations" class="col-sm-2 control-label">Iterations</label>
 
             <div class="col-sm-10">
-                <input type="number" class="form-control" ng-model="iterations" name="iterations" placeholder="10">
+                <input type="number" min="1" class="form-control" ng-model="iterations" name="iterations" placeholder="10">
             </div>
         </div>
 
@@ -115,6 +115,14 @@
 
             <div class="col-sm-10">
                 <input type="number" min="0" max="1" step="0.01" class="form-control" ng-model="crossOverProbability" name="crossOverProbability" placeholder="0.75">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="targetFitness" class="col-sm-2 control-label">Target fitness</label>
+
+            <div class="col-sm-10">
+                <input type="number" min="0" max="1" step="0.00000001" class="form-control" ng-model="targetFitness" name="targetFitness" placeholder="0.0000001">
             </div>
         </div>
 

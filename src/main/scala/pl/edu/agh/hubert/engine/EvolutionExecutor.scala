@@ -1,15 +1,13 @@
 package pl.edu.agh.hubert.engine
 
 
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent._
+import java.util.concurrent.atomic.AtomicBoolean
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.experiments.ExperimentStatus
-
-import util.control.Breaks._
 
 import scala.collection.mutable.ArrayBuffer
+import scala.util.control.Breaks._
 
 class EvolutionExecutor(
                          val numberOfThreads: Int,
@@ -66,6 +64,8 @@ class EvolutionExecutor(
     }
 
     private def executeTask(task: EvolutionTask): Unit = {
+      val targetFitness = task.evolutionEngine.experiment.targetFitness
+
       breakable {
         for (iteration <- 1 to task.iterations) {
           if (Thread.currentThread().isInterrupted) {
@@ -75,10 +75,14 @@ class EvolutionExecutor(
           }
 
           task.currentIteration = iteration
-          task.evolutionEngine.evolve()
+          if(!task.evolutionEngine.evolve()) {
+            debug("Breaking the loop - objective reached")
+            task.status = ExperimentStatus.FinishedSuccess
+            break()
+          }
         }
 
-        task.status = ExperimentStatus.Finished
+        task.status = ExperimentStatus.FinishedIterationLimitExceeded
       }
     }
 

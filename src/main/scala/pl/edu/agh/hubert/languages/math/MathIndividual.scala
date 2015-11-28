@@ -1,6 +1,6 @@
-package pl.edu.agh.hubert
+package pl.edu.agh.hubert.languages.math
 
-import pl.edu.agh.hubert.languages._
+import pl.edu.agh.hubert.engine.{Individual, CompositeWord, LanguageWord, TerminalWord}
 
 import scala.collection.mutable
 
@@ -39,30 +39,42 @@ class MathIndividual(override val rawTree: LanguageWord) extends Individual(rawT
           case word: LanguageWord => return cos
         }
 
-      case plus: Plus =>
-        if (isConstant(plus.leftWord) && isConstant(plus.rightWord)) {
-          return new Constant(constant(plus.leftWord) + constant(plus.rightWord))
-        } else if (isZero(plus.leftWord)) {
-          return plus.rightWord
-        } else if (isZero(plus.rightWord)) {
-          return plus.leftWord
-        }
+      case plus: Plus => {
+        val left = simplify(plus.leftWord)
+        val right = simplify(plus.rightWord)
 
-      case minus: Minus =>
-        if (isConstant(minus.leftWord) && isConstant(minus.rightWord)) {
-          return new Constant(constant(minus.leftWord) - constant(minus.rightWord))
-        } else if (isZero(minus.rightWord)) {
-          return minus.leftWord
+        if (isConstant(left) && isConstant(right)) {
+          return new Constant(constant(left) + constant(right))
+        } else if (isZero(left)) {
+          return right
+        } else if (isZero(right)) {
+          return left
         }
+      }
 
-      case mul: Mul =>
-        if (isConstant(mul.leftWord) && isConstant(mul.rightWord)) {
-          return new Constant(constant(mul.leftWord) * constant(mul.rightWord))
-        } else if (isOne(mul.leftWord)) {
-          return mul.rightWord
-        } else if (isOne(mul.rightWord)) {
-          return mul.leftWord
+      case minus: Minus => {
+        val left = simplify(minus.leftWord)
+        val right = simplify(minus.rightWord)
+
+        if (isConstant(left) && isConstant(right)) {
+          return new Constant(constant(left) - constant(right))
+        } else if (isZero(right)) {
+          return left
         }
+      }
+
+      case mul: Mul => {
+        val left = simplify(mul.leftWord)
+        val right = simplify(mul.rightWord)
+
+        if (isConstant(left) && isConstant(right)) {
+          return new Constant(constant(left) * constant(right))
+        } else if (isOne(left)) {
+          return right
+        } else if (isOne(right)) {
+          return left
+        }
+      }
     }
 
     word

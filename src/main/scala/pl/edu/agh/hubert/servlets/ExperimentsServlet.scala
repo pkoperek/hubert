@@ -1,9 +1,8 @@
 package pl.edu.agh.hubert.servlets
 
-import pl.edu.agh.hubert.engine.EvolutionExecutor
+import pl.edu.agh.hubert.engine.{ExperimentRepository, Experiment, ExperimentProtocol, EvolutionExecutor}
 import pl.edu.agh.hubert.engine.EvolutionTaskProtocol._
-import pl.edu.agh.hubert.experiments.ExperimentProtocol._
-import pl.edu.agh.hubert.experiments.{Experiment, ExperimentRepository}
+import ExperimentProtocol._
 import spray.json._
 
 class ExperimentsServlet(

@@ -1,48 +1,22 @@
-package pl.edu.agh.hubert.generator
+package pl.edu.agh.hubert.languages.math
 
 import java.lang.reflect.Constructor
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.experiments.Experiment
-import pl.edu.agh.hubert.languages._
-import pl.edu.agh.hubert.{Individual, MathIndividual}
+import pl.edu.agh.hubert.engine.{CompositeWord, Individual, IndividualGenerator, LanguageWord}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-trait IndividualGenerator {
-
-  def generateGenome(maxHeight: Int): LanguageWord
-  def generateIndividual(): Individual
-
-}
-
-object IndividualGenerator {
-
-  def apply(experiment: Experiment): IndividualGenerator = {
-    experiment.language.name match {
-      case "math" => return new MathRandomIndividualGenerator(
-        experiment.language.words.toArray,
-        experiment.maxHeight, 
-        new Random(),
-        experiment.dataSet.variables.size
-      )
-    }
-
-    throw new RuntimeException("No individual generator specified!")
-  }
-
-}
-
 class MathRandomIndividualGenerator(
-                           val words: Array[Class[_]],
-                           val maxHeight: Int,
-                           val random: Random,
-                           val variablesIdsNo: Int
-                           ) extends IndividualGenerator {
+                                     val words: Array[Class[_]],
+                                     val maxHeight: Int,
+                                     val random: Random,
+                                     val variablesIdsNo: Int
+                                     ) extends IndividualGenerator {
 
   private val logger = LoggerFactory.getLogger(getClass)
-  
+
   private val terminalWords = words.filter(c => !isCompositeWord(c))
   private val allWords = words
   private val variablesIds = (0 to variablesIdsNo-1).toArray
@@ -71,7 +45,7 @@ class MathRandomIndividualGenerator(
     if(logger.isDebugEnabled) {
       logger.debug("Composite, selected: " + word)
     }
-    
+
     val selectedCompositeWord: Class[CompositeWord] = word.asInstanceOf[Class[CompositeWord]]
     val constructor: Constructor[_] = firstConstructor(selectedCompositeWord)
     val parametersCount = constructor.getParameterCount

@@ -1,7 +1,7 @@
-package pl.edu.agh.hubert
+package pl.edu.agh.hubert.languages.math
 
-import org.scalatest.{Matchers, FunSuite}
-import pl.edu.agh.hubert.languages._
+import org.scalatest.{FunSuite, Matchers}
+import pl.edu.agh.hubert.engine.LanguageWord
 
 class MathIndividualTest extends FunSuite with Matchers {
 

@@ -1,19 +1,10 @@
 package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.crossingover.CrossOverOperator
-import pl.edu.agh.hubert.mutation.MutationOperator
-import pl.edu.agh.hubert.{EvaluatedIndividual, Individual}
-import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
-import pl.edu.agh.hubert.experiments.Experiment
-import pl.edu.agh.hubert.fitness.FitnessFunction
-import pl.edu.agh.hubert.generator.IndividualGenerator
-
-import scala.collection.mutable
-import scala.util.Random
+import pl.edu.agh.hubert.randomPairs
 
 trait EvolutionEngine {
-  def evolve()
+  def evolve(): Boolean
 
   def experiment: Experiment
 }
@@ -27,21 +18,38 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
   private val crossOverOperator = CrossOverOperator(experiment)
   private val mutationOperator = MutationOperator(experiment)
   private var population = Array[EvaluatedIndividual]()
+  private val targetFitness = experiment.targetFitness
 
-  def evolve() = {
-    logger.debug("Evolution iteration")
+  def evolve(): Boolean = {
+    logger.debug("Evolution iteration: start")
 
     population ++= missingIndividuals
 
-    val groupedParents = groupedIntoPairs(population)
+    val groupedParents = randomPairs(population)
     val children = crossOverInPairs(groupedParents)
     val mutatedChildren = mutate(children)
-    val evaluatedChildren = evaluateFitness(mutatedChildren)
+    val evaluatedChildren = fitnessFunction.evaluatePopulation(mutatedChildren)
 
     population = tournament(groupedParents, evaluatedChildren)
 
-    val result = if (population.nonEmpty) population.minBy(_.fitnessValue) else "None!"
-    logger.debug("Final fitness: " + result)
+    shouldContinue()
+  }
+
+  private def shouldContinue(): Boolean = {
+    !fitnessFunction.targetFitnessAchieved(targetFitness, bestFitness())
+  }
+
+  private def bestFitness(): Double = {
+    // assume that the higher fitness, the better
+    val result = if (population.nonEmpty) Some(population.maxBy(_.fitnessValue)) else None
+
+    logger.debug("Evolution iteration: end -> " + result)
+
+    if(result.isDefined) {
+      return result.get.fitnessValue
+    }
+
+    return Double.MinValue
   }
 
   private def missingIndividuals: Array[EvaluatedIndividual] = {
@@ -55,25 +63,11 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
 
   private def generateRandomIndividuals(targetSize: Int): Array[EvaluatedIndividual] = {
     logger.info("Generating: " + targetSize + " random individuals")
-    evaluateFitness((1 to targetSize).map(_ => individualGenerator.generateIndividual()).toArray)
+    fitnessFunction.evaluatePopulation((1 to targetSize).map(_ => individualGenerator.generateIndividual()).toArray)
   }
-
-  private def evaluateFitness(toEvaluate: Array[Individual]): Array[EvaluatedIndividual] = {
-    toEvaluate.par.map(individual => evaluateFitness(individual)).toArray
-  }
-
-  private def evaluateFitness(individual: Individual): EvaluatedIndividual =
-    new EvaluatedIndividual(
-      individual,
-      fitnessFunction.evaluateIndividual(individual)
-    )
 
   private def mutate(toMutate: Array[(Individual, Individual)]): Array[(Individual, Individual)] = {
     toMutate.map(pair => (mutationOperator.mutate(pair._1), mutationOperator.mutate(pair._2)))
-  }
-
-  private def groupedIntoPairs(toGroup: Array[EvaluatedIndividual]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
-    Random.shuffle(toGroup.toIterator).grouped(2).map(array => (array.head, array(1))).toArray
   }
 
   private def crossOverInPairs(parentsPairs: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[(Individual, Individual)] = {
@@ -88,9 +82,6 @@ private class DeterministicCrowdingEvolutionEngine(val experiment: Experiment) e
     })
   }
 
-  private def evaluateFitness(toEvaluate: Array[(Individual, Individual)]): Array[(EvaluatedIndividual, EvaluatedIndividual)] = {
-    toEvaluate.map(siblings => (evaluateFitness(siblings._1), evaluateFitness(siblings._2)))
-  }
 }
 
 object EvolutionEngine {

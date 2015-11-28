@@ -1,51 +1,24 @@
-package pl.edu.agh.hubert.fitness
+package pl.edu.agh.hubert.languages.math
 
-import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.languages.LanguageWord
-import pl.edu.agh.hubert.{MathIndividual, Individual}
 import pl.edu.agh.hubert.datasets.CSVLoader
-import pl.edu.agh.hubert.experiments.Experiment
-
-trait FitnessFunction {
-
-  def evaluateIndividual(individual: Individual): Option[Double]
-
-}
-
-object FitnessFunction {
-
-  def functions() = Set[String](
-    name(classOf[DifferentiationFitnessFunction])
-  )
-
-  private def name(value: Class[_]): String = value.getName
-
-  def apply(experiment: Experiment): FitnessFunction = {
-    if (classOf[DifferentiationFitnessFunction].getName == experiment.fitnessFunction) {
-      return new DifferentiationFitnessFunction(experiment)
-    }
-
-    throw new IllegalArgumentException("Unknown fitness function: " + experiment.fitnessFunction)
-  }
-
-}
+import pl.edu.agh.hubert.engine.{Individual, Experiment, FitnessFunction, LanguageWord}
 
 class DifferentiationFitnessFunction(val experiment: Experiment) extends FitnessFunction {
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
   private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
 
-  override def evaluateIndividual(individual: Individual): Option[Double] = {
-    evaluateIndividual(individual.asInstanceOf[MathIndividual])
+  override def evaluateFitness(individual: Individual): Option[Double] = {
+    evaluateFitness(individual.asInstanceOf[MathIndividual])
   }
 
-  private def evaluateIndividual(individual: MathIndividual): Option[Double] = {
+  private def evaluateFitness(individual: MathIndividual): Option[Double] = {
+
+    val N = loadedDataSet.rawSize
 
     val pairingErrors = pairings.par.map(pairing => {
       val x = pairing._1
       val y = pairing._2
-
-      val N = loadedDataSet.size
 
       val dx: LanguageWord = individual.differentiatedBy(x)
       val dy: LanguageWord = individual.differentiatedBy(y)

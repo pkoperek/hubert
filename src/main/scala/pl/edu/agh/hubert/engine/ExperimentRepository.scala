@@ -1,6 +1,4 @@
-package pl.edu.agh.hubert.experiments
-
-import pl.edu.agh.hubert.engine.EvolutionTask
+package pl.edu.agh.hubert.engine
 
 import scala.collection.concurrent.TrieMap
 

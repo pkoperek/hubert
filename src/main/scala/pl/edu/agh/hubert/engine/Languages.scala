@@ -1,6 +1,6 @@
-package pl.edu.agh.hubert.languages
+package pl.edu.agh.hubert.engine
 
-import pl.edu.agh.hubert.hubert.Input
+import pl.edu.agh.hubert.languages.math._
 import spray.json.{DefaultJsonProtocol, JsArray, JsObject, JsString, JsValue, RootJsonFormat, _}
 
 object Languages {

@@ -1,29 +1,8 @@
-package pl.edu.agh.hubert.crossingover
+package pl.edu.agh.hubert.languages.math
 
-import pl.edu.agh.hubert.languages._
-import pl.edu.agh.hubert.{MathIndividual, Individual}
-import pl.edu.agh.hubert.experiments.Experiment
+import pl.edu.agh.hubert.engine.{CrossOverOperator, Individual, LanguageWord}
 
-import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
-
-trait CrossOverOperator {
-
-  def crossOver(left: Individual, right: Individual): (Individual, Individual)
-
-}
-
-object CrossOverOperator {
-
-  def apply(experiment: Experiment): CrossOverOperator = {
-    experiment.language.name match {
-      case "math" => return new MathCrossOverOperator(experiment.crossOverProbability)
-    }
-
-    throw new IllegalArgumentException("Unknown language: " + experiment.language.name)
-  }
-
-}
 
 class MathCrossOverOperator(crossOverProbability: Double) extends CrossOverOperator {
 
