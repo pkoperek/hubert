@@ -53,6 +53,8 @@ class LoadedDataSet private(
 
   def timeVariableName(): String = "t"
 
+  def timeVariableIndex(): Option[Int] = indexOf(timeVariableName())
+
   def indexOf(variable: String): Option[Int] = {
     nameIdx.get(variable)
   }
