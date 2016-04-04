@@ -24,6 +24,15 @@ Building
 
  * Result can be found in `target/`
 
+Samples
+=======
+
+Sample datasets can be found in `samples/` directory.
+
+List:
+
+ * `x_2_add_1.csv` - contains data for `x^2+1` function. The accuracy (target error) is 0.01 (this is the resolution of datapoints).
+
 References
 ==========
 

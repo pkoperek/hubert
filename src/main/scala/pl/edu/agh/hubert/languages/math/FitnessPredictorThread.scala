@@ -18,7 +18,7 @@ private class FitnessPredictorThread(
 
   private val logger = LoggerFactory.getLogger(getClass)
 
-  private val dataSetSize = loadedDataSet.differentiatedSize
+  private val dataSetSize = loadedDataSet.differencesSize
   private val trainersPopulationSize = 1
   private val mostRecentBestPredictor = new AtomicReference[FitnessPredictor]()
   private val _mostRecentSolutionPopulation = new AtomicReference[Array[MathIndividual]]()
@@ -205,8 +205,8 @@ private class FitnessPredictorThread(
       val dx_sym = dx.evaluateInput(input.raw)
       val dy_sym = dy.evaluateInput(input.raw)
 
-      val dx_num = input.differentiated(x)
-      val dy_num = input.differentiated(y)
+      val dx_num = input.seriesOfDifferences(x)
+      val dy_num = input.seriesOfDifferences(y)
 
       val filtered = dy_sym.zip(dx_sym).zip(dx_num).zip(dy_num)
         .filter(r => r._1._1._2 > 0 && r._2 > 0)

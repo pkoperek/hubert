@@ -4,24 +4,28 @@ import java.io.File
 
 import org.scalatest.{BeforeAndAfter, FunSuite}
 import pl.edu.agh.hubert.datasets.DataSet
-import pl.edu.agh.hubert.languages.math.DifferentiationFitnessFunction
+import pl.edu.agh.hubert.languages.math.DifferentiationWithFitnessPredictionFitnessFunction
+import scalax.io._
 
-class MemoryExperimentRepositoryTest extends FunSuite with BeforeAndAfter{
+class MemoryExperimentRepositoryTest extends FunSuite with BeforeAndAfter {
   val temporaryFile = File.createTempFile("temp", ".csv")
+
+  Resource.fromFile(temporaryFile).writeStrings(List("#t\n", "1.0\n", "2.0"))
+
   val experiment = new Experiment(
-    1, 
-    "Test", 
-    "some experiment", 
-    1, 
-    Languages.mathLanguage(), 
-    new DataSet(temporaryFile.getAbsolutePath, Set("varA")),
-    fitnessFunction = classOf[DifferentiationFitnessFunction].getName
+    1,
+    "Test",
+    "some experiment",
+    1,
+    Languages.mathLanguage(),
+    new DataSet(temporaryFile.getAbsolutePath, Set("t")),
+    fitnessFunction = classOf[DifferentiationWithFitnessPredictionFitnessFunction].getName
   )
 
   before {
     temporaryFile.deleteOnExit()
   }
-  
+
   test("should add experiment") {
     val repo = new MemoryExperimentRepository
 

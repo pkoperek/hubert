@@ -1,6 +1,6 @@
 package pl.edu.agh.hubert.engine
 
-import pl.edu.agh.hubert.languages.math.{DifferentiationWithFitnessPredictionFitnessFunction, DifferentiationFitnessFunction}
+import pl.edu.agh.hubert.languages.math.DifferentiationWithFitnessPredictionFitnessFunction
 
 trait FitnessFunction {
 
@@ -18,17 +18,12 @@ trait FitnessFunction {
 object FitnessFunction {
 
   def functions() = Set[String](
-    name(classOf[DifferentiationFitnessFunction]),
     name(classOf[DifferentiationWithFitnessPredictionFitnessFunction])
   )
 
   private def name(value: Class[_]): String = value.getName
 
   def apply(experiment: Experiment): FitnessFunction = {
-    if (classOf[DifferentiationFitnessFunction].getName == experiment.fitnessFunction) {
-      return new DifferentiationFitnessFunction(experiment)
-    }
-
     if(classOf[DifferentiationWithFitnessPredictionFitnessFunction].getName == experiment.fitnessFunction) {
       return new DifferentiationWithFitnessPredictionFitnessFunction(experiment)
     }

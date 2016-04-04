@@ -10,7 +10,17 @@ class DifferentiationWithFitnessPredictionFitnessFunction(val experiment: Experi
   private val logger = LoggerFactory.getLogger(getClass)
 
   private val loadedDataSet = CSVLoader.load(experiment.dataSet)
-  private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
+
+  assumeDataSetHasTimeVariable(loadedDataSet)
+
+  private val timeVarIndex = loadedDataSet.timeVariableIndex().get
+  private val pairings = loadedDataSet
+                          .raw
+                          .indices
+                          .filter(_ != timeVarIndex)
+                          .combinations(2)
+                          .toArray
+                          .map(c => (c.seq(0), c.seq(1)))
 
   private val fitnessPredictorSize = 128
   private val fitnessPredictorMutationProbability = 0.10
@@ -58,47 +68,84 @@ class DifferentiationWithFitnessPredictionFitnessFunction(val experiment: Experi
     )
   }
 
+  def assumeDataSetHasTimeVariable(loadedDataSet: LoadedDataSet) = {
+    if (!loadedDataSet.hasTime()) {
+      throw new UnsupportedOperationException("The dataset has to contain a variable with time in order to use this fitness function")
+    }
+  }
+
   private def evaluateSolutionIndividual(solutionIndividual: MathIndividual, input: LoadedDataSet): Option[Double] = {
 
     val N = input.rawSize
 
-    val pairingErrors = pairings.par.map(pairing => {
-      val x = pairing._1
-      val y = pairing._2
+    if (pairings.length == 0) {
 
-      val dx: LanguageWord = solutionIndividual.differentiatedBy(x)
-      val dy: LanguageWord = solutionIndividual.differentiatedBy(y)
+      val f_t = (loadedDataSet.variables() - loadedDataSet.timeVariableName()).head
+      val f_t_idx = loadedDataSet.indexOf(f_t).get
 
-      val dx_sym = dx.evaluateInput(input.raw)
-      val dy_sym = dy.evaluateInput(input.raw)
+      val df_t_dt = solutionIndividual.differentiatedBy(timeVarIndex)
+      val df_t_dt_sym = df_t_dt.evaluateInput(input.raw)
 
-      val dx_num = input.differentiated(x)
-      val dy_num = input.differentiated(y)
+      val dt_num = input.seriesOfDifferences(timeVarIndex)
+      val df_t_num = input.seriesOfDifferences(f_t_idx)
 
-      val filtered = dy_sym.zip(dx_sym).zip(dx_num).zip(dy_num)
-        .filter(r => r._1._1._2 > 0 && r._2 > 0)
+      val filtered = df_t_num.zip(dt_num).zip(df_t_dt_sym).filter(row => row._1._2 > 0)
 
       if (filtered.length == 0) {
-        None
+        return None
       } else {
-        // -N - the same as multiplying by -1 at the beginning
-        val pairingError = filtered
-          //          .par
-          .map(r => Math.abs(r._1._1._1 / r._1._1._2) - Math.abs(r._1._2 / r._2))
-          .map(x => Math.log(1 + (if (x > 0) x else -x)))
+        val error = filtered
+          .map(r => Math.abs(r._1._1 / r._1._2) - Math.abs(r._2))
+          .map(x => Math.log(1 + Math.abs(x)))
           .sum / -N
 
-        Some(pairingError)
+        return Some(error)
       }
-    })
-      .seq
-      .filter(o => o.isDefined)
-      .map(o => o.get)
 
-    if (pairingErrors.nonEmpty) {
-      Some(pairingErrors.min)
     } else {
-      None
+      val pairingErrors = pairings.par.map(pairing => {
+        val x = pairing._1
+        val y = pairing._2
+
+        val dx: LanguageWord = solutionIndividual.differentiatedBy(x)
+        val dy: LanguageWord = solutionIndividual.differentiatedBy(y)
+
+        val dx_sym = dx.evaluateInput(input.raw)
+        val dy_sym = dy.evaluateInput(input.raw)
+
+        val dx_num = input.seriesOfDifferences(x)
+        val dy_num = input.seriesOfDifferences(y)
+
+        val filtered = dx_sym
+          .zip(dy_sym)
+          .zip(dx_num)
+          .zip(dy_num)
+          .map(x => (x._1._1._1, x._1._1._2, x._1._2, x._2))
+          .filter(r => r._2 > 0 && r._4 > 0)
+
+        if (filtered.length == 0) {
+          None
+        } else {
+          // -N - the same as multiplying by -1 at the beginning
+          val pairingError = filtered
+            //          .par
+            .map(r => Math.abs(r._1 / r._2 - r._3 / r._4))
+            .map(x => Math.log(1 + Math.abs(x)))
+            .sum / -N
+
+          Some(pairingError)
+        }
+      })
+        .seq
+        .filter(o => o.isDefined)
+        .map(o => o.get)
+
+      if (pairingErrors.nonEmpty) {
+        Some(pairingErrors.min)
+      } else {
+        None
+      }
     }
   }
+
 }
