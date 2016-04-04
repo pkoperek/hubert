@@ -36,8 +36,8 @@ class DifferentiationFitnessFunction(val experiment: Experiment) extends Fitness
       val dx_sym = dx.evaluateInput(loadedDataSet.raw)
       val dy_sym = dy.evaluateInput(loadedDataSet.raw)
 
-      val dx_num = loadedDataSet.differentiated(x)
-      val dy_num = loadedDataSet.differentiated(y)
+      val dx_num = loadedDataSet.seriesOfDifferences(x)
+      val dy_num = loadedDataSet.seriesOfDifferences(y)
 
       val filtered = dx_sym.zip(dy_sym).zip(dx_num).zip(dy_num)
         .filter(r => r._1._1._2 > 0 && r._2 > 0)

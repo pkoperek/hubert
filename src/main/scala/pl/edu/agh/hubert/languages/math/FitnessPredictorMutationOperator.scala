@@ -10,7 +10,7 @@ class FitnessPredictorMutationOperator(
                                         val fitnessPredictorSize: Int
                                         ) {
 
-  private val dataSetSize = baseDataSet.differentiatedSize
+  private val dataSetSize = baseDataSet.differencesSize
   private val random = new Random(System.currentTimeMillis())
 
   def mutate(parentPredictor: FitnessPredictor): FitnessPredictor = {
