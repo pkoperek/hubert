@@ -4,7 +4,7 @@ import java.io.File
 
 import org.scalatest.FunSuite
 import pl.edu.agh.hubert.datasets.DataSet
-import pl.edu.agh.hubert.languages.math.{DifferentiationWithFitnessPredictionFitnessFunction, DifferentiationFitnessFunction}
+import pl.edu.agh.hubert.languages.math.DifferentiationWithFitnessPredictionFitnessFunction
 
 class DeterministicCrowdingEvolutionIterationTest extends FunSuite {
 
