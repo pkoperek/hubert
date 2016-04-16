@@ -11,16 +11,16 @@ class Constant(val value: Double) extends TerminalWord() {
   override def toString: String = value.toString
 }
 
-class Variable(val id: Int) extends TerminalWord() {
+class Variable(val id: Int, val isDependentOf: Int = independentVariable) extends TerminalWord() {
   override def evaluateInput(input: Input): Array[Double] = {
-    if(id == Ddependent_Dvariable) {
+    if (id != independentVariable) {
       return input.last
     }
 
     input(id)
   }
 
-  private def idToString(): String = if (id == Ddependent_Dvariable) ("d_dep/d" + id) else id.toString
+  private def idToString(): String = if (isDependentOf == independentVariable) id.toString else ("d_" + id + "/d_" + isDependentOf)
 
   override def toString: String = "var_" + idToString()
 }
