@@ -13,6 +13,10 @@ class Constant(val value: Double) extends TerminalWord() {
 
 class Variable(val id: Int) extends TerminalWord() {
   override def evaluateInput(input: Input): Array[Double] = {
+    if(id == Ddependent_Dvariable) {
+      return input.last
+    }
+
     input(id)
   }
 
