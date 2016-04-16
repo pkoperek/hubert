@@ -20,7 +20,9 @@ class Variable(val id: Int) extends TerminalWord() {
     input(id)
   }
 
-  override def toString: String = "var_" + id.toString
+  private def idToString(): String = if (id == Ddependent_Dvariable) ("d_dep/d" + id) else id.toString
+
+  override def toString: String = "var_" + idToString()
 }
 
 class Sin(val internalWord: LanguageWord) extends CompositeWord(Array(internalWord), 1) {
