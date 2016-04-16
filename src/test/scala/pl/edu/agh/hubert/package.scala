@@ -2,7 +2,7 @@ package pl.edu.agh.hubert
 
 import pl.edu.agh.hubert.datasets.DataSet
 import pl.edu.agh.hubert.engine.{Languages, Experiment}
-import pl.edu.agh.hubert.languages.math.DifferentiationFitnessFunction
+import pl.edu.agh.hubert.languages.math.DifferentiationFitnessFunctionFormula
 
 package object testfixtures {
 
@@ -13,7 +13,7 @@ package object testfixtures {
     1,
     Languages.mathLanguage(),
     dataSet("circle.csv", Set("x", "y")),
-    fitnessFunction = classOf[DifferentiationFitnessFunction].getName
+    fitnessFunction = classOf[DifferentiationFitnessFunctionFormula].getName
   )
 
   def dataSet(path: String, variables: Set[String]): DataSet = {
