@@ -4,15 +4,21 @@ import pl.edu.agh.hubert.engine.Input
 
 class LoadedDataSet private(
                              val raw: Input,
-                             val nameIdx: Map[String, Int],
-                             val seriesOfDifferences: Input
+                             val rawAlignedToDifferences: Input,
+                             val seriesOfDifferences: Input,
+                             val nameIdx: Map[String, Int]
                            ) {
 
   val rawSize: Int = if (raw.length > 0) raw(0).length else 0
-  val differencesSize: Int = rawSize - 1
+  val differencesSize: Int = rawSize - 2
 
   def this(raw: Input, nameIdx: Map[String, Int]) {
-    this(raw, nameIdx, raw.map(rawValues => differences(rawValues)))
+    this(
+      raw,
+      raw.map(rawValues => dropFirstAndLast(rawValues)),
+      raw.map(rawValues => differences(rawValues)),
+      nameIdx
+    )
   }
 
   def rawByName(name: String): Option[Array[Double]] = {
@@ -38,8 +44,9 @@ class LoadedDataSet private(
   def subset(indices: Array[Int]): LoadedDataSet = {
     new LoadedDataSet(
       raw.map(rawSerie => indices.map(index => rawSerie(index))),
-      nameIdx,
-      seriesOfDifferences.map(differencesOfSerie => indices.map(index => differencesOfSerie(index)))
+      rawAlignedToDifferences.map(serie => indices.map(index => serie(index))),
+      seriesOfDifferences.map(differencesOfSerie => indices.map(index => differencesOfSerie(index))),
+      nameIdx
     )
   }
 
