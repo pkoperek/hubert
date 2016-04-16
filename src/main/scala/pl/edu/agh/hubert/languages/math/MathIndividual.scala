@@ -73,6 +73,10 @@ class MathIndividual(override val rawTree: LanguageWord) extends Individual(rawT
           return right
         } else if (isOne(right)) {
           return left
+        } else if (isZero(right)) {
+          return right
+        } else if (isZero(left)) {
+          return left
         }
       }
     }
