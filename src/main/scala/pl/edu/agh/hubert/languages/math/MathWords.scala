@@ -13,7 +13,7 @@ class Constant(val value: Double) extends TerminalWord() {
 
 class Variable(val id: Int, val isDependentOf: Int = independentVariable) extends TerminalWord() {
   override def evaluateInput(input: Input): Array[Double] = {
-    if (id != independentVariable) {
+    if (isDependentOf != independentVariable) {
       return input.last
     }
 
