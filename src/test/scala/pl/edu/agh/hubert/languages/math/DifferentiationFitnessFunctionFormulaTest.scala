@@ -2,13 +2,12 @@ package pl.edu.agh.hubert.languages.math
 
 import org.scalatest.FunSuite
 import pl.edu.agh.hubert.datasets.CSVLoader
-import pl.edu.agh.hubert.engine.{Languages, Experiment}
 import pl.edu.agh.hubert.testfixtures._
 
 class DifferentiationFitnessFunctionFormulaTest extends FunSuite {
 
-  val fitnessFunction = new DifferentiationFitnessFunctionFormula()
-  val loadedDataSet = CSVLoader.load(dataSet("circle.csv", Set("x", "y")))
+  val loadedDataSet = CSVLoader.load(dataSet("circle_1.csv", Set("t", "x", "y")))
+  val fitnessFunction = new DifferentiationFitnessFunctionFormula(3)
 
   test("x^2 + y^2 - 4 should have very low error") {
 
