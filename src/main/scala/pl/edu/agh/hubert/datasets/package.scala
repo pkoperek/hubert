@@ -5,10 +5,11 @@ import scala.collection.mutable.ArrayBuffer
 package object datasets {
 
   def differences(serie: Array[Double]): Array[Double] = {
-    // central difference
+    // backward difference
     val differentiated = ArrayBuffer[Double]()
+    // TODO: the central difference has actually better accuracy - add an option to use different formulas
     for (idx <- 1 to serie.length - 2) {
-      differentiated += serie(idx + 1) - serie(idx - 1)
+      differentiated += serie(idx) - serie(idx - 1)
     }
 
     differentiated.toArray

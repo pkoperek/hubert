@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicReference
 import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert._
 import pl.edu.agh.hubert.datasets.LoadedDataSet
-import pl.edu.agh.hubert.engine.{EvaluatedIndividual, LanguageWord}
+import pl.edu.agh.hubert.engine.EvaluatedIndividual
 
 import scala.util.Random
 
@@ -13,8 +13,9 @@ private class FitnessPredictorThread(
                                       val loadedDataSet: LoadedDataSet,
                                       val crossOverOperator: FitnessPredictorCrossOverOperator,
                                       val mutationOperator: FitnessPredictorMutationOperator,
-                                      val fitnessPredictorSize: Int
-                                      ) extends Runnable {
+                                      val fitnessPredictorSize: Int,
+                                      val fitnessFunctionFormula: DifferentiationFitnessFunctionFormula
+                                    ) extends Runnable {
 
   private val logger = LoggerFactory.getLogger(getClass)
 
@@ -22,7 +23,6 @@ private class FitnessPredictorThread(
   private val trainersPopulationSize = 1
   private val mostRecentBestPredictor = new AtomicReference[FitnessPredictor]()
   private val _mostRecentSolutionPopulation = new AtomicReference[Array[MathIndividual]]()
-  private val pairings = loadedDataSet.raw.indices.combinations(2).toArray.map(c => (c.seq(0), c.seq(1)))
   private var trainersPopulation: Array[EvaluatedIndividual] = null
 
   def mostRecentSolutionPopulation(population: Array[MathIndividual]): Unit = {
@@ -50,7 +50,7 @@ private class FitnessPredictorThread(
   }
 
   override def run(): Unit = {
-    while(running) {
+    while (running) {
       evolvePredictors(solutionPopulation())
       iteration += 1
     }
@@ -117,7 +117,7 @@ private class FitnessPredictorThread(
   private def evaluateTrainerVariance(trainer: MathIndividual): Double = {
     val N = fitnessPredictorPopulationSize
     val evaluations = fitnessPredictorPopulation
-      .map(predictor => evaluateSolutionIndividual(trainer, predictor.data))
+      .map(predictor => fitnessFunctionFormula.evaluateFitnessFormula(trainer, predictor.data))
       .filter(_.isDefined)
       .map(_.get)
 
@@ -155,23 +155,11 @@ private class FitnessPredictorThread(
 
   private def evaluateFitnessPredictor(
                                         predictor: FitnessPredictor
-                                        ): Option[Double] = {
-    /**
-     * Implemented formula:
-     * SUM( ABS(Exact_Fitness_of_Trainer(t) - Predicted_Fitness_of_Trainer(t)) ) / size_of_trainers_population
-     *
-     * The smaller - the better
-     *
-     * Source:
-     * Michael D. Schmidt and Hod Lipson: Coevolution of Fitness Predictors,
-     * IEEE TRANSACTIONS ON EVOLUTIONARY COMPUTATION, VOL. 12, NO. 6, DECEMBER 2008,
-     * p. 738
-     */
-
+                                      ): Option[Double] = {
     val evaluatedTrainers = trainersPopulation.map(trainer =>
       (
         trainer.fitnessValue,
-        evaluateSolutionIndividual(trainer.individual.asInstanceOf[MathIndividual], predictor.data)
+        fitnessFunctionFormula.evaluateFitnessFormula(trainer.individual.asInstanceOf[MathIndividual], predictor.data)
         )
     ).filter(fitness => fitness._2.isDefined)
 
@@ -187,52 +175,8 @@ private class FitnessPredictorThread(
     logger.debug("Evaluating real trainer fitness: " + trainer)
     EvaluatedIndividual(
       trainer,
-      evaluateSolutionIndividual(trainer, loadedDataSet)
+      fitnessFunctionFormula.evaluateFitnessFormula(trainer, loadedDataSet)
     )
-  }
-
-  private def evaluateSolutionIndividual(solutionIndividual: MathIndividual, input: LoadedDataSet): Option[Double] = {
-
-    val N = input.rawSize
-
-    val pairingErrors = pairings.par.map(pairing => {
-      val x = pairing._1
-      val y = pairing._2
-
-      val dx: LanguageWord = solutionIndividual.differentiatedBy(x)
-      val dy: LanguageWord = solutionIndividual.differentiatedBy(y)
-
-      val dx_sym = dx.evaluateInput(input.raw)
-      val dy_sym = dy.evaluateInput(input.raw)
-
-      val dx_num = input.seriesOfDifferences(x)
-      val dy_num = input.seriesOfDifferences(y)
-
-      val filtered = dy_sym.zip(dx_sym).zip(dx_num).zip(dy_num)
-        .filter(r => r._1._1._2 > 0 && r._2 > 0)
-
-      if (filtered.length == 0) {
-        None
-      } else {
-        // -N - the same as multiplying by -1 at the beginning
-        val pairingError = filtered
-          //          .par
-          .map(r => (r._1._1._1 / r._1._1._2) - (r._1._2 / r._2))
-          .map(x => Math.log(1 + (if (x > 0) x else -x)))
-          .sum / -N
-
-        Some(pairingError)
-      }
-    })
-      .seq
-      .filter(o => o.isDefined)
-      .map(o => o.get)
-
-    if (pairingErrors.nonEmpty) {
-      Some(pairingErrors.min)
-    } else {
-      None
-    }
   }
 
 }
