@@ -30,7 +30,7 @@ package object testfixtures {
     "no description",
     1,
     Languages.mathLanguage(),
-    dataSet("circle.csv", Set("x", "y")),
+    dataSet("circle_1.csv", Set("t", "x", "y")),
     fitnessFunction = classOf[DifferentiationFitnessFunctionFormula].getName
   )
 

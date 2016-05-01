@@ -15,8 +15,8 @@ class LoadedDataSet private(
   def this(raw: Input, nameIdx: Map[String, Int]) {
     this(
       raw,
-      new Input(raw.series.map(rawValues => dropFirstAndLast(rawValues))),
-      new Input(raw.series.map(rawValues => differences(rawValues))),
+      new Input(raw.series.map(dropFirstAndLast)),
+      new Input(raw.series.map(differences)),
       nameIdx
     )
   }
