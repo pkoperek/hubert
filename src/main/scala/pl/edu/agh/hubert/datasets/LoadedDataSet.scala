@@ -9,14 +9,14 @@ class LoadedDataSet private(
                              val nameIdx: Map[String, Int]
                            ) {
 
-  val rawSize: Int = if (raw.length > 0) raw(0).length else 0
+  val rawSize: Int = raw.dataPointsCount
   val differencesSize: Int = rawSize - 2
 
   def this(raw: Input, nameIdx: Map[String, Int]) {
     this(
       raw,
-      raw.map(rawValues => dropFirstAndLast(rawValues)),
-      raw.map(rawValues => differences(rawValues)),
+      new Input(raw.series.map(rawValues => dropFirstAndLast(rawValues))),
+      new Input(raw.series.map(rawValues => differences(rawValues))),
       nameIdx
     )
   }
@@ -25,7 +25,7 @@ class LoadedDataSet private(
     val index = nameIdx.get(name)
 
     if (index.isDefined) {
-      return Some(raw(index.get))
+      return Some(raw.serie(index.get))
     }
 
     None
@@ -35,7 +35,7 @@ class LoadedDataSet private(
     val index = nameIdx.get(name)
 
     if (index.isDefined) {
-      return Some(seriesOfDifferences(index.get))
+      return Some(seriesOfDifferences.serie(index.get))
     }
 
     None
@@ -43,9 +43,9 @@ class LoadedDataSet private(
 
   def subset(indices: Array[Int]): LoadedDataSet = {
     new LoadedDataSet(
-      raw.map(rawSerie => indices.map(index => rawSerie(index))),
-      rawAlignedToDifferences.map(serie => indices.map(index => serie(index))),
-      seriesOfDifferences.map(differencesOfSerie => indices.map(index => differencesOfSerie(index))),
+      new Input(raw.series.map(rawSerie => indices.map(index => rawSerie(index)))),
+      new Input(rawAlignedToDifferences.series.map(serie => indices.map(index => serie(index)))),
+      new Input(seriesOfDifferences.series.map(differencesOfSerie => indices.map(index => differencesOfSerie(index)))),
       nameIdx
     )
   }

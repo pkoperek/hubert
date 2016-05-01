@@ -19,5 +19,5 @@ class LanguageTest extends FunSuite {
 }
 
 class DummyWord extends LanguageWord {
-  override def evaluateInput(input: Input): Array[Double] = Array.fill(input.size)(0.0)
+  override def evaluateInput(input: Input): Array[Double] = Array.fill(input.variablesCount)(0.0)
 }

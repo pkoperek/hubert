@@ -1,11 +1,12 @@
 package pl.edu.agh.hubert.languages.math
 
+import pl.edu.agh.hubert.engine
 import pl.edu.agh.hubert.engine.{CompositeWord, LanguageWord, TerminalWord}
 import pl.edu.agh.hubert.engine.Input
 
 class Constant(val value: Double) extends TerminalWord() {
   override def evaluateInput(input: Input): Array[Double] = {
-    Array.fill[Double](input(0).length)(value)
+    Array.fill[Double](input.dataPointsCount)(value)
   }
 
   override def toString: String = value.toString
@@ -14,15 +15,13 @@ class Constant(val value: Double) extends TerminalWord() {
 class Variable(val id: Int, val isDependentOf: Int = independentVariable) extends TerminalWord() {
   override def evaluateInput(input: Input): Array[Double] = {
     if (isDependentOf != independentVariable) {
-      return input.last
+      return input.series.last
     }
 
-    input(id)
+    input.series(id)
   }
 
-  private def idToString(): String = if (isDependentOf == independentVariable) id.toString else ("d_" + id + "/d_" + isDependentOf)
-
-  override def toString: String = "var_" + idToString()
+  override def toString: String = "var_" + id + "(dep of: )"
 }
 
 class Sin(val internalWord: LanguageWord) extends CompositeWord(Array(internalWord), 1) {
