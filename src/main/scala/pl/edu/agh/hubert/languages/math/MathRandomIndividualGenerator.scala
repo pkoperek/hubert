@@ -61,11 +61,11 @@ class MathRandomIndividualGenerator(
   private def instantiateTerminalWord(word: Class[_]): LanguageWord = {
     logger.debug("Terminal, selected: " + word)
     if (classOf[Constant].isAssignableFrom(word)) {
-      return firstConstructor(word).newInstance(Math.random().asInstanceOf[Object]).asInstanceOf[LanguageWord]
+      return new Constant(Math.random())
     }
 
     if (classOf[Variable].isAssignableFrom(word)) {
-      return firstConstructor(word).newInstance(randomElement(variablesIds).asInstanceOf[Object]).asInstanceOf[LanguageWord]
+      return new Variable(randomElement(variablesIds))
     }
 
     word.newInstance().asInstanceOf[LanguageWord]
