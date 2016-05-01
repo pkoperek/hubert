@@ -12,7 +12,7 @@ class DeterministicCrowdingEvolutionIterationTest extends FunSuite {
 
   test("should execute experiment with math language") {
     val tmp = File.createTempFile("temp", ".csv")
-    Resource.fromFile(tmp).writeStrings(List("#t,varB\n", "1.0,3.0\n", "2.0,4.0"))
+    Resource.fromFile(tmp).writeStrings(List("#t,varB\n", "1.0,3.0\n", "2.0,4.0\n", "3.0,6.0"))
 
     val experiment = Experiment(
       1,
