@@ -1,9 +1,7 @@
 package pl.edu.agh.hubert.engine
 
 import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.randomPairs
-import pl.edu.agh.hubert.flat
-import pl.edu.agh.hubert.pairs
+import pl.edu.agh.hubert.{flat, pairs, randomPairs}
 
 trait EvolutionIteration {
   /**
@@ -46,12 +44,16 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
 
   private def bestFitness(): Double = {
     // assume that the higher fitness, the better
-    val result = if (population.nonEmpty) Some(population.maxBy(_.fitnessValue)) else None
+    val result = if (population.nonEmpty) Some(population.maxBy(_.fitness)) else None
 
-    logger.debug("Evolution iteration: end -> " + result)
+    if (logger.isDebugEnabled()) {
+      logger.debug("Evolution iteration: end max (best): -> " + population.maxBy(_.fitness))
+      logger.debug("Evolution iteration: end min: -> " + population.minBy(_.fitness))
+      logger.debug("Evolution iteration: end avg: -> " + population.foldLeft(0.0)(_ + _.fitness) / population.length)
+    }
 
-    if(result.isDefined) {
-      return result.get.fitnessValue
+    if (result.isDefined) {
+      return result.get.fitness
     }
 
     Double.MinValue
@@ -59,7 +61,7 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
 
   private def missingIndividuals: Array[EvaluatedIndividual] = {
     val missingIndividualsNo = experiment.populationSize - population.length
-    if(missingIndividualsNo > 0) {
+    if (missingIndividualsNo > 0) {
       return generateRandomIndividuals(missingIndividualsNo)
     }
 
@@ -83,7 +85,7 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
                           groupedParents: Array[(EvaluatedIndividual, EvaluatedIndividual)],
                           mutatedChildren: Array[(EvaluatedIndividual, EvaluatedIndividual)]): Array[EvaluatedIndividual] = {
     groupedParents.zip(mutatedChildren).flatMap(p => {
-      Array(p._1._1, p._1._2, p._2._1, p._2._2).filter(i => i.isValid).sortBy(-_.fitnessValue).slice(0, 2)
+      Array(p._1._1, p._1._2, p._2._1, p._2._2).sortBy(-_.fitness).slice(0, 2)
     })
   }
 

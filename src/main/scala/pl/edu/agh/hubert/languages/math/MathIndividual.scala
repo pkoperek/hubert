@@ -12,7 +12,10 @@ class MathIndividual(override val rawTree: LanguageWord) extends Individual(rawT
 
   lazy val tree = simplify(rawTree)
 
-  def differentiatedBy(variable: Int) = differentiatedCache.getOrElseUpdate(variable, simplify(differentiateBy(variable, tree)))
+  def differentiatedBy(variable: Int, dependent: Int = Int.MinValue) = differentiatedCache.getOrElseUpdate(
+    variable,
+    simplify(differentiateBy(variable, dependent, tree))
+  )
 
   private def countElements(tree: LanguageWord): Int = {
     1 + (tree match {
@@ -73,6 +76,10 @@ class MathIndividual(override val rawTree: LanguageWord) extends Individual(rawT
           return right
         } else if (isOne(right)) {
           return left
+        } else if (isZero(right)) {
+          return right
+        } else if (isZero(left)) {
+          return left
         }
       }
     }
@@ -94,12 +101,12 @@ class MathIndividual(override val rawTree: LanguageWord) extends Individual(rawT
     word.isInstanceOf[Constant]
   }
 
-  private def differentiateBy(variable: Int, tree: LanguageWord): LanguageWord = {
+  private def differentiateBy(variable: Int, dependent: Int, tree: LanguageWord): LanguageWord = {
     tree match {
       case sin: Sin =>
         return new Mul(
           new Cos(sin.internalWord),
-          differentiateBy(variable, sin.internalWord)
+          differentiateBy(variable, dependent, sin.internalWord)
         )
 
       case cos: Cos =>
@@ -108,36 +115,40 @@ class MathIndividual(override val rawTree: LanguageWord) extends Individual(rawT
             new Constant(-1.0),
             new Sin(cos.internalWord)
           ),
-          differentiateBy(variable, cos.internalWord)
+          differentiateBy(variable, dependent, cos.internalWord)
         )
 
       case plus: Plus =>
         return new Plus(
-          differentiateBy(variable, plus.leftWord),
-          differentiateBy(variable, plus.rightWord)
+          differentiateBy(variable, dependent, plus.leftWord),
+          differentiateBy(variable, dependent, plus.rightWord)
         )
 
       case minus: Minus =>
         return new Minus(
-          differentiateBy(variable, minus.leftWord),
-          differentiateBy(variable, minus.rightWord)
+          differentiateBy(variable, dependent, minus.leftWord),
+          differentiateBy(variable, dependent, minus.rightWord)
         )
 
       case mul: Mul =>
         return new Plus(
           new Mul(
-            differentiateBy(variable, mul.leftWord),
+            differentiateBy(variable, dependent, mul.leftWord),
             mul.rightWord
           ),
           new Mul(
             mul.leftWord,
-            differentiateBy(variable, mul.rightWord)
+            differentiateBy(variable, dependent, mul.rightWord)
           )
         )
 
       case variableTree: Variable =>
         if (variableTree.id == variable) {
           return new Constant(1.0)
+        } else if(variableTree.id == dependent) {
+          // in reality when the variable y is interdependent with x
+          // we compute the derivative as y' = dy/dx
+          return new Variable(dependent, variable)
         } else {
           return new Constant(0.0)
         }

@@ -1,15 +1,16 @@
 package pl.edu.agh.hubert.datasets
 
 import org.scalatest.{FunSuite, Matchers}
+import pl.edu.agh.hubert.testfixtures.dataSet
 
 class CSVLoaderTest extends FunSuite with Matchers {
 
   test("load empty file") {
-    assert(CSVLoader.load(new DataSet(resolvePath("empty.csv"), Set())).raw.isEmpty)
+    assert(CSVLoader.load(dataSet("empty.csv", Set())).raw.isEmpty)
   }
 
   test("load sample file") {
-    val loaded = CSVLoader.load(new DataSet(resolvePath("noSpaces.csv"), Set("varA", "varB", "varC")))
+    val loaded = CSVLoader.load(dataSet("noSpaces.csv", Set("varA", "varB", "varC")))
 
     loaded.raw.nonEmpty should be
     loaded.rawByName("varA").get should equal(Array(1.0, 4.0, 7.0))
@@ -18,7 +19,7 @@ class CSVLoaderTest extends FunSuite with Matchers {
   }
 
   test("load with engineering notation") {
-    val loaded = CSVLoader.load(new DataSet(resolvePath("linesWithE.csv"), Set("x", "y")))
+    val loaded = CSVLoader.load(dataSet("linesWithE.csv", Set("x", "y")))
 
     loaded.raw.nonEmpty should be
     loaded.rawByName("x").get should equal(Array(1.7501908933647871e-002, 4.9880440460896436e+000, 6.2831853071795862e+000))
@@ -26,7 +27,7 @@ class CSVLoaderTest extends FunSuite with Matchers {
   }
 
   test("load sample file with spaces") {
-    val loaded = CSVLoader.load(new DataSet(resolvePath("withSpaces.csv"), Set("varA", "varB", "varC")))
+    val loaded = CSVLoader.load(dataSet("withSpaces.csv", Set("varA", "varB", "varC")))
 
     loaded.raw.nonEmpty should be
     loaded.rawByName("varA").get should equal(Array(1.0, 4.0, 7.0))
@@ -35,7 +36,7 @@ class CSVLoaderTest extends FunSuite with Matchers {
   }
 
   test("load only a single variable from a file") {
-    val loaded = CSVLoader.load(new DataSet(resolvePath("withSpaces.csv"), Set("varB")))
+    val loaded = CSVLoader.load(dataSet("withSpaces.csv", Set("varB")))
 
     loaded.raw.nonEmpty should be
     loaded.rawByName("varB").get should equal(Array(2.0, 5.0, 8.0))
@@ -44,9 +45,7 @@ class CSVLoaderTest extends FunSuite with Matchers {
   }
 
   test("load file with just the description of data") {
-    val loaded = CSVLoader.load(new DataSet(
-      resolvePath("firstline.csv"),
-      Set("varA", "varB", "varC")))
+    val loaded = CSVLoader.load(dataSet("firstline.csv", Set("varA", "varB", "varC")))
 
     assert(loaded.raw.nonEmpty)
     assert(loaded.rawByName("varA").get.isEmpty)
@@ -54,7 +53,4 @@ class CSVLoaderTest extends FunSuite with Matchers {
     assert(loaded.rawByName("varC").get.isEmpty)
   }
 
-  private def resolvePath(fileName: String): String = {
-    getClass.getResource("/csvloader/" + fileName).getPath
-  }
 }

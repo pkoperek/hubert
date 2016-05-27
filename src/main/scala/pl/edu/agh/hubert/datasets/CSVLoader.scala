@@ -1,5 +1,7 @@
 package pl.edu.agh.hubert.datasets
 
+import pl.edu.agh.hubert.engine.Input
+
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
@@ -50,6 +52,6 @@ object CSVLoader {
       namesToIdx += (variableSerie._1 -> (seriesBuffer.size - 1))
     }
 
-    new LoadedDataSet(seriesBuffer.toArray, namesToIdx.toMap)
+    new LoadedDataSet(new Input(seriesBuffer.toArray), namesToIdx.toMap)
   }
 }

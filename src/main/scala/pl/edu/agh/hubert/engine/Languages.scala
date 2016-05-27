@@ -53,7 +53,7 @@ object LanguageProtocol extends DefaultJsonProtocol {
             name,
             words.map(word => Class.forName(word.toString().replaceAll("\"", ""))).toSet
           )
-        case _ => deserializationError("Langugae expected")
+        case _ => deserializationError("Language expected")
       }
   }
 

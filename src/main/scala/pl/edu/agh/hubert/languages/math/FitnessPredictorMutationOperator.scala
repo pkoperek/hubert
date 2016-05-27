@@ -20,8 +20,8 @@ class FitnessPredictorMutationOperator(
 
       parentPredictor.predictorIndices(pointToChange) = newRow
 
-      for (serieIdx <- parentPredictor.data.raw.indices) {
-        parentPredictor.data.raw(serieIdx)(pointToChange) = baseDataSet.raw(serieIdx)(newRow)
+      for (serieIdx <- parentPredictor.data.raw.series.indices) {
+        parentPredictor.data.raw.series(serieIdx)(pointToChange) = baseDataSet.raw.series(serieIdx)(newRow)
       }
     }
 
