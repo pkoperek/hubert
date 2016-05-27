@@ -17,8 +17,7 @@ class DifferentiationWithFitnessPredictionFitnessFunctionTest extends FunSuite w
     val evaluatedPopulation = fitnessFunction.evaluatePopulation(Array(properSolution))
 
     val fitness = evaluatedPopulation(0).fitness
-    assert(fitness.isDefined)
-    assert(Math.abs(fitness.get) < 3e-12)
+    assert(Math.abs(fitness) < 3e-12)
   }
 
 }
