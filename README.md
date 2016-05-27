@@ -29,9 +29,33 @@ Samples
 
 Sample datasets can be found in `samples/` directory.
 
-List:
+#### x2_add_1.csv
 
- * `x_2_add_1.csv` - contains data for `x^2+1` function. The accuracy (target error) is 0.01 (this is the resolution of datapoints).
+Original formula: `x = t^2 + 1`
+The accuracy (target error) is 0.01 (this is the resolution of datapoints).
+
+Sample output from the evolution:
+```
+17:55:10.823 [pool-1-thread-6] DEBUG p.e.a.h.e.DeterministicCrowdingEvolutionIteration => Evolution iteration: end max (best): -> EvaluatedIndividual(Individual: ((var_0(dep of: ) * var_0(dep of: )) - var_1(dep of: )),-3.197789255612609E-14)
+```
+
+Which roughly (constants omitted) translates to the following equation: `t * t - x = 0`
+
+#### circle.csv
+
+Original formula: `16 = x^2 + y^2`
+
+Sample output from the evolution:
+```
+18:09:22.132 [pool-1-thread-6] DEBUG p.e.a.h.e.DeterministicCrowdingEvolutionIteration => Evolution iteration: end max (best): -> EvaluatedIndividual(Individual: (((0.12389272997871958 - var_0(dep of: )) + (var_0(dep of: ) + (var_1(dep of: ) + ((0.237852231098711 - var_1(dep of: )) - (var_0(dep of: ) * var_0(dep of: )))))) + (0.715395558549027 + (0.9672931591150952 - (0.6886642219802059 - (var_1(dep of: ) * var_1(dep of: )))))),-1.2429467177658014E-13)
+
+```
+
+Which translates to the following equation: `-x*x  + y*y + 1.355769457 = 0`
+
+### Limitations:
+
+* Fitness function uses the absolute value of the partial derivatives quotient. This means that the signs in the equations can be incorrect.
 
 References
 ==========
