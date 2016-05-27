@@ -16,7 +16,7 @@ class MathRandomIndividualGeneratorTest extends FunSuite {
     val individual = generateIndividualOfHeight(1, language = variableLanguage)
 
     assert(individual.rawTree.isInstanceOf[Variable])
-    assert(individual.rawTree.asInstanceOf[Variable].id == 1)
+    assert(individual.rawTree.asInstanceOf[Variable].id == 0)
   }
 
   test("should create Constant with random value") {

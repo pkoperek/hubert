@@ -19,7 +19,7 @@ class MathRandomIndividualGenerator(
 
   private val terminalWords = words.filter(c => !isCompositeWord(c))
   private val allWords = words
-  private val variablesIds = (1 to variablesIdsNo-1).toArray // don't use time in the equations
+  private val variablesIds = (0 to variablesIdsNo-1).toArray
 
   private def isCompositeWord(c: Class[_]): Boolean = {
     classOf[CompositeWord].isAssignableFrom(c)
