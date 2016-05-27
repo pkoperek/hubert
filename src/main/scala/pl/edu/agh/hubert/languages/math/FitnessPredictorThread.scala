@@ -108,7 +108,7 @@ private class FitnessPredictorThread(
         .take(trainersPopulationSize)
         .map(trainer => evaluateTrainer(trainer._1))
 
-      logger.debug("Best trainer: " + newTrainers(0).fitness.get)
+      logger.debug("Best trainer: " + newTrainers(0).fitness)
 
       trainersPopulation = newTrainers
     }
@@ -116,11 +116,7 @@ private class FitnessPredictorThread(
 
   private def evaluateTrainerVariance(trainer: MathIndividual): Double = {
     val N = fitnessPredictorPopulationSize
-    val evaluations = fitnessPredictorPopulation
-      .map(predictor => fitnessFunctionFormula.evaluateFitnessFormula(trainer, predictor.data))
-      .filter(_.isDefined)
-      .map(_.get)
-
+    val evaluations = fitnessPredictorPopulation.map(predictor => fitnessFunctionFormula.evaluateFitnessFormula(trainer, predictor.data))
     val avg = evaluations.sum / N
     val variance = evaluations.map(e => (e - avg) * (e - avg)).sum / N
 
@@ -158,14 +154,14 @@ private class FitnessPredictorThread(
                                       ): Option[Double] = {
     val evaluatedTrainers = trainersPopulation.map(trainer =>
       (
-        trainer.fitnessValue,
+        trainer.fitness,
         fitnessFunctionFormula.evaluateFitnessFormula(trainer.individual.asInstanceOf[MathIndividual], predictor.data)
         )
-    ).filter(fitness => fitness._2.isDefined)
+    )
 
     if (evaluatedTrainers.nonEmpty) {
       val N = evaluatedTrainers.length
-      return Some(evaluatedTrainers.map(fitness => Math.abs(fitness._1 - fitness._2.get)).sum / N)
+      return Some(evaluatedTrainers.map(fitness => Math.abs(fitness._1 - fitness._2)).sum / N)
     }
 
     None

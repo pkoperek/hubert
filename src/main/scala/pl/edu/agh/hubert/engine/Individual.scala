@@ -7,10 +7,6 @@ class Individual(val rawTree: LanguageWord) {
   }
 }
 
-case class EvaluatedIndividual(individual: Individual, fitness: Option[Double]) {
+case class EvaluatedIndividual(individual: Individual, fitness: Double) {
   def rawTree = individual.rawTree
-
-  val isValid = fitness.isDefined
-
-  val fitnessValue = fitness.getOrElse(Double.PositiveInfinity)
 }
