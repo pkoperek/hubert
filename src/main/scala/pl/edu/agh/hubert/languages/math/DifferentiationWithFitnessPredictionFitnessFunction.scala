@@ -1,9 +1,7 @@
 package pl.edu.agh.hubert.languages.math
 
-import org.slf4j.LoggerFactory
-import pl.edu.agh.hubert.datasets.{CSVLoader, LoadedDataSet}
+import pl.edu.agh.hubert.datasets.CSVLoader
 import pl.edu.agh.hubert.engine._
-import pl.edu.agh.hubert.flat
 
 class DifferentiationWithFitnessPredictionFitnessFunction(val experiment: Experiment) extends FitnessFunction {
 
