@@ -4,13 +4,16 @@ import org.slf4j.LoggerFactory
 import pl.edu.agh.hubert.{flat, pairs, randomPairs}
 
 trait EvolutionIteration {
-  /**
-    * Returns true if the solution hasn't been found
-    */
-  def evolve(): Boolean
+  def evolve(): EvolutionIterationResult
 
   def experiment: Experiment
 }
+
+case class EvolutionIterationResult(
+                                     // Returns true if the solution hasn't been found
+                                     val shouldContinue: Boolean,
+                                     val iterationStatistics: EvolutionIterationStatistics
+                                   )
 
 private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment) extends EvolutionIteration {
 
@@ -23,7 +26,7 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
   private var population = Array[EvaluatedIndividual]()
   private val targetFitness = experiment.targetFitness
 
-  def evolve(): Boolean = {
+  def evolve(): EvolutionIterationResult = {
     logger.debug("Deterministic Crowding Evolution iteration: start")
 
     population ++= missingIndividuals
@@ -35,7 +38,24 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
 
     population = tournament(groupedParents, pairs(evaluatedChildren))
 
-    shouldContinue()
+    gatherResults()
+  }
+
+  private def gatherResults(): EvolutionIterationResult = {
+    val avgFitness = population.foldLeft(0.0)(_ + _.fitness) / population.length
+    val withMinFitness = population.minBy(_.fitness)
+    val withMaxFitness = population.maxBy(_.fitness)
+
+    if (logger.isDebugEnabled()) {
+      logger.debug("Evolution iteration: end max (best): -> " + withMaxFitness.fitness)
+      logger.debug("Evolution iteration: end min: -> " + withMinFitness.fitness)
+      logger.debug("Evolution iteration: end avg: -> " + avgFitness)
+    }
+
+    new EvolutionIterationResult(
+      shouldContinue(),
+      new EvolutionIterationStatistics(avgFitness, withMinFitness.fitness, withMaxFitness.fitness)
+    )
   }
 
   private def shouldContinue(): Boolean = {
@@ -44,19 +64,7 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
 
   private def bestFitness(): Double = {
     // assume that the higher fitness, the better
-    val result = if (population.nonEmpty) Some(population.maxBy(_.fitness)) else None
-
-    if (logger.isDebugEnabled()) {
-      logger.debug("Evolution iteration: end max (best): -> " + population.maxBy(_.fitness))
-      logger.debug("Evolution iteration: end min: -> " + population.minBy(_.fitness))
-      logger.debug("Evolution iteration: end avg: -> " + population.foldLeft(0.0)(_ + _.fitness) / population.length)
-    }
-
-    if (result.isDefined) {
-      return result.get.fitness
-    }
-
-    Double.MinValue
+    if (population.nonEmpty) population.maxBy(_.fitness).fitness else Double.MinValue
   }
 
   private def missingIndividuals: Array[EvaluatedIndividual] = {

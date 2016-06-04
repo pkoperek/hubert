@@ -68,6 +68,8 @@ class EvolutionExecutor(
       * in one place than in each engine implementation separately.
       */
     private def executeTask(task: EvolutionTask): Unit = {
+      val engine = task.evolutionEngine
+
       breakable {
         for (iteration <- 1 to task.iterations) {
           if (Thread.currentThread().isInterrupted) {
@@ -76,8 +78,12 @@ class EvolutionExecutor(
             break()
           }
 
+          val iterationResult = engine.evolve()
+
           task.currentIteration = iteration
-          if(!task.evolutionEngine.evolve()) {
+          task.statistics = iterationResult.iterationStatistics
+
+          if(!iterationResult.shouldContinue) {
             debug("Breaking the loop - objective reached")
             task.status = ExperimentStatus.FinishedSuccess
             break()
