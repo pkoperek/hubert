@@ -81,14 +81,15 @@
                             <progressbar
                                     class="{{task | progressBarClass}}"
                                     animate="true"
-                                    max="task.experiment.iterations"
+                                    max="task | maxProgressByExpStatus"
                                     value="task.currentIteration"
                                     type="{{task | type}}">
                                 <span style="color:white; white-space:nowrap;">{{task.currentIteration}} / {{task.experiment.iterations}}</span>
                             </progressbar>
                         </td>
                         <td>
-                            <a href="/experiments/{{task.experiment.id}}" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span></a>
+                            <a href="/experiments/{{task.experiment.id}}"><span class="glyphicon glyphicon-download"
+                                                                                aria-hidden="true"></span></a>
                             <a href="#"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></a>
                             <a href="#"><span class="glyphicon glyphicon-play inactive" aria-hidden="true"></span></a>
                             <a href="#"><span class="glyphicon glyphicon-pause inactive" aria-hidden="true"></span></a>

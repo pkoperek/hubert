@@ -25,6 +25,16 @@ var openModal = function(modal, modalToOpen, successCallback, failureCallback, t
     modalInstance.result.then(successCallback, failureCallback);
 };
 
+hubertApp.filter('maxProgressByExpStatus', function() {
+    return function(task) {
+        if(task.status === "Running") {
+            return task.experiment.iterations;
+        }
+
+        return task.currentIteration;
+    };
+});
+
 hubertApp.filter('progressBarClass', function() {
     return function(input) {
         if(input.status === "Running") {
@@ -59,7 +69,7 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
             'experiment',
             function(result) {
                 $log.info("New experiment to send: " + result);
-                $http.post("experiments/run", result).success(function(data) {
+                $http.post("experiments/run", result).then(function(data) {
                     $log.info("Got data from service: " + data)
                 })
             },
