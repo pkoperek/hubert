@@ -173,7 +173,7 @@ hubertApp.controller('experimentController', function(
             "id": -1,
             "name": $scope.experimentName || "Experiment",
             "description": $scope.experimentDescription || "Description",
-            "iterations": $scope.iterations || 10,
+            "iterations": $scope.iterations || 10000,
             "language": {
                 "name": $scope.selectedLanguage.name,
                 "words": extractText($scope.selectedLanguage.words)
