@@ -5,7 +5,8 @@ import spray.json._
 case class EvolutionIterationStatistics(
                                          val avgFitness: Double,
                                          val minFitness: Double,
-                                         val maxFitness: Double
+                                         val maxFitness: Double,
+                                         val bestIndividual: String = "None"
                                        )
 
 object EvolutionIterationStatisticsProtocol extends DefaultJsonProtocol {
@@ -15,7 +16,8 @@ object EvolutionIterationStatisticsProtocol extends DefaultJsonProtocol {
       JsObject(
         "avg" -> JsNumber(is.avgFitness),
         "min" -> JsNumber(is.minFitness),
-        "max" -> JsNumber(is.maxFitness)
+        "max" -> JsNumber(is.maxFitness),
+        "bestIndividual" -> JsString(is.bestIndividual)
       )
 
     def read(value: JsValue) = value match {

@@ -54,7 +54,12 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
 
     new EvolutionIterationResult(
       shouldContinue(),
-      new EvolutionIterationStatistics(avgFitness, withMinFitness.fitness, withMaxFitness.fitness)
+      new EvolutionIterationStatistics(
+        avgFitness,
+        withMinFitness.fitness,
+        withMaxFitness.fitness,
+        withMaxFitness.toString
+      )
     )
   }
 

@@ -22,6 +22,10 @@ class ExperimentsServlet(
 
   get("/:experimentId") {
 
+    /**
+      * Returns experiment definition
+      */
+
     val experimentId = params("experimentId").toInt
     val maybeExperiment = experimentRepository.experimentById(experimentId)
 

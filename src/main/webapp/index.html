@@ -94,6 +94,11 @@
                             <a href="#"><span class="glyphicon glyphicon-play inactive" aria-hidden="true"></span></a>
                             <a href="#"><span class="glyphicon glyphicon-pause inactive" aria-hidden="true"></span></a>
                             <a href="#"><span class="glyphicon glyphicon-stop inactive" aria-hidden="true"></span></a>
+
+                            <a ng-if="task.status=='FinishedSuccess'"
+                               ng-click="openExperimentResults(task)">
+                                <span class="glyphicon glyphicon-stats" aria-hidden="true"/>
+                            </a>
                         </td>
                     </tr>
                     </tbody>

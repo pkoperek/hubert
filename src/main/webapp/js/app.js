@@ -10,7 +10,7 @@ var extractText = function(arrayToExtract) {
     return result;
 };
 
-var openModal = function(modal, modalToOpen, successCallback, failureCallback, title, experimentModel) {
+var openModal = function(modal, modalToOpen, successCallback, failureCallback, title, externalData) {
     var modalInstance = modal.open({
         animation: true,
         size: 'lg',
@@ -18,7 +18,7 @@ var openModal = function(modal, modalToOpen, successCallback, failureCallback, t
         templateUrl: modalToOpen + 'Modal.html',
         resolve: {
             title: function() { return title || "!No title passed!"; },
-            experiment: function() { return experimentModel || {}; }
+            externalData: function() { return externalData || {}; }
         }
     });
 
@@ -90,7 +90,8 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
             },
             function(reason) {
                 $log.info("Upload experiment modal cancelled: " + reason);
-            }
+            },
+            "Upload experiment"
         );
         $log.info("uploading experiment");
     };
@@ -99,6 +100,21 @@ hubertApp.controller('NavbarButtonController', function($scope, $modal, $log, $h
 hubertApp.controller('experimentsListController', function($scope, $interval, $modal, $log, $http) {
     
     $scope.loadingIndicator = "(loading...)";
+
+    $scope.openExperimentResults = function(evolutionTask) {
+        $log.info("Showing results of experiment: " + evolutionTask.experiment.id);
+
+        openModal(
+            $modal,
+            'experimentResults',
+            function(result) {
+                $log.info("Closing experiment results: " + result);
+            },
+            function(result) {},
+            "Experiment results",
+            evolutionTask
+        );
+    };
 
     $scope.refresh = function() {
         $http.get("experiments").then(function(response) {
@@ -117,15 +133,33 @@ hubertApp.controller('experimentsListController', function($scope, $interval, $m
     $scope.refresh();
 });
 
+hubertApp.controller('experimentResultsController', function(
+    $scope,
+    $modalInstance,
+    $log,
+    title,
+    externalData
+) {
+    var evolutionTask = externalData;
+
+    $scope.title = title;
+    $scope.statistics = evolutionTask.statistics;
+
+    $scope.ok = function() {
+        $modalInstance.close();
+    };
+});
+
 hubertApp.controller('experimentController', function(
     $scope, 
     $modalInstance, 
     $log, 
     configuration, 
     title, 
-    experiment,
+    externalData,
     datasets
 ) {
+    var experiment = externalData;
 
     $scope.fitnessFunctions = configuration.fitnessFunctions;
     $scope.datasets = datasets;
