@@ -4,13 +4,24 @@
 
 <div class="modal-body">
     <div class="row">
-        <figure class="highlight">
-            <pre>
-                <code class="language-json" data-lang="json">
-                    {{statistics}}
-                </code>
-            </pre>
-        </figure>
+        <table class="table">
+            <tr>
+                <td>Maximum fitness</td>
+                <td>{{statistics.max}}</td>
+            </tr>
+            <tr>
+                <td>Minimum fitness</td>
+                <td>{{statistics.min}}</td>
+            </tr>
+            <tr>
+                <td>Average fitness</td>
+                <td>{{statistics.avg}}</td>
+            </tr>
+            <tr>
+                <td>Best individual</td>
+                <td>{{statistics.bestIndividual}}</td>
+            </tr>
+        </table>
     </div>
 </div>
 
