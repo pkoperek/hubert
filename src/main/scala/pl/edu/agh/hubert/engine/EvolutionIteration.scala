@@ -58,7 +58,7 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
         avgFitness,
         withMinFitness.fitness,
         withMaxFitness.fitness,
-        withMaxFitness.toString
+        withMaxFitness.individual.toString
       )
     )
   }
