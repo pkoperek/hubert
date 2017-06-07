@@ -18,6 +18,7 @@ case class EvolutionIterationResult(
 private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment) extends EvolutionIteration {
 
   private val logger = LoggerFactory.getLogger(getClass)
+  private val populationLogger = LoggerFactory.getLogger("Population")
 
   private val individualGenerator = IndividualGenerator(experiment)
   private val fitnessFunction = FitnessFunction(experiment)
@@ -42,6 +43,9 @@ private class DeterministicCrowdingEvolutionIteration(val experiment: Experiment
   }
 
   private def gatherResults(): EvolutionIterationResult = {
+    populationLogger.debug("Dumping population")
+    population.foreach( individual => populationLogger.debug(">>> " + individual.toString))
+
     val avgFitness = population.foldLeft(0.0)(_ + _.fitness) / population.length
     val withMinFitness = population.minBy(_.fitness)
     val withMaxFitness = population.maxBy(_.fitness)

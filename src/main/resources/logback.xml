@@ -7,9 +7,20 @@
         </layout>
     </appender>
 
+    <appender name="population_file" class="ch.qos.logback.core.FileAppender">
+        <file>populations.log</file>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%msg%n</Pattern>
+        </layout>
+    </appender>
+
     <logger name="pl.edu.agh.hubert.languages.math.MathRandomIndividualGenerator" level="INFO"/>
     <logger name="pl.edu.agh.hubert.languages.math.DifferentiationFitnessFunctionFormula" level="INFO"/>
     <logger name="pl.edu.agh.hubert.engine.DeterministicCrowdingEvolutionIteration" level="DEBUG"/>
+
+    <logger name="Population" level="DEBUG" additivity="false">
+        <appender-ref ref="population_file"/>
+    </logger>
 
     <root level="debug">
         <appender-ref ref="STDOUT" />
